@@ -4,7 +4,7 @@ import 'package:animator/animator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class MyBloc extends StatesRebuilder {
-  final myAnimation = AniamtionSetup(
+  final myAnimation = AnimationSetup(
     tweenMap: {
       "opacityAnim": Tween<double>(begin: 0.5, end: 1),
       "rotationAnim": Tween<double>(begin: 0, end: 2 * pi),

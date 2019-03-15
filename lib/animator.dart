@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// `AnimationSetup` allows you to setup your Animation by defining : `tween`, `duration`, `curve`.
-class AniamtionSetup extends State with TickerProviderStateMixin {
+class AnimationSetup extends State with TickerProviderStateMixin {
   ///A linear interpolation between a beginning and ending value.
   ///
   ///The default `tween` is Tween<double>(begin: 0, end: 1).
@@ -37,7 +37,7 @@ class AniamtionSetup extends State with TickerProviderStateMixin {
   }
 
   bool get controllerIsDisposed => '$controller'.contains("DISPOSED");
-  AniamtionSetup({
+  AnimationSetup({
     Tween tween,
     this.tweenMap,
     this.duration = const Duration(milliseconds: 500),
@@ -60,7 +60,7 @@ class AniamtionSetup extends State with TickerProviderStateMixin {
   int _repeats;
 
   /// Add statusListener to be called every time the status of the animation changes.
-  void statusListener(void Function(AnimationStatus, AniamtionSetup) listener) {
+  void statusListener(void Function(AnimationStatus, AnimationSetup) listener) {
     if (_statusListner != null) {
       animation?.removeStatusListener(_statusListner);
     }
@@ -88,7 +88,7 @@ class AniamtionSetup extends State with TickerProviderStateMixin {
     int cycles,
     int repeats,
     bool dispose = false,
-    Function(AniamtionSetup) customListener,
+    Function(AnimationSetup) customListener,
     VoidCallback endAnimationListener,
   }) {
     if (controller == null || controllerIsDisposed) {
@@ -182,7 +182,7 @@ class AniamtionSetup extends State with TickerProviderStateMixin {
     int cycles,
     int repeats,
     bool dispose: false,
-    Function(AniamtionSetup) customListener,
+    Function(AnimationSetup) customListener,
     VoidCallback endAnimationListener,
   }) {
     if (tween != null) {
@@ -352,14 +352,14 @@ class Animator extends StatefulWidget {
 }
 
 class _AnimatorState extends State<Animator> {
-  AniamtionSetup _animationSetup;
+  AnimationSetup _animationSetup;
   Map<String, Animation> get _animationMap => _animationSetup.animationMap;
   Animation get _animation => _animationSetup.animation;
   final _bloc = StatesRebuilder();
   @override
   void initState() {
     super.initState();
-    _animationSetup = AniamtionSetup(
+    _animationSetup = AnimationSetup(
       tween: widget.tween ?? Tween<double>(begin: 0, end: 1),
       tweenMap: widget.tweenMap,
       duration: widget.duration,
