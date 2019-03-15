@@ -16,16 +16,16 @@ With one widget, `Animator`, you can do all the available animation in Flutter.
 
   ```dart
 Animator({
-  Key key, 
-  Tween<dynamic> tween, // (1) // Default tween: Tween<double>(begin:0 end: 1)
-  Duration duration: const Duration(milliseconds: 500),  // (2)
-  Curve curve: Curves.linear, // (3)
-  int cycles, // (4)
-  int repeats: 1, // (5)
-  (Animation<dynamic>) → Widget builder, // (6)
-  Map<String, Tween<dynamic>> tweenMap, () → void endAnimationListener, // (7)
-  (Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
-  () → void endAnimationListener, // (10)
+    Key key, 
+    Tween<dynamic> tween, // (1) // Default tween: Tween<double>(begin:0 end: 1)
+    Duration duration: const Duration(milliseconds: 500),  // (2)
+    Curve curve: Curves.linear, // (3)
+    int cycles, // (4)
+    int repeats: 1, // (5)
+    (Animation<dynamic>) → Widget builder, // (6)
+    Map<String, Tween<dynamic>> tweenMap, () → void endAnimationListener, // (7)
+    (Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
+    () → void endAnimationListener, // (10)
 })
   ```
 
@@ -270,7 +270,6 @@ class MyAnimation extends StatelessWidget {
     ]);
   }
 }
- 
  ```
 
 
