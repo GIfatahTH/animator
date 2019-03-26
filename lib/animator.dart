@@ -61,6 +61,7 @@ class AnimationSetup extends State with TickerProviderStateMixin {
 
   /// Add statusListener to be called every time the status of the animation changes.
   void statusListener(void Function(AnimationStatus, AnimationSetup) listener) {
+
     if (_statusListener != null) {
       animation?.removeStatusListener(_statusListener);
     }

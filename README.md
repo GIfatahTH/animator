@@ -16,16 +16,16 @@ With one widget, `Animator`, you can do all the available animation in Flutter.
 
   ```dart
 Animator({
-Key key, 
-Tween<dynamic> tween, // (1) // Default tween: Tween<double>(begin:0 end: 1)
-Duration duration: const Duration(milliseconds: 500),  // (2)
-Curve curve: Curves.linear, // (3)
-int cycles, // (4)
-int repeats: 1, // (5)
-(Animation<dynamic>) → Widget builder, // (6)
-Map<String, Tween<dynamic>> tweenMap, () → void endAnimationListener, // (7)
-(Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
-() → void endAnimationListener, // (10)
+    Key key, 
+    Tween<dynamic> tween, // (1) // Default tween: Tween<double>(begin:0 end: 1)
+    Duration duration: const Duration(milliseconds: 500),  // (2)
+    Curve curve: Curves.linear, // (3)
+    int cycles, // (4)
+    int repeats: 1, // (5)
+    (Animation<dynamic>) → Widget builder, // (6)
+    Map<String, Tween<dynamic>> tweenMap, () → void endAnimationListener, // (7)
+    (Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
+    () → void endAnimationListener, // (10)
 })
   ```
 
@@ -105,7 +105,7 @@ With implicit-like animation you can implement almost all the available animatio
 In any of your logic classes, instantiate the `AnimationSetup` and assign it to a variable.
 
 ```dart
-AniamtionSetup({
+AnimationSetup({
         Tween<dynamic> tween, 
         Duration duration: const Duration(milliseconds: 500), 
         Curve curve: Curves.linear,
@@ -126,7 +126,7 @@ initAnimation({
     int cycles, 
     int repeats, 
     bool dispose: false // Dispose animation after it is finished
-    (AniamtionSetup) → dynamic customListener, // any custom animation listener
+    (AnimationSetup) → dynamic customListener, // any custom animation listener
     () → void endAnimationListener,
 })
 ```
@@ -154,7 +154,7 @@ changeAnimatioSetup({
     int cycles, 
     int repeats, 
     bool dispose: false,
-    (AniamtionSetup) → dynamic customListener, 
+    (AnimationSetup) → dynamic customListener, 
     () → void endAnimationListener
 })
 ```
@@ -177,7 +177,7 @@ import 'package:animator/animator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class MyBloc extends StatesRebuilder {
-  final myAnimation = AniamtionSetup(
+  final myAnimation = AnimationSetup(
     tweenMap: {
       "opacityAnim": Tween<double>(begin: 0.5, end: 1),
       "rotationAnim": Tween<double>(begin: 0, end: 2 * pi),
@@ -270,7 +270,6 @@ class MyAnimation extends StatelessWidget {
     ]);
   }
 }
- 
  ```
 
 
