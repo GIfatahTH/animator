@@ -52,24 +52,25 @@ class AnimationSetup extends State with TickerProviderStateMixin {
   // Map of animation, keys are the same as key of tweenMap
   Map<String, Animation> animationMap = {};
 
-  VoidCallback _listner, _customListener;
-  Function(AnimationStatus) _statusListner;
-  Function(AnimationStatus) _repeatstatusListner;
+  VoidCallback _listener, _customListener;
+  Function(AnimationStatus) _statusListener;
+  Function(AnimationStatus) _repeatstatusListener;
 
   int _cycles;
   int _repeats;
 
   /// Add statusListener to be called every time the status of the animation changes.
   void statusListener(void Function(AnimationStatus, AnimationSetup) listener) {
-    if (_statusListner != null) {
-      animation?.removeStatusListener(_statusListner);
-    }
-    animation?.removeStatusListener(_repeatstatusListner);
 
-    _statusListner = (status) {
+    if (_statusListener != null) {
+      animation?.removeStatusListener(_statusListener);
+    }
+    animation?.removeStatusListener(_repeatstatusListener);
+
+    _statusListener = (status) {
       listener(status, this);
     };
-    animation?.addStatusListener(_statusListner);
+    animation?.addStatusListener(_statusListener);
   }
 
   /// Initialize animation by adding listener.
@@ -78,7 +79,7 @@ class AnimationSetup extends State with TickerProviderStateMixin {
   /// You can add customListener : any Function you want to call every
   /// time the value of the animation changes.
   ///
-  /// You can also and endAnimationListner : any Function you want to call
+  /// You can also and endAnimationListener : any Function you want to call
   /// every time the animation ends (for example to trigger other animation).
   initAnimation({
     StatesRebuilder bloc,
@@ -106,32 +107,32 @@ class AnimationSetup extends State with TickerProviderStateMixin {
       });
     }
 
-    if (_listner == null) {
+    if (_listener == null) {
       assert(bloc != null);
       assert(states != null || ids != null);
       _bloc = bloc;
-      _listner = () {
+      _listener = () {
         bloc.rebuildStates(states: states, ids: ids);
       };
     }
 
-    animation.addListener(_listner);
+    animation.addListener(_listener);
 
     if (customListener != null) {
       _customListener = () => customListener(this);
       animation.addListener(_customListener);
     }
 
-    if (_statusListner != null) {
-      animation.addStatusListener(_statusListner);
+    if (_statusListener != null) {
+      animation.addStatusListener(_statusListener);
     }
 
     if (cycles != null) {
       _cycles = cycles;
-      _addCycleStatusListner(cycles, dispose, endAnimationListener);
+      _addCycleStatusListener(cycles, dispose, endAnimationListener);
     } else if (repeats != null) {
       _repeats = repeats;
-      _addRepeatStatusListner(repeats, dispose, endAnimationListener);
+      _addRepeatStatusListener(repeats, dispose, endAnimationListener);
     }
 
     if (trigger == true) {
@@ -155,19 +156,19 @@ class AnimationSetup extends State with TickerProviderStateMixin {
     }
   }
 
-  /// Add listners you want to calls every time animation ticks.
+  /// Add listeners you want to calls every time animation ticks.
   ///
   /// if reset is true  previous listener are removed
-  addListners({List<State> states, List<String> ids, bool reset = true}) {
+  addListeners({List<State> states, List<String> ids, bool reset = true}) {
     if (reset) {
-      animation.removeListener(_listner);
+      animation.removeListener(_listener);
     }
 
-    _listner = () {
+    _listener = () {
       _bloc.rebuildStates(states: states, ids: ids);
     };
 
-    animation.addListener(_listner);
+    animation.addListener(_listener);
   }
 
   /// Change any of the animation parameters.
@@ -205,10 +206,10 @@ class AnimationSetup extends State with TickerProviderStateMixin {
       this.curve = curve;
     }
     if (cycles != null || repeats != null) {
-      if (_statusListner != null) {
-        animation?.removeStatusListener(_statusListner);
+      if (_statusListener != null) {
+        animation?.removeStatusListener(_statusListener);
       }
-      _statusListner = null;
+      _statusListener = null;
     }
 
     initAnimation(
@@ -221,10 +222,10 @@ class AnimationSetup extends State with TickerProviderStateMixin {
     );
   }
 
-  _addCycleStatusListner(
+  _addCycleStatusListener(
       int cycles, bool dispose, VoidCallback endAnimationListener) {
     if (cycles == 0) {
-      _repeatstatusListner = (AnimationStatus status) {
+      _repeatstatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
         }
@@ -233,7 +234,7 @@ class AnimationSetup extends State with TickerProviderStateMixin {
         }
       };
     } else {
-      _repeatstatusListner = (AnimationStatus status) {
+      _repeatstatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           cycles--;
           if (cycles <= 0) {
@@ -256,20 +257,20 @@ class AnimationSetup extends State with TickerProviderStateMixin {
         }
       };
     }
-    animation.addStatusListener(_repeatstatusListner);
+    animation.addStatusListener(_repeatstatusListener);
   }
 
-  _addRepeatStatusListner(
+  _addRepeatStatusListener(
       int repeats, bool dispose, VoidCallback endAnimationListener) {
     if (repeats == 0) {
-      _repeatstatusListner = (AnimationStatus status) {
+      _repeatstatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           controller.reset();
           controller.forward();
         }
       };
     } else {
-      _repeatstatusListner = (AnimationStatus status) {
+      _repeatstatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           repeats--;
           if (repeats <= 0) {
@@ -283,14 +284,14 @@ class AnimationSetup extends State with TickerProviderStateMixin {
         }
       };
     }
-    animation.addStatusListener(_repeatstatusListner);
+    animation.addStatusListener(_repeatstatusListener);
   }
 
-  // Remove listener, statusListner and dispose the animation controller
+  // Remove listener, statusListener and dispose the animation controller
   disposeAnimation() {
-    animation.removeListener(_listner);
+    animation.removeListener(_listener);
     animation.removeListener(_customListener);
-    animation.removeStatusListener(_statusListner);
+    animation.removeStatusListener(_statusListener);
     if (!'$controller'.contains("DISPOSED")) {
       controller?.dispose();
     }
