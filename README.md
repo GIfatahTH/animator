@@ -23,9 +23,15 @@ Animator({
     int cycles, // (4)
     int repeats: 1, // (5)
     (Animation<dynamic>) → Widget builder, // (6)
-    Map<String, Tween<dynamic>> tweenMap, () → void endAnimationListener, // (7)
+    Map<String, Tween<dynamic>> tweenMap, // (7)
     (Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
     () → void endAnimationListener, // (10)
+    dynamic customListener,  // (11)
+    (AnimationStatus, AnimationSetup) → dynamic statusListener //(12)
+    bool animateOnRebuild: true, () // (13)
+    bool resetAnimationOnRebuild: false, // (14)
+    String stateID, // (15)
+    List<StatesRebuilder> blocs, // (16)
 })
   ```
 
@@ -40,6 +46,18 @@ In the `builder` argument (6) you put your widgets to be animated. The builder i
 If you want to animate many Tween, use `tweenMap` argument (7). Is is a Map of String type keys and Tween type values. In this case you have to use `builderMap` (8) insteat of `builder` (6). 
 
 With `endAnimationListener` (10) argument you can define a VoidCallback to be executed when animation is finished. For example, it can be used to trigger another animation.
+
+With `customListener` (11) argument you can define a Function to be called every time the animation value changes. The customListener is provided with an Animation object.
+
+With `statusListener` (12) argument you can define a Function to be called every time the status of the animation chage. The customListener is provided with an AnimationStatus, AnimationSetup objectt.
+
+`animateOnRebuild` (13) controls whether the animation is automatically restarted when Animator widget is rebuilt. The default value is true.
+
+If you want to reset your animation, such as changing your Tween or duration, and want the new setting to be reconsidered when the Animator widget is rebuilt, set the `resetAnimationOnRebuild` (14) argument to true. The default value is false.
+
+`stateID` is a unique name of your Animator widget. It is used to rebuild this widget from your logic classes.
+
+`blocs` argument is a list of your logic classes you want to rebuild this widget from. The logic class should extand  `StatesRebuilder`of the states_rebuilder package.
 
 ## Example of a single Tween animation:
 
@@ -131,10 +149,10 @@ initAnimation({
 })
 ```
 
-2-	`addListners`: to aAdd listners you want to calls every time animation ticks.
+2-	`addListeners`: to aAdd listeners you want to calls every time animation ticks.
 
 ```dart
-addListners({
+addListeners({
     List<State<StatefulWidget>> states, 
     List<String> ids, 
     StatesRebuilder bloc, 
@@ -167,7 +185,7 @@ triggerAnimation({
     })
 ```
 
-5-	`disposeAnimation()` : to remove listener, statusListner and dispose the animation controller.
+5-	`disposeAnimation()` : to remove listener, statusListener and dispose the animation controller.
 
 ## Implicet animation example:
  ```dart
@@ -271,11 +289,3 @@ class MyAnimation extends StatelessWidget {
   }
 }
  ```
-
-
-
-
-
-
-
-
