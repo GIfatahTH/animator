@@ -316,11 +316,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
   }
 }
 
-class _Bloc extends StatesRebuilder {
-  AnimationSetup _animationSetup;
-}
-
-class Animator extends StatelessWidget {
+class Animator extends StatefulWidget {
   ///A widget that allows you to easily implement almost all the available
   ///Animation in flutter
   Animator(
@@ -331,7 +327,7 @@ class Animator extends StatelessWidget {
       this.cycles,
       this.repeats,
       this.animateOnRebuild: true,
-      this.resetAnimationOnRebuild: false,
+      this.resetAnimationOnRebuild: true,
       this.builder,
       this.builderMap,
       this.tweenMap,
@@ -426,62 +422,99 @@ class Animator extends StatelessWidget {
   /// The list of your logicclasses you want to rebuild this widget from.
   final List<StatesRebuilder> blocs;
 
-  Map<String, Animation> get _animationMap =>
-      _bloc._animationSetup.animationMap;
-  Animation get _animation => _bloc._animationSetup.animation;
+  @override
+  _AnimatorState createState() => _AnimatorState();
+}
+
+class _AnimatorState extends State<Animator> {
+  AnimationSetup _animationSetup;
+  Map<String, Animation> get _animationMap => _animationSetup.animationMap;
+  Animation get _animation => _animationSetup.animation;
+  final _bloc = StatesRebuilder();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.stateID != null && widget.stateID != "") {
+      if (widget.blocs != null) {
+        widget.blocs.forEach(
+          (b) {
+            if (b == null) return;
+            b.addState(widget.stateID, this);
+          },
+        );
+      }
+    }
+    _initAnim("animattionWithAnimtor#2597442");
+  }
+
+  @override
+  void didUpdateWidget(Animator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animateOnRebuild && widget.resetAnimationOnRebuild) {
+      _initAnim("animattionWithAnimtor#2597442");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return StateBuilder(
-      stateID: stateID,
-      blocs: blocs,
-
-      // initState: (_) => _bloc = _Bloc(),
-      // dispose: (_) => _animationSetup[0].disposeAnimation(),
-      builder: (_) => StateBuilder(
-            initState: (State state) {
-              _bloc = _Bloc();
-              _initAnim(state);
-            },
-            didUpdateWidget: (_, State state) {
-              print(this.curve);
-              if (animateOnRebuild) {
-                _initAnim(state);
-                _bloc._animationSetup.triggerAnimation();
-              }
-            },
-            builder: (_) {
-              if (builder != null) {
-                return builder(_animation);
-              } else {
-                return builderMap(_animationMap);
-              }
-            },
-          ),
+      stateID: 'animattionWithAnimtor#2597442',
+      blocs: [_bloc],
+      didUpdateWidget: (_, __) {
+        if (widget.animateOnRebuild) {
+          _animationSetup.triggerAnimation();
+        }
+      },
+      builder: (_) {
+        if (widget.builder != null) {
+          return widget.builder(_animation);
+        } else {
+          return widget.builderMap(_animationMap);
+        }
+      },
     );
   }
 
-  void _initAnim(State state) {
-    _bloc._animationSetup = AnimationSetup(
-      tween: tween ?? Tween<double>(begin: 0, end: 1),
-      tweenMap: tweenMap,
-      duration: duration,
-      curve: curve,
+  @override
+  void dispose() {
+    if (widget.stateID != null && widget.stateID != "") {
+      if (widget.blocs != null) {
+        widget.blocs.forEach(
+          (b) {
+            if (b == null) return;
+            if (b.stateMap[widget.stateID].hashCode == this.hashCode) {
+              b.stateMap.remove(widget.stateID);
+            }
+          },
+        );
+      }
+    }
+    _animationSetup.disposeAnimation();
+    super.dispose();
+  }
+
+  void _initAnim(String id) {
+    _animationSetup = AnimationSetup(
+      tween: widget.tween ?? Tween<double>(begin: 0, end: 1),
+      tweenMap: widget.tweenMap,
+      duration: widget.duration,
+      curve: widget.curve,
     );
 
-    _bloc._animationSetup.initAnimation(
+    _animationSetup.initAnimation(
       bloc: _bloc,
-      states: [state],
-      cycles: cycles,
-      repeats: repeats,
-      customListener: customListener,
-      endAnimationListener: endAnimationListener,
+      ids: [id],
+      cycles: widget.cycles,
+      repeats: widget.repeats,
+      customListener: widget.customListener,
+      endAnimationListener: widget.endAnimationListener,
       trigger: true,
-      dispose: !animateOnRebuild,
+      dispose: !widget.animateOnRebuild,
     );
 
-    if (statusListener != null) {
-      _bloc._animationSetup.statusListener(statusListener);
+    if (widget.statusListener != null) {
+      _animationSetup.statusListener(widget.statusListener);
     }
   }
 }

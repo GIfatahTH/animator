@@ -1,80 +1,16 @@
-```dart
-import 'package:flutter/material.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
-import 'package:animator/animator.dart';
+# example
 
-class MainBloc extends StatesRebuilder {
-  bool toggleCurve = true;
-  rebuild(State state) {
-    toggleCurve = !toggleCurve;
-    rebuildStates(states: [state]);
-  }
-}
+A new Flutter project.
 
-final mainBloc = MainBloc();
+## Getting Started
 
-void main() => runApp(AnimatedLogo());
+This project is a starting point for a Flutter application.
 
-class AnimatedLogo extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(),
-        body: Body(),
-      ),
-    );
-  }
-}
+A few resources to get you started if this is your first Flutter project:
 
-class Body extends StatelessWidget {
-  const Body({
-    Key key,
-  }) : super(key: key);
+- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
 
-  @override
-  Widget build(BuildContext context) {
-    return StateBuilder(
-      builder: (State state) => Column(
-            children: <Widget>[
-              Text('Widget is animated on rebuild'),
-              Animator(
-                builder: (anim) => Center(
-                      child: Transform.scale(
-                        scale: anim.value,
-                        child: FlutterLogo(size: 50),
-                      ),
-                    ),
-              ),
-              Divider(),
-              Text('Widget is not animatted on rebuild'),
-              Animator(
-                animateOnRebuild: false,
-                builder: (anim) => Center(
-                      child: Transform.scale(
-                        scale: anim.value,
-                        child: FlutterLogo(size: 50),
-                      ),
-                    ),
-              ),
-              Divider(),
-              Text('Animation is reset on rebuild.'),
-              Animator(
-                resetAnimationOnRebuild: true,
-                curve: mainBloc.toggleCurve ? Curves.linear : Curves.elasticOut,
-                builder: (anim) => Center(
-                      child: Transform.scale(
-                        scale: anim.value,
-                        child: FlutterLogo(size: 50),
-                      ),
-                    ),
-              ),
-              RaisedButton(
-                child: Text('Rebuild'),
-                onPressed: () => mainBloc.rebuild(state),
-              )
-            ],
-          ),
-    );
-  }
-}
-```
+For help getting started with Flutter, view our 
+[online documentation](https://flutter.io/docs), which offers tutorials, 
+samples, guidance on mobile development, and a full API reference.

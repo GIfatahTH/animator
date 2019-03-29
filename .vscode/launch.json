@@ -8,7 +8,7 @@
             "name": "Flutter",
             "request": "launch",
             "type": "dart",
-            "program": "example/basic_animation0/lib/main.dart"
+            "program": "example/lib/main.dart"
         }
     ]
 }
