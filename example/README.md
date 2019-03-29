@@ -1,16 +1,93 @@
-# example
+```dart
+import 'package:flutter/material.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:animator/animator.dart';
 
-A new Flutter project.
+class MainBloc extends StatesRebuilder {
+  bool toggleCurve = true;
+  rebuild() {
+    toggleCurve = !toggleCurve;
+    rebuildStates(ids: ['widget 1', 'widget 2', 'widget 3']);
+  }
+}
 
-## Getting Started
+final mainBloc = MainBloc();
 
-This project is a starting point for a Flutter application.
+class BasicAnimation0 extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Basic Animation 0'),
+        ),
+        body: Body(),
+      ),
+    );
+  }
+}
 
-A few resources to get you started if this is your first Flutter project:
+class Body extends StatelessWidget {
+  const Body({
+    Key key,
+  }) : super(key: key);
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text('Widget is animated on rebuild'),
+        Animator(
+          stateID: "widget 1",
+          blocs: [mainBloc],
+          duration: Duration(seconds: 2),
+          cycles: 1,
+          builder: (anim) => Center(
+                child: Transform.scale(
+                  scale: anim.value,
+                  child: FlutterLogo(size: 50),
+                ),
+              ),
+        ),
+        Divider(),
+        Text('Widget is not animatted on rebuild'),
+        Animator(
+          stateID: "widget 2",
+          blocs: [mainBloc],
+          duration: Duration(seconds: 2),
+          animateOnRebuild: false,
+          builder: (anim) => Center(
+                child: Transform.scale(
+                  scale: anim.value,
+                  child: FlutterLogo(
+                    size: 50,
+                    colors: Colors.red,
+                  ),
+                ),
+              ),
+        ),
+        Divider(),
+        Text('Animation is reset on rebuild. Curve changes on rebuild'),
+        StateBuilder(
+          stateID: 'widget 3',
+          blocs: [mainBloc],
+          builder: (_) => Animator(
+                duration: Duration(seconds: 2),
+                repeats: 1,
+                curve: mainBloc.toggleCurve ? Curves.linear : Curves.bounceIn,
+                builder: (anim) => Center(
+                      child: Transform.scale(
+                        scale: anim.value,
+                        child: FlutterLogo(size: 50),
+                      ),
+                    ),
+              ),
+        ),
+        RaisedButton(
+          child: Text('Rebuild '),
+          onPressed: () => mainBloc.rebuild(),
+        )
+      ],
+    );
+  }
+}
+```
