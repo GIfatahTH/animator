@@ -6,7 +6,7 @@ class MainBloc extends StatesRebuilder {
   bool toggleCurve = false;
   rebuild() {
     toggleCurve = !toggleCurve;
-    rebuildStates(ids: ['widget 1', 'widget 2', 'widget 3']);
+    rebuildStates(ids: ['widget 1', 'widget 2', 'widget 3', 'rr']);
   }
 }
 
@@ -32,54 +32,62 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text('Widget is animated on rebuild'),
-        Animator(
-          stateID: "widget 1",
-          blocs: [mainBloc],
-          cycles: 1,
-          builder: (anim) => Center(
-                child: Transform.scale(
-                  scale: anim.value,
-                  child: FlutterLogo(size: 50),
-                ),
+    return StateBuilder(
+      stateID: 'rr',
+      blocs: [mainBloc],
+      builder: (_) => Column(
+            children: <Widget>[
+              Text('Widget is animated on rebuild'),
+              Animator(
+                stateID: "widget 1",
+                blocs: [mainBloc],
+                cycles: 1,
+                builder: (anim) => Center(
+                      child: Transform.scale(
+                        scale: anim.value,
+                        child: FlutterLogo(size: 50),
+                      ),
+                    ),
               ),
-        ),
-        Divider(),
-        Text('Widget is not animatted on rebuild'),
-        Animator(
-          stateID: "widget 2",
-          blocs: [mainBloc],
-          animateOnRebuild: false,
-          builder: (anim) => Center(
-                child: Transform.scale(
-                  scale: anim.value,
-                  child: FlutterLogo(size: 50),
-                ),
+              Divider(),
+              Text('Widget is not animatted on rebuild'),
+              Animator(
+                stateID: "widget 2",
+                blocs: [mainBloc],
+                // animateOnRebuild: false,
+                builder: (anim) => Center(
+                      child: Transform.scale(
+                        scale: anim.value,
+                        child: FlutterLogo(
+                          size: 50,
+                          colors: Colors.red,
+                        ),
+                      ),
+                    ),
               ),
-        ),
-        Divider(),
-        Text('Animation is reset on rebuild.'),
-        Animator(
-          stateID: "widget 3",
-          blocs: [mainBloc],
-          repeats: 1,
-          resetAnimationOnRebuild: true,
-          curve: mainBloc.toggleCurve ? Curves.linear : Curves.bounceIn,
-          // duration: mainBloc.toggleCurve ? null : Duration(seconds: 2),
-          builder: (anim) => Center(
-                child: Transform.scale(
-                  scale: anim.value,
-                  child: FlutterLogo(size: 50),
-                ),
+              Divider(),
+              Text('Animation is reset on rebuild.'),
+              Animator(
+                stateID: "widget 3",
+                blocs: [mainBloc],
+                // animateOnRebuild: false,
+                duration: Duration(seconds: 2),
+                repeats: 1,
+                // curve: mainBloc.toggleCurve ? Curves.linear : Curves.bounceIn,
+                // duration: mainBloc.toggleCurve ? null : Duration(seconds: 2),
+                builder: (anim) => Center(
+                      child: Transform.scale(
+                        scale: anim.value,
+                        child: FlutterLogo(size: 50),
+                      ),
+                    ),
               ),
-        ),
-        RaisedButton(
-          child: Text('Rebuild '),
-          onPressed: () => mainBloc.rebuild(),
-        )
-      ],
+              RaisedButton(
+                child: Text('Rebuild '),
+                onPressed: () => mainBloc.rebuild(),
+              )
+            ],
+          ),
     );
   }
 }

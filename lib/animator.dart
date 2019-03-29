@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+class SDe extends StatefulWidget {
+  @override
+  AnimationSetup createState() => AnimationSetup();
+}
+
 /// `AnimationSetup` allows you to setup your Animation by defining : `tween`, `duration`, `curve`.
-class AnimationSetup extends State with TickerProviderStateMixin {
+class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
   ///A linear interpolation between a beginning and ending value.
   ///
   ///The default `tween` is Tween<double>(begin: 0, end: 1).
@@ -311,7 +316,11 @@ class AnimationSetup extends State with TickerProviderStateMixin {
   }
 }
 
-class Animator extends StatefulWidget {
+class _Bloc extends StatesRebuilder {
+  AnimationSetup _animationSetup;
+}
+
+class Animator extends StatelessWidget {
   ///A widget that allows you to easily implement almost all the available
   ///Animation in flutter
   Animator(
@@ -350,9 +359,7 @@ class Animator extends StatefulWidget {
           }
           return true;
         }()),
-        super(key: key) {
-    print(this.curve);
-  }
+        super(key: key);
 
   ///A linear interpolation between a beginning and ending value.
   ///
@@ -419,91 +426,62 @@ class Animator extends StatefulWidget {
   /// The list of your logicclasses you want to rebuild this widget from.
   final List<StatesRebuilder> blocs;
 
-  @override
-  _AnimatorState createState() => _AnimatorState();
-}
-
-class _AnimatorState extends State<Animator> {
-  AnimationSetup _animationSetup;
-  Map<String, Animation> get _animationMap => _animationSetup.animationMap;
-  Animation get _animation => _animationSetup.animation;
-  final _bloc = StatesRebuilder();
-  @override
-  void initState() {
-    super.initState();
-    // if (widget.stateID != null && widget.stateID != "") {
-    //   if (widget.blocs != null) {
-    //     widget.blocs.forEach(
-    //       (b) {
-    //         if (b == null) return;
-    //         b.stateMap[widget.stateID] = this;
-    //       },
-    //     );
-    //   }
-    // }
-    _initAnim();
-  }
-
-  _initAnim() {
-    _animationSetup = AnimationSetup(
-      tween: widget.tween ?? Tween<double>(begin: 0, end: 1),
-      tweenMap: widget.tweenMap,
-      duration: widget.duration,
-      curve: widget.curve,
-    );
-    _animationSetup.initAnimation(
-      bloc: _bloc,
-      states: [this],
-      cycles: widget.cycles,
-      repeats: widget.repeats,
-      customListener: widget.customListener,
-      endAnimationListener: widget.endAnimationListener,
-      trigger: true,
-      dispose: !widget.animateOnRebuild,
-    );
-    if (widget.statusListener != null) {
-      _animationSetup.statusListener(widget.statusListener);
-    }
-  }
-
-  @override
-  void didUpdateWidget(Animator oldWidget) {
-    print(didUpdateWidget);
-    if (widget.resetAnimationOnRebuild) {
-      print('ljvdjv');
-      _initAnim();
-    } else if (widget.animateOnRebuild) {
-      _animationSetup.triggerAnimation();
-    }
-    super.didUpdateWidget(oldWidget);
-  }
+  Map<String, Animation> get _animationMap =>
+      _bloc._animationSetup.animationMap;
+  Animation get _animation => _bloc._animationSetup.animation;
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
-    if (widget.builder != null) {
-      child = widget.builder(_animation);
-    } else {
-      child = widget.builderMap(_animationMap);
-    }
-    return child;
+    return StateBuilder(
+      stateID: stateID,
+      blocs: blocs,
+
+      // initState: (_) => _bloc = _Bloc(),
+      // dispose: (_) => _animationSetup[0].disposeAnimation(),
+      builder: (_) => StateBuilder(
+            initState: (State state) {
+              _bloc = _Bloc();
+              _initAnim(state);
+            },
+            didUpdateWidget: (_, State state) {
+              print(this.curve);
+              if (animateOnRebuild) {
+                _initAnim(state);
+                _bloc._animationSetup.triggerAnimation();
+              }
+            },
+            builder: (_) {
+              if (builder != null) {
+                return builder(_animation);
+              } else {
+                return builderMap(_animationMap);
+              }
+            },
+          ),
+    );
   }
 
-  @override
-  void dispose() {
-    _animationSetup.disposeAnimation();
-    // if (widget.stateID != null && widget.stateID != "") {
-    //   if (widget.blocs != null) {
-    //     widget.blocs.forEach(
-    //       (b) {
-    //         if (b == null) return;
-    //         if (b.stateMap[widget.stateID].hashCode == this.hashCode) {
-    //           b.stateMap.remove(widget.stateID);
-    //         }
-    //       },
-    //     );
-    //   }
-    // }
-    super.dispose();
+  void _initAnim(State state) {
+    _bloc._animationSetup = AnimationSetup(
+      tween: tween ?? Tween<double>(begin: 0, end: 1),
+      tweenMap: tweenMap,
+      duration: duration,
+      curve: curve,
+    );
+
+    _bloc._animationSetup.initAnimation(
+      bloc: _bloc,
+      states: [state],
+      cycles: cycles,
+      repeats: repeats,
+      customListener: customListener,
+      endAnimationListener: endAnimationListener,
+      trigger: true,
+      dispose: !animateOnRebuild,
+    );
+
+    if (statusListener != null) {
+      _bloc._animationSetup.statusListener(statusListener);
+    }
   }
 }
