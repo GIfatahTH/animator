@@ -17,7 +17,7 @@ class MyBloc extends StatesRebuilder {
       bloc: this,
       ids: ["OpacityWidget", "RotationWidget"],
       cycles: 3,
-      endAnimationListener: () => print("animation finished"),
+      endAnimationListener: (_) => print("animation finished"),
     );
   }
 }

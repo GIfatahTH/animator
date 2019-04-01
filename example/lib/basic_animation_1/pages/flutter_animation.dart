@@ -60,7 +60,7 @@ class MyAnimation extends StatelessWidget {
         _child = Animator(
           key: Key("opacity"),
           duration: Duration(seconds: 2),
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('rotation1', 'Rotation'),
           cycles: 3,
           builder: (anim) => FadeTransition(
@@ -76,7 +76,7 @@ class MyAnimation extends StatelessWidget {
           curve: Curves.bounceIn,
           duration: Duration(seconds: 2),
           repeats: 2,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('rotation2', 'Rotation'),
           builder: (anim) {
             return Transform.rotate(
@@ -92,7 +92,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 0, end: 4 * pi),
           duration: Duration(seconds: 1),
           repeats: 2,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('scaling1', 'Scaling'),
           builder: (anim) {
             return Transform.rotate(
@@ -108,7 +108,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 1, end: 0.5),
           duration: Duration(seconds: 1),
           cycles: 4,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('scaling2', 'Scaling'),
           builder: (anim) {
             return Transform.scale(
@@ -124,7 +124,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 1, end: 2),
           duration: Duration(seconds: 1),
           cycles: 3,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('cliping1', 'Cliping'),
           builder: (anim) {
             return Transform.scale(
@@ -140,7 +140,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('cliping2', 'Cliping'),
           builder: (anim) {
             return Column(
@@ -166,7 +166,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: () => myBloc.changeAnimation('skew1', 'Skew'),
+          endAnimationListener: (_) => myBloc.changeAnimation('skew1', 'Skew'),
           builder: (anim) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +192,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: () => myBloc.changeAnimation('skew2', 'Skew'),
+          endAnimationListener: (_) => myBloc.changeAnimation('skew2', 'Skew'),
           builder: (anim) {
             return Transform(
               transform: Matrix4.skewX(anim.value),
@@ -207,7 +207,7 @@ class MyAnimation extends StatelessWidget {
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('translation1', 'Translation'),
           builder: (anim) {
             return Transform(
@@ -224,7 +224,7 @@ class MyAnimation extends StatelessWidget {
           duration: Duration(seconds: 3),
           curve: Curves.elasticIn,
           cycles: 1,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('translation2', 'Translation'),
           builder: (anim) {
             return FractionalTranslation(
@@ -241,7 +241,7 @@ class MyAnimation extends StatelessWidget {
           duration: Duration(seconds: 3),
           curve: Curves.elasticOut,
           cycles: 1,
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('opacity2', 'Mutlti Tweens'),
           builder: (anim) {
             return FractionalTranslation(
@@ -255,7 +255,7 @@ class MyAnimation extends StatelessWidget {
         _child = Animator(
           tween: Tween<double>(begin: 1, end: 0),
           key: Key("opacity2"),
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('multi1', 'Multi Tweens'),
           builder: (anim) {
             return FadeTransition(
@@ -276,7 +276,7 @@ class MyAnimation extends StatelessWidget {
               "scale": Tween<double>(begin: 1, end: 5),
             },
             duration: Duration(seconds: 3),
-            endAnimationListener: () =>
+            endAnimationListener: (_) =>
                 myBloc.changeAnimation('multi2', 'Multi Tweens'),
             builderMap: (anim) => FadeTransition(
                   opacity: anim["opacity"],
@@ -320,7 +320,7 @@ class MyAnimation extends StatelessWidget {
             "scale": Tween<double>(begin: 5, end: 1),
           },
           duration: Duration(seconds: 3),
-          endAnimationListener: () =>
+          endAnimationListener: (_) =>
               myBloc.changeAnimation('opacity', 'Opacity'),
           builderMap: (anim) => FadeTransition(
                 opacity: anim["opacity"],
