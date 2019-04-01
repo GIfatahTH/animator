@@ -55,7 +55,7 @@ class MyHomePage extends StatelessWidget {
                   Text("repeats = 5", style: _style),
                   Animator(
                     repeats: 5,
-                    endAnimationListener: () => print("end"),
+                    endAnimationListener: (_) => print("end"),
                     builder: (anim) => Opacity(
                           opacity: anim.value,
                           child: FlutterLogo(

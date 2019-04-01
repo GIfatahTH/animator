@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-class SDe extends StatefulWidget {
-  @override
-  AnimationSetup createState() => AnimationSetup();
-}
-
 /// `AnimationSetup` allows you to setup your Animation by defining : `tween`, `duration`, `curve`.
-class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
+class AnimationSetup extends State with TickerProviderStateMixin {
   ///A linear interpolation between a beginning and ending value.
   ///
   ///The default `tween` is Tween<double>(begin: 0, end: 1).
@@ -57,7 +52,10 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
   // Map of animation, keys are the same as key of tweenMap
   Map<String, Animation> animationMap = {};
 
-  VoidCallback _listener, _customListener;
+  Function(AnimationSetup) _customListener;
+  Function(AnimationSetup) _endAnimationListener;
+
+  VoidCallback _listenerV, _customListenerV;
   Function(AnimationStatus) _statusListener;
   Function(AnimationStatus) _repeatstatusListener;
 
@@ -94,7 +92,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
     int repeats,
     bool dispose = false,
     Function(AnimationSetup) customListener,
-    VoidCallback endAnimationListener,
+    Function(AnimationSetup) endAnimationListener,
   }) {
     if (controller == null || controllerIsDisposed) {
       controller = AnimationController(duration: duration, vsync: this);
@@ -111,32 +109,37 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
       });
     }
 
-    if (_listener == null) {
+    if (_listenerV == null) {
       assert(bloc != null);
       assert(states != null || ids != null);
       _bloc = bloc;
-      _listener = () {
+      _listenerV = () {
         bloc.rebuildStates(states: states, ids: ids);
       };
     }
 
-    animation.addListener(_listener);
+    animation.addListener(_listenerV);
+
+    if (customListener == null) customListener = _customListener;
 
     if (customListener != null) {
-      _customListener = () => customListener(this);
-      animation.addListener(_customListener);
+      _customListener = customListener;
+      _customListenerV = () => _customListener(this);
+      animation.addListener(_customListenerV);
     }
 
     if (_statusListener != null) {
       animation.addStatusListener(_statusListener);
     }
-
+    if (endAnimationListener == null)
+      endAnimationListener = _endAnimationListener;
+    _endAnimationListener = endAnimationListener;
     if (cycles != null) {
       _cycles = cycles;
-      _addCycleStatusListener(cycles, dispose, endAnimationListener);
+      _addCycleStatusListener(cycles, dispose, _endAnimationListener);
     } else {
       _repeats = repeats ?? 1;
-      _addRepeatStatusListener(_repeats, dispose, endAnimationListener);
+      _addRepeatStatusListener(_repeats, dispose, _endAnimationListener);
     }
 
     if (trigger == true) {
@@ -169,14 +172,14 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
   /// if reset is true  previous listener are removed
   addListeners({List<State> states, List<String> ids, bool reset = true}) {
     if (reset) {
-      animation.removeListener(_listener);
+      animation.removeListener(_listenerV);
     }
 
-    _listener = () {
+    _listenerV = () {
       _bloc.rebuildStates(states: states, ids: ids);
     };
 
-    animation.addListener(_listener);
+    animation.addListener(_listenerV);
   }
 
   /// Change any of the animation parameters.
@@ -192,7 +195,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
     int repeats,
     bool dispose: false,
     Function(AnimationSetup) customListener,
-    VoidCallback endAnimationListener,
+    Function(AnimationSetup) endAnimationListener,
   }) {
     if (tween != null) {
       this.tween = tween;
@@ -231,7 +234,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
   }
 
   _addCycleStatusListener(
-      int cycles, bool dispose, VoidCallback endAnimationListener) {
+      int cycles, bool dispose, Function(AnimationSetup) endAnimationListener) {
     animation.removeStatusListener(_repeatstatusListener);
     if (cycles == 0) {
       _repeatstatusListener = (AnimationStatus status) {
@@ -249,7 +252,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
           if (cycles <= 0) {
             animation.removeStatusListener(_repeatstatusListener);
             if (dispose) disposeAnimation();
-            if (endAnimationListener != null) endAnimationListener();
+            if (endAnimationListener != null) endAnimationListener(this);
             return;
           } else {
             controller.reverse();
@@ -260,7 +263,7 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
           if (cycles <= 0) {
             animation.removeStatusListener(_repeatstatusListener);
             if (dispose) disposeAnimation();
-            if (endAnimationListener != null) endAnimationListener();
+            if (endAnimationListener != null) endAnimationListener(this);
             return;
           } else {
             controller.forward();
@@ -271,8 +274,8 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
     animation.addStatusListener(_repeatstatusListener);
   }
 
-  _addRepeatStatusListener(
-      int repeats, bool dispose, VoidCallback endAnimationListener) {
+  _addRepeatStatusListener(int repeats, bool dispose,
+      Function(AnimationSetup) endAnimationListener) {
     animation.removeStatusListener(_repeatstatusListener);
     if (repeats == 0) {
       _repeatstatusListener = (AnimationStatus status) {
@@ -288,7 +291,10 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
           if (repeats <= 0) {
             animation.removeStatusListener(_repeatstatusListener);
             if (dispose) disposeAnimation();
-            if (endAnimationListener != null) endAnimationListener();
+
+            if (endAnimationListener != null) {
+              endAnimationListener(this);
+            }
             return;
           } else {
             controller.reset();
@@ -302,8 +308,8 @@ class AnimationSetup extends State<SDe> with TickerProviderStateMixin {
 
   /// Remove listener, statusListener and dispose the animation controller
   disposeAnimation() {
-    animation.removeListener(_listener);
-    animation.removeListener(_customListener);
+    animation.removeListener(_listenerV);
+    animation.removeListener(_customListenerV);
     animation.removeStatusListener(_statusListener);
     if (!controllerIsDisposed) {
       controller?.dispose();
@@ -322,17 +328,17 @@ class Animator extends StatefulWidget {
   Animator(
       {Key key,
       this.tween,
-      this.duration: const Duration(milliseconds: 500),
+      this.duration,
       this.curve: Curves.linear,
       this.cycles,
       this.repeats,
-      this.animateOnRebuild: true,
       this.resetAnimationOnRebuild: true,
       this.builder,
       this.builderMap,
       this.tweenMap,
-      this.stateID,
+      this.name,
       this.blocs,
+      this.triggerOnInit,
       this.customListener,
       this.endAnimationListener,
       this.statusListener})
@@ -355,6 +361,8 @@ class Animator extends StatefulWidget {
           }
           return true;
         }()),
+        assert(name == null ||
+            blocs != null), // blocs must not be null if the stateID is given
         super(key: key);
 
   ///A linear interpolation between a beginning and ending value.
@@ -374,15 +382,15 @@ class Animator extends StatefulWidget {
   ///The number of forward periods the animation performs before stopping
   final int repeats;
 
-  ///Whether the animation is automatically restarted when Animator widget
-  ///is rebuilt. The default value is true
-  final bool animateOnRebuild;
-
   ///Whether the animation settings are reset when Animator widget
   ///is rebuilt. The default value is false.
   ///
   ///Animation settings are defined by the tween, duration and curve argument.
   final bool resetAnimationOnRebuild;
+
+  ///Whether to statrt the animation when the Animator widget
+  ///is inserted into the tree.
+  final bool triggerOnInit;
 
   ///Function to be called every time the animation value changes.
   ///
@@ -390,7 +398,7 @@ class Animator extends StatefulWidget {
   final Function(AnimationSetup) customListener;
 
   ///VoidCallback to be called when animation is finished.
-  final VoidCallback endAnimationListener;
+  final Function(AnimationSetup) endAnimationListener;
 
   ///Function to be called every time the status of the animation changes.
   ///
@@ -414,10 +422,11 @@ class Animator extends StatefulWidget {
   ///`tweenMap` argument is used for multi-Tween animation.
   final Map<String, Tween<dynamic>> tweenMap;
 
-  ///The unique name of your Animator widget.
+  ///The name of your Animator widget.
+  ///Many widgets can have the same name.
   ///
   ///It is used to rebuild this widget from your logic classes
-  final String stateID;
+  final String name;
 
   /// The list of your logicclasses you want to rebuild this widget from.
   final List<StatesRebuilder> blocs;
@@ -430,29 +439,48 @@ class _AnimatorState extends State<Animator> {
   AnimationSetup _animationSetup;
   Map<String, Animation> get _animationMap => _animationSetup.animationMap;
   Animation get _animation => _animationSetup.animation;
+
   final _bloc = StatesRebuilder();
+  bool _hasName = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.stateID != null && widget.stateID != "") {
+    _hasName = widget.name != null && widget.name != "";
+    if (_hasName) {
+      _initAnim("animattionWithAnimtor#2597442", widget.triggerOnInit ?? false);
       if (widget.blocs != null) {
         widget.blocs.forEach(
           (b) {
             if (b == null) return;
-            b.addState(widget.stateID, this);
+            b.addToInnerMap(
+              id: widget.name,
+              state: this,
+              fn: (fn) {
+                _animationSetup.triggerAnimation();
+              },
+              add: true,
+            );
           },
         );
       }
+    } else {
+      _initAnim("animattionWithAnimtor#2597442", widget.triggerOnInit ?? true);
     }
-    _initAnim("animattionWithAnimtor#2597442");
   }
 
   @override
   void didUpdateWidget(Animator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.animateOnRebuild && widget.resetAnimationOnRebuild) {
-      _initAnim("animattionWithAnimtor#2597442");
+    print(widget.triggerOnInit);
+    if (widget.resetAnimationOnRebuild) {
+      if (_hasName) {
+        _initAnim(
+            "animattionWithAnimtor#2597442", widget.triggerOnInit ?? false);
+      } else {
+        _initAnim(
+            "animattionWithAnimtor#2597442", widget.triggerOnInit ?? true);
+      }
     }
   }
 
@@ -461,11 +489,6 @@ class _AnimatorState extends State<Animator> {
     return StateBuilder(
       stateID: 'animattionWithAnimtor#2597442',
       blocs: [_bloc],
-      didUpdateWidget: (_, __) {
-        if (widget.animateOnRebuild) {
-          _animationSetup.triggerAnimation();
-        }
-      },
       builder: (_) {
         if (widget.builder != null) {
           return widget.builder(_animation);
@@ -478,27 +501,31 @@ class _AnimatorState extends State<Animator> {
 
   @override
   void dispose() {
-    if (widget.stateID != null && widget.stateID != "") {
+    if (widget.name != null && widget.name != "") {
       if (widget.blocs != null) {
         widget.blocs.forEach(
           (b) {
             if (b == null) return;
-            if (b.stateMap[widget.stateID].hashCode == this.hashCode) {
-              b.stateMap.remove(widget.stateID);
-            }
+            if (b.innerMap[widget.name] == null) return;
+            b.innerMap[widget.name].forEach((e) {
+              if (e[0].hashCode == this.hashCode) {
+                b.innerMap.remove(widget.name);
+              }
+            });
           },
         );
       }
     }
+
     _animationSetup.disposeAnimation();
     super.dispose();
   }
 
-  void _initAnim(String id) {
+  void _initAnim(String id, bool trigger) {
     _animationSetup = AnimationSetup(
       tween: widget.tween ?? Tween<double>(begin: 0, end: 1),
       tweenMap: widget.tweenMap,
-      duration: widget.duration,
+      duration: widget.duration ?? Duration(milliseconds: 500),
       curve: widget.curve,
     );
 
@@ -509,8 +536,8 @@ class _AnimatorState extends State<Animator> {
       repeats: widget.repeats,
       customListener: widget.customListener,
       endAnimationListener: widget.endAnimationListener,
-      trigger: true,
-      dispose: !widget.animateOnRebuild,
+      trigger: trigger,
+      dispose: !_hasName,
     );
 
     if (widget.statusListener != null) {
