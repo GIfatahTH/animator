@@ -1,6 +1,7 @@
 ## [0.1.1].
 1. Remove animateOnRebuild and add triggerOnInit.
 2. Improve the logic
+3. Changed `stateID` to `name`
 
 ## [0.1.0].
 1. Extend the functionality of Animator widget by the following arguments:
