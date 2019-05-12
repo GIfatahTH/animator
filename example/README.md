@@ -37,7 +37,7 @@ class Body extends StatelessWidget {
       children: <Widget>[
         Text('Widget is animated on rebuild'),
         Animator(
-          stateID: "widget 1",
+          name: "widget 1",
           blocs: [mainBloc],
           duration: Duration(seconds: 2),
           cycles: 1,
@@ -51,7 +51,7 @@ class Body extends StatelessWidget {
         Divider(),
         Text('Widget is not animatted on rebuild'),
         Animator(
-          stateID: "widget 2",
+          name: "widget 2",
           blocs: [mainBloc],
           duration: Duration(seconds: 2),
           animateOnRebuild: false,

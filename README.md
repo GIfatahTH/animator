@@ -30,7 +30,7 @@ Animator({
     (AnimationStatus, AnimationSetup) → dynamic statusListener //(12)
     bool animateOnRebuild: true, () // (13)
     bool resetAnimationOnRebuild: false, // (14)
-    String stateID, // (15)
+    String name, // (15)
     List<StatesRebuilder> blocs, // (16)
 })
   ```
@@ -55,7 +55,7 @@ With `statusListener` (12) argument you can define a Function to be called every
 
 If you want to reset your animation, such as changing your Tween or duration, and want the new setting to be reconsidered when the Animator widget is rebuilt, set the `resetAnimationOnRebuild` (14) argument to true. The default value is false.
 
-`stateID` is a unique name of your Animator widget. It is used to rebuild this widget from your logic classes.
+`name` is a unique name of your Animator widget. It is used to rebuild this widget from your logic classes.
 
 `blocs` argument is a list of your logic classes you want to rebuild this widget from. The logic class should extand  `StatesRebuilder`of the states_rebuilder package.
 
