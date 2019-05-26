@@ -11,27 +11,23 @@ class MyBloc extends StatesRebuilder {
   changeAnimation(String swicher, String name) {
     animationSwicher = swicher;
     animationName = name;
-    rebuildStates(ids: ['myAnimation']);
+    rebuildStates(['myAnimation']);
   }
 }
 
-MyBloc myBloc;
+MyBloc myBloc = MyBloc();
 
 class FlutterAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StateBuilder(
-      initState: (_) => myBloc = MyBloc(),
-      dispose: (_) => myBloc = null,
-      builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: Text("Flutter Animation"),
-            ),
-            body: Padding(
-              padding: EdgeInsets.all(20),
-              child: MyHomePage(),
-            ),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Flutter Animation"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: MyHomePage(),
+      ),
     );
   }
 }
@@ -40,9 +36,9 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StateBuilder(
-      stateID: 'myAnimation',
+      tag: 'myAnimation',
       blocs: [myBloc],
-      builder: (_) => Center(child: MyAnimation()),
+      builder: (_, __) => Center(child: MyAnimation()),
     );
   }
 }
@@ -58,7 +54,7 @@ class MyAnimation extends StatelessWidget {
     switch (myBloc.animationSwicher) {
       case "opacity":
         _child = Animator(
-          key: Key("opacity"),
+          key: UniqueKey(),
           duration: Duration(seconds: 2),
           endAnimationListener: (_) =>
               myBloc.changeAnimation('rotation1', 'Rotation'),
@@ -71,7 +67,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "rotation1":
         _child = Animator(
-          key: Key("rotation1"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 0, end: 2 * pi),
           curve: Curves.bounceIn,
           duration: Duration(seconds: 2),
@@ -88,7 +84,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "rotation2":
         _child = Animator(
-          key: Key("rotation2"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 0, end: 4 * pi),
           duration: Duration(seconds: 1),
           repeats: 2,
@@ -104,7 +100,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "scaling1":
         _child = Animator(
-          key: Key("scaling1"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0.5),
           duration: Duration(seconds: 1),
           cycles: 4,
@@ -120,7 +116,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "scaling2":
         _child = Animator(
-          key: Key("scaling2"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 2),
           duration: Duration(seconds: 1),
           cycles: 3,
@@ -136,7 +132,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "cliping1":
         _child = Animator(
-          key: Key("cliping1"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
@@ -162,7 +158,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "cliping2":
         _child = Animator(
-          key: Key("cliping2"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
@@ -188,7 +184,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "skew1":
         _child = Animator(
-          key: Key("skew1"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
@@ -203,7 +199,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "skew2":
         _child = Animator(
-          key: Key("skew2"),
+          key: UniqueKey(),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
@@ -219,7 +215,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "translation1":
         _child = Animator(
-          key: Key("translation1"),
+          key: UniqueKey(),
           tween: Tween<Offset>(begin: Offset(0, 0), end: Offset(1.5, 0)),
           duration: Duration(seconds: 3),
           curve: Curves.elasticIn,
@@ -236,7 +232,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "translation2":
         _child = Animator(
-          key: Key("translation2"),
+          key: UniqueKey(),
           tween: Tween<Offset>(begin: Offset(-1.5, 0), end: Offset(0, 0)),
           duration: Duration(seconds: 3),
           curve: Curves.elasticOut,
@@ -253,8 +249,8 @@ class MyAnimation extends StatelessWidget {
         break;
       case "opacity2":
         _child = Animator(
+          key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0),
-          key: Key("opacity2"),
           endAnimationListener: (_) =>
               myBloc.changeAnimation('multi1', 'Multi Tweens'),
           builder: (anim) {
@@ -268,7 +264,7 @@ class MyAnimation extends StatelessWidget {
       case "multi1":
         Center(
           child: _child = Animator(
-            key: Key("multi1"),
+            key: UniqueKey(),
             tweenMap: {
               "opacity": Tween<double>(begin: 0.2, end: 1),
               "rotation": Tween<double>(begin: 0, end: 2 * pi),
@@ -312,7 +308,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "multi2":
         _child = Animator(
-          key: Key("multi2"),
+          key: UniqueKey(),
           tweenMap: {
             "opacity": Tween<double>(begin: 1, end: 0.2),
             "rotation": Tween<double>(begin: 0, end: 2 * pi),

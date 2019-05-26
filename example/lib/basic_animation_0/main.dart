@@ -6,7 +6,7 @@ class MainBloc extends StatesRebuilder {
   bool toggleCurve = true;
   rebuild() {
     toggleCurve = !toggleCurve;
-    rebuildStates(ids: ['widget 1', 'widget 2', 'widget 3']);
+    rebuildStates(['widget 1', 'widget 2', 'widget 3']);
   }
 }
 
@@ -36,6 +36,7 @@ class Body extends StatelessWidget {
       children: <Widget>[
         Text('Widget is animated on rebuild'),
         Animator(
+          key: UniqueKey(),
           name: "widget 1",
           blocs: [mainBloc],
           duration: Duration(seconds: 2),
@@ -64,9 +65,9 @@ class Body extends StatelessWidget {
         Divider(),
         Text('Animation is reset on rebuild. Curve changes on rebuild'),
         StateBuilder(
-          stateID: 'widget 3',
+          tag: 'widget 3',
           blocs: [mainBloc],
-          builder: (_) => Animator(
+          builder: (_, __) => Animator(
                 duration: Duration(seconds: 2),
                 repeats: 1,
                 resetAnimationOnRebuild: true,
