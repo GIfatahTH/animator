@@ -8,13 +8,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Animator Demo',
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text("Animator demo"),
-          ),
-          body: MyHomePage(),
-        ));
+      title: 'Animator Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Animator demo"),
+        ),
+        body: MyHomePage(),
+      ),
+    );
   }
 }
 
