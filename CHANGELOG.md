@@ -1,3 +1,7 @@
+## [0.1.2].
+1. update to use states_rebuilder: ^1.2.0
+2. resetAnimationOnRebuild default to false.
+
 ## [0.1.1].
 1. Remove animateOnRebuild and add triggerOnInit.
 2. Improve the logic
