@@ -384,10 +384,7 @@ class MyHomePage extends StatelessWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text(
-                    "skewX",
-                    style: _style
-                  ),
+                  Text("skewX", style: _style),
                   Animator(
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
