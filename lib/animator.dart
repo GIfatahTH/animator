@@ -372,7 +372,7 @@ class Animator extends StatefulWidget {
         assert(name == null ||
             blocs != null), // blocs must not be null if the tag is given
         super(
-          key: key,
+          key: key ?? UniqueKey(),
         );
 
   ///A linear interpolation between a beginning and ending value.
