@@ -63,7 +63,7 @@ class AnimatorBloc {
 
   VoidCallback _listenerV, _customListenerV;
   Function(AnimationStatus) _statusListener;
-  Function(AnimationStatus) _repeatstatusListener;
+  Function(AnimationStatus) _repeatStatusListener;
   TickerProvider _tickerProvider;
   int _cycles;
   int _repeats;
@@ -73,7 +73,7 @@ class AnimatorBloc {
     if (_statusListener != null) {
       animation?.removeStatusListener(_statusListener);
     }
-    animation?.removeStatusListener(_repeatstatusListener);
+    animation?.removeStatusListener(_repeatStatusListener);
 
     _statusListener = (status) {
       listener(status, this);
@@ -196,7 +196,7 @@ class AnimatorBloc {
 
   /// Change any of the animation parameters.
   /// such as tween, duration, curve, cycles and repeats.
-  changeAnimatioSetup({
+  changeAnimationSetup({
     Tween tween,
     Map<String, Tween> tweenMap,
     bool resetTweenMap = false,
@@ -247,9 +247,9 @@ class AnimatorBloc {
 
   _addCycleStatusListener(
       int cycles, bool dispose, Function(AnimatorBloc) endAnimationListener) {
-    animation.removeStatusListener(_repeatstatusListener);
+    animation.removeStatusListener(_repeatStatusListener);
     if (cycles == 0) {
-      _repeatstatusListener = (AnimationStatus status) {
+      _repeatStatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
         }
@@ -258,11 +258,11 @@ class AnimatorBloc {
         }
       };
     } else {
-      _repeatstatusListener = (AnimationStatus status) {
+      _repeatStatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           cycles--;
           if (cycles <= 0) {
-            animation.removeStatusListener(_repeatstatusListener);
+            animation.removeStatusListener(_repeatStatusListener);
             if (dispose) disposeAnimation();
             if (endAnimationListener != null) endAnimationListener(this);
             return;
@@ -273,7 +273,7 @@ class AnimatorBloc {
         if (status == AnimationStatus.dismissed) {
           cycles--;
           if (cycles <= 0) {
-            animation.removeStatusListener(_repeatstatusListener);
+            animation.removeStatusListener(_repeatStatusListener);
             if (dispose) disposeAnimation();
             if (endAnimationListener != null) endAnimationListener(this);
             return;
@@ -283,25 +283,25 @@ class AnimatorBloc {
         }
       };
     }
-    animation.addStatusListener(_repeatstatusListener);
+    animation.addStatusListener(_repeatStatusListener);
   }
 
   _addRepeatStatusListener(
       int repeats, bool dispose, Function(AnimatorBloc) endAnimationListener) {
-    animation.removeStatusListener(_repeatstatusListener);
+    animation.removeStatusListener(_repeatStatusListener);
     if (repeats == 0) {
-      _repeatstatusListener = (AnimationStatus status) {
+      _repeatStatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           controller.reset();
           controller.forward();
         }
       };
     } else {
-      _repeatstatusListener = (AnimationStatus status) {
+      _repeatStatusListener = (AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           repeats--;
           if (repeats <= 0) {
-            animation.removeStatusListener(_repeatstatusListener);
+            animation.removeStatusListener(_repeatStatusListener);
             if (dispose) disposeAnimation();
 
             if (endAnimationListener != null) {
@@ -315,7 +315,7 @@ class AnimatorBloc {
         }
       };
     }
-    animation.addStatusListener(_repeatstatusListener);
+    animation.addStatusListener(_repeatStatusListener);
   }
 
   /// Remove listener, statusListener and dispose the animation controller
@@ -359,7 +359,7 @@ class Animator extends StatefulWidget {
           }
           if (builder != null && builderMap != null) {
             throw FlutterError(
-                'You have to define either buider or "builderMap" argument. you can\'t define both\n'
+                'You have to define either builder or "builderMap" argument. you can\'t define both\n'
                 ' - Define the "builder" argument if you have one Tween\n'
                 ' - Define the "builderMap" argument if you have many Tweens');
           }
@@ -380,7 +380,7 @@ class Animator extends StatefulWidget {
   ///`tween` argument is used for one Tween animation.
   final Tween tween;
 
-  ///A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seco
+  ///A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seconds
   final Duration duration;
 
   ///An easing curve, i.e. a mapping of the unit interval to the unit interval.
@@ -398,7 +398,7 @@ class Animator extends StatefulWidget {
   ///Animation settings are defined by the tween, duration and curve argument.
   final bool resetAnimationOnRebuild;
 
-  ///Whether to statrt the animation when the Animator widget
+  ///Whether to start the animation when the Animator widget
   ///is inserted into the tree.
   final bool triggerOnInit;
 
@@ -453,7 +453,7 @@ class _AnimatorState extends State<Animator> {
     return StateWithMixinBuilder(
       key: UniqueKey(),
       mixinWith: MixinWith.tickerProviderStateMixin,
-      tag: 'animattionWithAnimtor#2597442',
+      tag: 'animationWithAnimator#2597442',
       blocs: [_animatorBloc],
       initState: (_, __, ticker) {
         _animatorBloc.widget = widget;
@@ -482,21 +482,21 @@ class _AnimatorBloc extends StatesRebuilder {
   bool _hasBloc = false;
   Animator widget;
 
-  initAnim(TickerProvider ticker, int hashcode) {
+  initAnim(TickerProvider ticker, int hashCode) {
     _hasBloc = widget.blocs != null && widget.blocs.isNotEmpty;
     if (_hasBloc) {
-      _initAnim(ticker, "animattionWithAnimtor#2597442",
+      _initAnim(ticker, "animationWithAnimator#2597442",
           widget.triggerOnInit ?? false);
 
       widget.blocs.forEach(
         (b) {
           if (b == null) return;
           b.addToListeners(
-              tag: widget.name, listener: _listener, hashcode: "$hashcode");
+              tag: widget.name, listener: _listener, hashCode: "$hashCode");
         },
       );
     } else {
-      _initAnim(ticker, "animattionWithAnimtor#2597442",
+      _initAnim(ticker, "animationWithAnimator#2597442",
           widget.triggerOnInit ?? true);
     }
   }
@@ -538,16 +538,16 @@ class _AnimatorBloc extends StatesRebuilder {
     // if (widget.resetAnimationOnRebuild) {
     //   _animationSetup?.disposeAnimation();
     //   if (_hasBloc) {
-    //     _initAnim(ticker, "animattionWithAnimtor#2597442",
+    //     _initAnim(ticker, "animationWithAnimator#2597442",
     //         widget.triggerOnInit ?? false);
     //   } else {
-    //     _initAnim(ticker, "animattionWithAnimtor#2597442",
+    //     _initAnim(ticker, "animationWithAnimator#2597442",
     //         widget.triggerOnInit ?? true);
     //   }
     // }
   }
 
-  dispose(int hashcode) {
+  dispose(int hashCode) {
     if (widget.blocs != null) {
       widget.blocs.forEach(
         (b) {

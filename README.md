@@ -5,7 +5,7 @@ This library is an animation library for Flutter that:
   * Allows you to declare all animation setup in your logic classes (BloCs) and animate you widgets.
 
 In flutter animation can be classified:
-  * Implicit: such as AnimatedContaine, AnimatedPadding, AnimatedPositioned and AnimatedDefaultTextStyle.
+  * Implicit: such as AnimatedContainer, AnimatedPadding, AnimatedPositioned and AnimatedDefaultTextStyle.
   * Explicit: Where you define AnimationController, Animation and Tween classes, and you should explicitly start, stop and listen to animation status.
 
 Following the same fashion, the Animator package offers implicit-like and explicit-like animation
@@ -43,13 +43,13 @@ With `repeats` argument (5) you define the number of forward periods you want yo
 
 In the `builder` argument (6) you put your widgets to be animated. The builder is a function with Animation argument.
 
-If you want to animate many Tween, use `tweenMap` argument (7). Is is a Map of String type keys and Tween type values. In this case you have to use `builderMap` (8) insteat of `builder` (6). 
+If you want to animate many Tween, use `tweenMap` argument (7). Is is a Map of String type keys and Tween type values. In this case you have to use `builderMap` (8) instead of `builder` (6). 
 
 With `endAnimationListener` (10) argument you can define a VoidCallback to be executed when animation is finished. For example, it can be used to trigger another animation.
 
 With `customListener` (11) argument you can define a Function to be called every time the animation value changes. The customListener is provided with an Animation object.
 
-With `statusListener` (12) argument you can define a Function to be called every time the status of the animation chage. The customListener is provided with an AnimationStatus, AnimationSetup objectt.
+With `statusListener` (12) argument you can define a Function to be called every time the status of the animation change. The customListener is provided with an AnimationStatus, AnimationSetup objects.
 
 `animateOnRebuild` (13) controls whether the animation is automatically restarted when Animator widget is rebuilt. The default value is true.
 
@@ -57,7 +57,7 @@ If you want to reset your animation, such as changing your Tween or duration, an
 
 `name` is a unique name of your Animator widget. It is used to rebuild this widget from your logic classes.
 
-`blocs` argument is a list of your logic classes you want to rebuild this widget from. The logic class should extand  `StatesRebuilder`of the states_rebuilder package.
+`blocs` argument is a list of your logic classes you want to rebuild this widget from. The logic class should extend  `StatesRebuilder`of the states_rebuilder package.
 
 ## Example of a single Tween animation:
 
@@ -159,10 +159,10 @@ addListeners({
 bool reset: true
 })
 ```
-3-	`changeAnimatioSetup`:  to change any of the animation parameters. such as tween, duration, curve, cycles and repeats
+3-	`changeAnimationSetup`:  to change any of the animation parameters. such as tween, duration, curve, cycles and repeats
 
 ```dart
-changeAnimatioSetup({
+changeAnimationSetup({
     Tween<dynamic> tween, 
     Map<String, Tween<dynamic>> tweenMap, 
     bool resetTweenMap: false, 
@@ -187,7 +187,7 @@ triggerAnimation({
 
 5-	`disposeAnimation()` : to remove listener, statusListener and dispose the animation controller.
 
-## Implicet animation example:
+## Implicit animation example:
  ```dart
  import 'dart:math';
 import 'package:flutter/material.dart';

@@ -49,7 +49,7 @@ class Body extends StatelessWidget {
               ),
         ),
         Divider(),
-        Text('Widget is not animatted on rebuild'),
+        Text('Widget is not animated on rebuild'),
         Animator(
           name: "widget 2",
           blocs: [mainBloc],
