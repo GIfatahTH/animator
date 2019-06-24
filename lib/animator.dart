@@ -491,8 +491,11 @@ class _AnimatorBloc extends StatesRebuilder {
       widget.blocs.forEach(
         (b) {
           if (b == null) return;
-          b.addToListeners(
-              tag: widget.name, listener: _listener, hashCode: "$hashCode");
+          StatesRebuilder.addToListeners(
+              viewModel: b,
+              tag: widget.name,
+              listener: _listener,
+              hashCode: "$hashCode");
         },
       );
     } else {
@@ -553,7 +556,7 @@ class _AnimatorBloc extends StatesRebuilder {
         (b) {
           if (b == null) return;
           if (widget.name == null) return;
-          b.removeFromListeners(widget.name, "$hashCode");
+          StatesRebuilder.removeFromListeners(b, widget.name, "$hashCode");
         },
       );
     }

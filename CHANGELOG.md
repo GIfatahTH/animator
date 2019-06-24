@@ -1,3 +1,6 @@
+## [0.1.4].
+1. update to use states_rebuilder: ^1.3.2
+
 ## [0.1.3].
 1. update to use states_rebuilder: ^1.3.1
 2. Fiw typos
