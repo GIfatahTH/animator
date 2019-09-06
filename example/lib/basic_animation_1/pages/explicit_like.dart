@@ -1,60 +1,53 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:animator/animator.dart';
+
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-class MyBloc extends AnimatorBloc with StatesRebuilder {
-  MyBloc()
-      : super(
-          tweenMap: {
-            "opacityAnim": Tween<double>(begin: 0.5, end: 1),
-            "rotationAnim": Tween<double>(begin: 0, end: 2 * pi),
-            "translateAnim":
-                Tween<Offset>(begin: Offset.zero, end: Offset(1, 0)),
-          },
-          duration: Duration(seconds: 2),
-        );
+import 'package:animator/animator.dart';
 
-  init() {
-    animator.initAnimation(
-      bloc: this,
-      states: ["OpacityWidget", "RotationWidget"],
-      cycles: 3,
-      endAnimationListener: (_) => print("animation finished"),
-    );
+class MyBloc extends StatesRebuilderWithAnimator {
+  init(TickerProvider ticker) {
+    animator.tweenMap = {
+      "opacityAnim": Tween<double>(begin: 0.5, end: 1),
+      "rotationAnim": Tween<double>(begin: 0, end: 2 * pi),
+      "translateAnim": Tween<Offset>(begin: Offset.zero, end: Offset(1, 0)),
+    };
+    initAnimation(ticker);
+    addAnimationListener(() {
+      print(this);
+      rebuildStates(["OpacityWidget", "RotationWidget"]);
+    });
+    animator.cycles = 3;
+    // animator.duration = Duration(seconds: 2);
+
+    endAnimationListener(() => print("animation finished"));
+  }
+
+  startAnimation([bool reset = false]) {
+    triggerAnimation(reset: reset);
   }
 }
-
-MyBloc myBloc = MyBloc();
 
 class ExplicitAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Flutter Animation"),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Animator(
-          blocs: [myBloc],
-          triggerOnInit: false,
-          resetAnimationOnRebuild: false,
-          builder: (_) => MyHomePage(),
+    return Injector<MyBloc>(
+      models: [() => MyBloc()],
+      builder: (_, model) => Scaffold(
+        appBar: AppBar(
+          title: Text("Flutter Animation"),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(20),
+          child: StateWithMixinBuilder(
+            mixinWith: MixinWith.tickerProviderStateMixin,
+            viewModels: [model],
+            initState: (ctx, _, ticker) => model.init(ticker),
+            dispose: (_, __, ___) => model.dispose(),
+            builder: (_, __) => Center(child: MyAnimation()),
+          ),
         ),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StateBuilder(
-      initState: (_, __) => myBloc.init(),
-      tag: 'myAnimation',
-      blocs: [myBloc],
-      builder: (_, __) => Center(child: MyAnimation()),
     );
   }
 }
@@ -62,33 +55,39 @@ class MyHomePage extends StatelessWidget {
 class MyAnimation extends StatelessWidget {
   final _flutterLog100 =
       FlutterLogo(size: 150, style: FlutterLogoStyle.horizontal);
+
+  final model = Injector.get<MyBloc>();
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       RaisedButton(
         child: Text("Animate"),
-        onPressed: () => myBloc.triggerAnimation(),
+        onPressed: () => model.triggerAnimation(),
+      ),
+      RaisedButton(
+        child: Text("Reset and Animate"),
+        onPressed: () => model.startAnimation(true),
       ),
       StateBuilder(
         tag: "OpacityWidget",
-        blocs: [myBloc],
+        blocs: [model],
         builder: (_, __) => FadeTransition(
-              opacity: myBloc.animator.animationMap["opacityAnim"],
-              child: FractionalTranslation(
-                translation: myBloc.animator.valueMap["translateAnim"],
-                child: _flutterLog100,
-              ),
-            ),
+          opacity: model.animationMap["opacityAnim"],
+          child: FractionalTranslation(
+            translation: model.animationMap["translateAnim"].value,
+            child: _flutterLog100,
+          ),
+        ),
       ),
       StateBuilder(
         tag: "RotationWidget",
-        blocs: [myBloc],
+        blocs: [model],
         builder: (_, __) {
           return Container(
             child: FractionalTranslation(
-              translation: myBloc.animator.valueMap["translateAnim"],
+              translation: model.animationMap["translateAnim"].value,
               child: Transform.rotate(
-                angle: myBloc.animator.valueMap['rotationAnim'],
+                angle: model.animationMap['rotationAnim'].value,
                 child: _flutterLog100,
               ),
             ),

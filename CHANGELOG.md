@@ -1,3 +1,10 @@
+## [1.0.0].
+1. You can nest Animator Widget with different tween, duration and curve.
+2. Refactor code and test it.
+3. Explicit-like animation are used with `StateWithMixinBuilder` widget.
+4. Update to use states_rebuilder: ^1.5.0.
+
+
 ## [0.1.4].
 1. update to use states_rebuilder: ^1.3.2
 

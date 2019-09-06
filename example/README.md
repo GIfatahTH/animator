@@ -7,7 +7,7 @@ class MainBloc extends StatesRebuilder {
   bool toggleCurve = true;
   rebuild() {
     toggleCurve = !toggleCurve;
-    rebuildStates(ids: ['widget 1', 'widget 2', 'widget 3']);
+    rebuildStates(['widget 1', 'widget 2', 'widget 3']);
   }
 }
 
@@ -37,50 +37,50 @@ class Body extends StatelessWidget {
       children: <Widget>[
         Text('Widget is animated on rebuild'),
         Animator(
+          key: UniqueKey(),
           name: "widget 1",
           blocs: [mainBloc],
           duration: Duration(seconds: 2),
-          cycles: 1,
+          cycles: 2,
           builder: (anim) => Center(
-                child: Transform.scale(
-                  scale: anim.value,
-                  child: FlutterLogo(size: 50),
-                ),
-              ),
+            child: Transform.scale(
+              scale: anim.value,
+              child: FlutterLogo(size: 50),
+            ),
+          ),
         ),
         Divider(),
         Text('Widget is not animated on rebuild'),
         Animator(
-          name: "widget 2",
-          blocs: [mainBloc],
           duration: Duration(seconds: 2),
-          animateOnRebuild: false,
           builder: (anim) => Center(
-                child: Transform.scale(
-                  scale: anim.value,
-                  child: FlutterLogo(
-                    size: 50,
-                    colors: Colors.red,
-                  ),
-                ),
+            child: Transform.scale(
+              scale: anim.value,
+              child: FlutterLogo(
+                size: 50,
+                colors: Colors.red,
               ),
+            ),
+          ),
         ),
         Divider(),
         Text('Animation is reset on rebuild. Curve changes on rebuild'),
         StateBuilder(
-          stateID: 'widget 3',
+          tag: 'widget 3',
           blocs: [mainBloc],
-          builder: (_) => Animator(
-                duration: Duration(seconds: 2),
-                repeats: 1,
-                curve: mainBloc.toggleCurve ? Curves.linear : Curves.bounceIn,
-                builder: (anim) => Center(
-                      child: Transform.scale(
-                        scale: anim.value,
-                        child: FlutterLogo(size: 50),
-                      ),
-                    ),
+          builder: (_, __) => Animator(
+            tickerMixin: TickerMixin.tickerProviderStateMixin,
+            duration: Duration(seconds: 2),
+            repeats: 1,
+            resetAnimationOnRebuild: true,
+            curve: mainBloc.toggleCurve ? Curves.linear : Curves.bounceIn,
+            builder: (anim) => Center(
+              child: Transform.scale(
+                scale: anim.value,
+                child: FlutterLogo(size: 50),
               ),
+            ),
+          ),
         ),
         RaisedButton(
           child: Text('Rebuild '),
@@ -90,4 +90,5 @@ class Body extends StatelessWidget {
     );
   }
 }
+
 ```

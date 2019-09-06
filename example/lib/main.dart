@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'basic_animation_0/main.dart';
 import 'basic_animation_1/main.dart';
+import 'basic_animation_2/nested_animator.dart';
+// import 'basic_animation_2/nested_animator.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,6 +44,10 @@ class MyHomePage extends StatelessWidget {
           RaisedButton(
             child: Text("Basic Animation 1"),
             onPressed: () => goto(BasicAnimation1(), context),
+          ),
+          RaisedButton(
+            child: Text("Basic Animation 3"),
+            onPressed: () => goto(MyCustomPainterAnimation(), context),
           ),
         ],
       ),

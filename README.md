@@ -21,17 +21,18 @@ Animator({
     Duration duration: const Duration(milliseconds: 500),  // (2)
     Curve curve: Curves.linear, // (3)
     int cycles, // (4)
-    int repeats: 1, // (5)
+    int repeats, // (5)
     (Animation<dynamic>) → Widget builder, // (6)
     Map<String, Tween<dynamic>> tweenMap, // (7)
     (Map<String, Animation<dynamic>>) → Widget builderMap, // (8)
-    () → void endAnimationListener, // (10)
-    dynamic customListener,  // (11)
-    (AnimationStatus, AnimationSetup) → dynamic statusListener //(12)
-    bool animateOnRebuild: true, () // (13)
-    bool resetAnimationOnRebuild: false, // (14)
-    String name, // (15)
-    List<StatesRebuilder> blocs, // (16)
+    () → void endAnimationListener, // (9)
+    dynamic customListener,  // (10)
+    (AnimationStatus, AnimationSetup) → dynamic statusListener //(11)
+    bool triggerOnInit: true, () // (12)
+    bool resetAnimationOnRebuild: false, // (13)
+    String name, // (14)
+    List<StatesRebuilder> blocs, // (15)
+    TickerMixin tickerMixin, // (16)
 })
   ```
 
@@ -45,15 +46,15 @@ In the `builder` argument (6) you put your widgets to be animated. The builder i
 
 If you want to animate many Tween, use `tweenMap` argument (7). Is is a Map of String type keys and Tween type values. In this case you have to use `builderMap` (8) instead of `builder` (6). 
 
-With `endAnimationListener` (10) argument you can define a VoidCallback to be executed when animation is finished. For example, it can be used to trigger another animation.
+With `endAnimationListener` (9) argument you can define a VoidCallback to be executed when animation is finished. For example, it can be used to trigger another animation.
 
-With `customListener` (11) argument you can define a Function to be called every time the animation value changes. The customListener is provided with an Animation object.
+With `customListener` (10) argument you can define a Function to be called every time the animation value changes. The customListener is provided with an Animation object.
 
-With `statusListener` (12) argument you can define a Function to be called every time the status of the animation change. The customListener is provided with an AnimationStatus, AnimationSetup objects.
+With `statusListener` (11) argument you can define a Function to be called every time the status of the animation change. The customListener is provided with an AnimationStatus, AnimationSetup objects.
 
-`animateOnRebuild` (13) controls whether the animation is automatically restarted when Animator widget is rebuilt. The default value is true.
+`triggerOnInit` (12) controls whether the animation is automatically started when Animator widget is initialized. The default value is true.
 
-If you want to reset your animation, such as changing your Tween or duration, and want the new setting to be reconsidered when the Animator widget is rebuilt, set the `resetAnimationOnRebuild` (14) argument to true. The default value is false.
+If you want to reset your animation, such as changing your Tween or duration, and want the new setting to be reconsidered when the Animator widget is rebuilt, set the `resetAnimationOnRebuild` (13) argument to true. The default value is false.
 
 `name` is a unique name of your Animator widget. It is used to rebuild this widget from your logic classes.
 
@@ -69,7 +70,7 @@ void main() => runApp(AnimatedLogo());
 
 class AnimatedLogo extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Animator(
+    return Animator<double>(
       tween: Tween<double>(begin: 0, end: 300),
       cycles: 0,
       builder: (anim) => Center(
@@ -117,75 +118,80 @@ class AnimatedLogo extends StatelessWidget {
 }
 ```
 
+You can nest many Animator with different setting (tween, duration, curve, repeats and cycles) to do a complex animation:
+
+This is a simple example of how to animate the the scale and rotation independently.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:animator/animator.dart';
+
+void main() => runApp(AnimatedLogo());
+
+class AnimatedLogo extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Animator<double>(
+      tween: Tween<double>(begin: 0, end: 300),
+      repeats: 0,
+      duration: Duration(seconds: 2),
+      builder: (anim1) => Animator<double>(
+        tween: Tween<double>(begin: -1, end: 1),
+        cycles: 0,
+        builder: (anim2) => Center(
+          child: Transform.rotate(
+            angle: anim2.value,
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              height: anim1.value,
+              width: anim1.value,
+              child: FlutterLogo(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+Use nested Animators with CustomPainter and CustomClipper and draw the animation you want.
+
 # Explicit-like animation:
 With implicit-like animation you can implement almost all the available animation type in Flutter. However if you want more control over your animation use Explicit-like animation. 
 
-In any of your logic classes, instantiate the `AnimationSetup` and assign it to a variable.
+Your logic class should extends `StatesRebuilderWithAnimator` to get access to animator parameters and your UI should use `StateWithMixinBuilder` from the states_rebuilder package.
+
+You have many methods available in the logic class: 
+
+1-	`initAnimation` : to initialize animation.
 
 ```dart
-AnimationSetup({
-        Tween<dynamic> tween, 
-        Duration duration: const Duration(milliseconds: 500), 
-        Curve curve: Curves.linear,
-        Map<String, Tween<dynamic>> tweenMap, 
-})
+void initAnimation([TickerProvider ticker])
 ```
 
-You have five methods: 
-
-1-	`initAnimation` : to initialize animation by adding listener
+3- 	`addAnimationListener`: to aAdd listeners you want to calls every time animation ticks.
 
 ```dart
-initAnimation({
-    StatesRebuilder bloc, 
-    List<State<StatefulWidget>> states, // reference to widgets to be rebuild each frame.
-    List<String> ids, // reference to widgets to be rebuild each frame.
-    bool trigger: false, // Auto start animation if trigger is true
-    int cycles, 
-    int repeats, 
-    bool dispose: false // Dispose animation after it is finished
-    (AnimationSetup) → dynamic customListener, // any custom animation listener
-    () → void endAnimationListener,
-})
+void addAnimationListener(void Function() fn)
 ```
 
-2-	`addListeners`: to aAdd listeners you want to calls every time animation ticks.
+3- 	`addAnimationStatusListener`: to aAdd listeners you want to calls every time animation status changes.
 
 ```dart
-addListeners({
-    List<State<StatefulWidget>> states, 
-    List<String> ids, 
-    StatesRebuilder bloc, 
-bool reset: true
-})
+void addAnimationStatusListener(void Function(AnimationStatus) fn)
+
 ```
-3-	`changeAnimationSetup`:  to change any of the animation parameters. such as tween, duration, curve, cycles and repeats
+4-	`endAnimationListener`: to aAdd listeners you want to calls The animation ends.
 
 ```dart
-changeAnimationSetup({
-    Tween<dynamic> tween, 
-    Map<String, Tween<dynamic>> tweenMap, 
-    bool resetTweenMap: false, 
-    Duration duration, 
-    Curve curve, 
-    bool trigger: false, 
-    int cycles, 
-    int repeats, 
-    bool dispose: false,
-    (AnimationSetup) → dynamic customListener, 
-    () → void endAnimationListener
-})
-```
-4-	`triggerAnimation` : to starts running this animation forwards (towards the end).
-```dart
-triggerAnimation({
-        int cycles, 
-        int repeats, 
-        bool dispose: false
-    })
+void endAnimationListener(void Function() fn)
 ```
 
-5-	`disposeAnimation()` : to remove listener, statusListener and dispose the animation controller.
+3-	`triggerAnimation` : to starts running this animation forwards (towards the end).
+```dart
+void triggerAnimation({bool reset = false})
+```
+
+5-	`dispose()` : to dispose the animation controller.
 
 ## Implicit animation example:
  ```dart
@@ -194,55 +200,50 @@ import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-class MyBloc extends StatesRebuilder {
-  final myAnimation = AnimationSetup(
-    tweenMap: {
+
+class MyBloc extends StatesRebuilderWithAnimator {
+  init(TickerProvider ticker) {
+    animator.tweenMap = {
       "opacityAnim": Tween<double>(begin: 0.5, end: 1),
       "rotationAnim": Tween<double>(begin: 0, end: 2 * pi),
       "translateAnim": Tween<Offset>(begin: Offset.zero, end: Offset(1, 0)),
-    },
-    duration: Duration(seconds: 2),
-  );
-  init() {
-    myAnimation.initAnimation(
-      bloc: this,
-      ids: ["OpacityWidget", "RotationWidget"],
-      cycles: 3,
-      endAnimationListener: () => print("animation finished"),
-    );
+    };
+    initAnimation(ticker);
+    addAnimationListener(() {
+      print(this);
+      rebuildStates(["OpacityWidget", "RotationWidget"]);
+    });
+    animator.cycles = 3;
+    // animator.duration = Duration(seconds: 2);
+
+    endAnimationListener(() => print("animation finished"));
+  }
+
+  startAnimation([bool reset = false]) {
+    triggerAnimation(reset: reset);
   }
 }
 
-MyBloc myBloc;
-
-class FlutterAnimation extends StatelessWidget {
+class ExplicitAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StateBuilder(
-      initState: (_) => myBloc = MyBloc(),
-      dispose: (_) => myBloc = null,
-      builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: Text("Flutter Animation"),
-            ),
-            body: Padding(
-              padding: EdgeInsets.all(20),
-              child: MyHomePage(),
-            ),
+    return Injector<MyBloc>(
+      models: [() => MyBloc()],
+      builder: (_, model) => Scaffold(
+        appBar: AppBar(
+          title: Text("Flutter Animation"),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(20),
+          child: StateWithMixinBuilder(
+            mixinWith: MixinWith.tickerProviderStateMixin,
+            viewModels: [model],
+            initState: (ctx, _, ticker) => model.init(ticker),
+            dispose: (_, __, ___) => model.dispose(),
+            builder: (_, __) => Center(child: MyAnimation()),
           ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StateBuilder(
-      initState: (_) => myBloc.init(),
-      dispose: (_) => myBloc.myAnimation.disposeAnimation(),
-      stateID: 'myAnimation',
-      blocs: [myBloc],
-      builder: (_) => Center(child: MyAnimation()),
+        ),
+      ),
     );
   }
 }
@@ -250,35 +251,39 @@ class MyHomePage extends StatelessWidget {
 class MyAnimation extends StatelessWidget {
   final _flutterLog100 =
       FlutterLogo(size: 150, style: FlutterLogoStyle.horizontal);
+
+  final model = Injector.get<MyBloc>();
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       RaisedButton(
         child: Text("Animate"),
-        onPressed: () => myBloc.myAnimation.triggerAnimation(),
+        onPressed: () => model.triggerAnimation(),
+      ),
+      RaisedButton(
+        child: Text("Reset and Animate"),
+        onPressed: () => model.startAnimation(true),
       ),
       StateBuilder(
-        key: Key("opacity"),
-        stateID: "OpacityWidget",
-        blocs: [myBloc],
-        builder: (anim) => FadeTransition(
-              opacity: myBloc.myAnimation.animationMap["opacityAnim"],
-              child: FractionalTranslation(
-                translation: myBloc.myAnimation.valueMap["translateAnim"],
-                child: _flutterLog100,
-              ),
-            ),
+        tag: "OpacityWidget",
+        blocs: [model],
+        builder: (_, __) => FadeTransition(
+          opacity: model.animationMap["opacityAnim"],
+          child: FractionalTranslation(
+            translation: model.animationMap["translateAnim"].value,
+            child: _flutterLog100,
+          ),
+        ),
       ),
       StateBuilder(
-        key: Key("rotation"),
-        stateID: "RotationWidget",
-        blocs: [myBloc],
-        builder: (anim) {
+        tag: "RotationWidget",
+        blocs: [model],
+        builder: (_, __) {
           return Container(
             child: FractionalTranslation(
-              translation: myBloc.myAnimation.valueMap["translateAnim"],
+              translation: model.animationMap["translateAnim"].value,
               child: Transform.rotate(
-                angle: myBloc.myAnimation.valueMap['rotationAnim'],
+                angle: model.animationMap['rotationAnim'].value,
                 child: _flutterLog100,
               ),
             ),
