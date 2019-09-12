@@ -63,7 +63,7 @@ class Animator<T> extends StatefulWidget {
         assert(name == null ||
             blocs != null), // blocs must not be null if the tag is given
         super(
-          key: key,
+          key: resetAnimationOnRebuild ? UniqueKey() : key,
         );
 
   ///A linear interpolation between a beginning and ending value.
@@ -133,9 +133,9 @@ class Animator<T> extends StatefulWidget {
   /// The list of your logic classes you want to rebuild this widget from.
   final List<StatesRebuilder> blocs;
 
-  ///For performance reason the default tickerProvider is of type `SingleTickerProviderStateMixin`.
+  ///For performance reason the default tickerProvider is of type `singleTickerProviderStateMixin`.
   ///
-  /// To use `TickerProviderStateMixin`set the `isSingleTicker` to false
+  ///use `tickerProviderStateMixin` if many controllers use the same ticker.
   final TickerMixin tickerMixin;
 
   @override
@@ -144,21 +144,13 @@ class Animator<T> extends StatefulWidget {
 
 class _AnimatorState<T> extends State<Animator<T>> {
   StatesRebuilderWithAnimator<T> _animatorBloc;
-  bool didWidgetUpdated = false;
+
   @override
   void initState() {
     super.initState();
 
     _animatorBloc = StatesRebuilderWithAnimator<T>(
         AnimationParameters<T>(_animatorBloc)..setAnimationParameters(widget));
-  }
-
-  @override
-  void didUpdateWidget(Animator<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.resetAnimationOnRebuild && oldWidget != widget) {
-      didWidgetUpdated = true;
-    }
   }
 
   @override
@@ -172,16 +164,6 @@ class _AnimatorState<T> extends State<Animator<T>> {
       initState: (_, __, ticker) {
         _animatorBloc.shouldDisposeOnAnimationEnd = true;
         _animatorBloc.initAnimation(ticker);
-      },
-      didUpdateWidget: (_, __, ___, ticker) {
-        if (didWidgetUpdated) {
-          _animatorBloc.dispose(false);
-          _animatorBloc.reSetAnimator(AnimationParameters<T>(_animatorBloc)
-            ..setAnimationParameters(widget));
-          _animatorBloc.shouldDisposeOnAnimationEnd = true;
-          _animatorBloc.initAnimation(ticker);
-          didWidgetUpdated = false;
-        }
       },
       dispose: (_, __, ___) => _animatorBloc.dispose(),
       builder: (_, __) {

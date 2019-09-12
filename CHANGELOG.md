@@ -1,3 +1,8 @@
+## [1.0.0+1].
+1. Refactor code.
+2. Fix typos.
+
+
 ## [1.0.0].
 1. You can nest Animator Widget with different tween, duration and curve.
 2. Refactor code and test it.

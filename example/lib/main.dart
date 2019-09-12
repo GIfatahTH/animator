@@ -46,7 +46,7 @@ class MyHomePage extends StatelessWidget {
             onPressed: () => goto(BasicAnimation1(), context),
           ),
           RaisedButton(
-            child: Text("Basic Animation 3"),
+            child: Text("Basic Animation 2"),
             onPressed: () => goto(MyCustomPainterAnimation(), context),
           ),
         ],

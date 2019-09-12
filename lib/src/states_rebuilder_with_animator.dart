@@ -15,11 +15,6 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   AnimationParameters<T> _animator;
   IAnimationParameters<T> get animator => _animator;
 
-  reSetAnimator(AnimationParameters<T> animator$) {
-    _animator = animator$;
-    _animate = Animate<T>(animator$.tween, animator$.duration, animator$.curve);
-  }
-
   Animation<T> get animation => _animate?.animation;
   AnimationController get controller => _animate?.controller;
   Map<String, Animation> get animationMap => _animateMap?.animationMap;
@@ -31,21 +26,26 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   TickerProvider _ticker;
   int _repeatCount;
   bool _isCycle;
-  bool skipDismissStatus = false;
+  bool _skipDismissStatus = false;
 
   Function(AnimationStatus) _statusListenerForRepeats;
 
   StatesRebuilderWithAnimator([AnimationParameters<T> animator$]) {
     if (animator$ == null) {
-      reSetAnimator(AnimationParameters<T>(this)
+      _reSetAnimator(AnimationParameters<T>(this)
         ..setAnimationParameters(null)
         ..triggerOnInit = false);
     } else {
-      reSetAnimator(animator$);
+      _reSetAnimator(animator$);
     }
 
     _isCycle = _animator.repeats == null && _animator.cycles != null;
     _statusListenerForRepeats = _getStatusListenerCallBack();
+  }
+
+    _reSetAnimator(AnimationParameters<T> animator$) {
+    _animator = animator$;
+    _animate = Animate<T>(animator$.tween, animator$.duration, animator$.curve);
   }
 
   void initAnimation([TickerProvider ticker]) {
@@ -154,9 +154,9 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
 
   void triggerAnimation({bool reset = false}) {
     if (reset) {
-      skipDismissStatus = true;
+      _skipDismissStatus = true;
       controller?.reset();
-      skipDismissStatus = false;
+      _skipDismissStatus = false;
     }
     if (animation.status == AnimationStatus.dismissed) {
       controller.forward();
@@ -191,12 +191,10 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
     }
   }
 
-  void dispose([bool cleanStatesRebuilder = true]) {
+  void dispose() {
     _animate.disposeController();
     _animate.removeListeners();
-    if (cleanStatesRebuilder) {
-      _removeObserverFromBloc();
-    }
+    _removeObserverFromBloc();
   }
 
   @override
@@ -220,7 +218,7 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
       if (status == AnimationStatus.completed ||
           (status == AnimationStatus.dismissed &&
               _isCycle &&
-              !skipDismissStatus)) {
+              !_skipDismissStatus)) {
         if (_repeatCount == 1) {
           if (_animator.endAnimationListener != null) {
             _animator.endAnimationListener(this);
