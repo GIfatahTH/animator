@@ -14,7 +14,6 @@ class MyBloc extends StatesRebuilderWithAnimator {
     };
     initAnimation(ticker);
     addAnimationListener(() {
-      print(this);
       rebuildStates(["OpacityWidget", "RotationWidget"]);
     });
     animator.cycles = 3;
