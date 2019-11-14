@@ -69,7 +69,7 @@ class MyAnimation extends StatelessWidget {
       ),
       StateBuilder(
         tag: "OpacityWidget",
-        blocs: [model],
+        models: [model],
         builder: (_, __) => FadeTransition(
           opacity: model.animationMap["opacityAnim"],
           child: FractionalTranslation(
@@ -80,7 +80,7 @@ class MyAnimation extends StatelessWidget {
       ),
       StateBuilder(
         tag: "RotationWidget",
-        blocs: [model],
+        models: [model],
         builder: (_, __) {
           return Container(
             child: FractionalTranslation(

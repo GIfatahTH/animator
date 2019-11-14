@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -20,7 +19,6 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   Map<String, Animation> get animationMap => _animateMap?.animationMap;
 
   String _tagName;
-  String _tagID;
   bool shouldDisposeOnAnimationEnd = false;
 
   TickerProvider _ticker;
@@ -43,7 +41,7 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
     _statusListenerForRepeats = _getStatusListenerCallBack();
   }
 
-    _reSetAnimator(AnimationParameters<T> animator$) {
+  _reSetAnimator(AnimationParameters<T> animator$) {
     _animator = animator$;
     _animate = Animate<T>(animator$.tween, animator$.duration, animator$.curve);
   }
@@ -173,9 +171,8 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   void _addObserverToBloc() {
     if (_animator.hasBlocs) {
       _tagName = _animator.name ?? "#@deFau_Lt${hashCode}TaG30";
-      _tagID = shortHash(this) + UniqueKey().toString();
       _animator.blocs.forEach((b$) {
-        b$.addObserver(tag: _tagName, tagID: _tagID, observer: this);
+        b$.addObserver(tag: _tagName, observer: this);
       });
     }
   }
@@ -185,7 +182,7 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
       _animator.blocs.forEach((b$) {
         b$.removeObserver(
           tag: _tagName,
-          tagID: _tagID,
+          observer: this,
         );
       });
     }
@@ -198,7 +195,8 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   }
 
   @override
-  void update() {
+  @override
+  bool update([void Function(BuildContext) onRebuildCallBack]) {
     _setRepeatCount(_animator.repeats, _animator.cycles);
     if (!_isCycle) {
       controller.reset();
@@ -211,6 +209,7 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
         controller.forward();
       }
     }
+    return true;
   }
 
   Function(AnimationStatus) _getStatusListenerCallBack() {

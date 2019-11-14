@@ -5,11 +5,11 @@ import 'package:animator/animator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class MyBloc extends StatesRebuilder {
-  String animationSwicher = 'opacity';
+  String animationSwitcher = 'opacity';
   String animationName = 'Opacity';
 
-  changeAnimation(String swicher, String name) {
-    animationSwicher = swicher;
+  changeAnimation(String switcher, String name) {
+    animationSwitcher = switcher;
     animationName = name;
     rebuildStates(['myAnimation']);
   }
@@ -37,7 +37,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StateBuilder(
       tag: 'myAnimation',
-      blocs: [myBloc],
+      models: [myBloc],
       builder: (_, __) => Center(child: MyAnimation()),
     );
   }
@@ -51,7 +51,7 @@ class MyAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget _child;
-    switch (myBloc.animationSwicher) {
+    switch (myBloc.animationSwitcher) {
       case "opacity":
         _child = Animator(
           key: UniqueKey(),
@@ -60,9 +60,9 @@ class MyAnimation extends StatelessWidget {
               myBloc.changeAnimation('rotation1', 'Rotation'),
           cycles: 3,
           builder: (anim) => FadeTransition(
-                opacity: anim,
-                child: _flutterLog150,
-              ),
+            opacity: anim,
+            child: _flutterLog150,
+          ),
         );
         break;
       case "rotation1":
@@ -121,7 +121,7 @@ class MyAnimation extends StatelessWidget {
           duration: Duration(seconds: 1),
           cycles: 3,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('cliping1', 'Cliping'),
+              myBloc.changeAnimation('clipping1', 'clipping'),
           builder: (anim) {
             return Transform.scale(
               scale: anim.value,
@@ -130,14 +130,14 @@ class MyAnimation extends StatelessWidget {
           },
         );
         break;
-      case "cliping1":
+      case "clipping1":
         _child = Animator(
           key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('cliping2', 'Cliping'),
+              myBloc.changeAnimation('clipping2', 'clipping'),
           builder: (anim) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +156,7 @@ class MyAnimation extends StatelessWidget {
           },
         );
         break;
-      case "cliping2":
+      case "clipping2":
         _child = Animator(
           key: UniqueKey(),
           tween: Tween<double>(begin: 1, end: 0),
@@ -238,7 +238,7 @@ class MyAnimation extends StatelessWidget {
           curve: Curves.elasticOut,
           cycles: 1,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('opacity2', 'Mutlti Tweens'),
+              myBloc.changeAnimation('opacity2', 'Multi Tweens'),
           builder: (anim) {
             return FractionalTranslation(
               translation: anim.value,
@@ -275,34 +275,34 @@ class MyAnimation extends StatelessWidget {
             endAnimationListener: (_) =>
                 myBloc.changeAnimation('multi2', 'Multi Tweens'),
             builderMap: (anim) => FadeTransition(
-                  opacity: anim["opacity"],
-                  child: Transform.rotate(
-                    angle: anim["rotation"].value,
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: <Widget>[
-                        Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent, shape: BoxShape.circle),
-                        ),
-                        Transform.scale(
-                          scale: anim['scale'].value,
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: anim["color"].value,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ],
+              opacity: anim["opacity"],
+              child: Transform.rotate(
+                angle: anim["rotation"].value,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: <Widget>[
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          color: Colors.blueAccent, shape: BoxShape.circle),
                     ),
-                  ),
+                    Transform.scale(
+                      scale: anim['scale'].value,
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: anim["color"].value,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ),
           ),
         );
         break;
@@ -319,34 +319,34 @@ class MyAnimation extends StatelessWidget {
           endAnimationListener: (_) =>
               myBloc.changeAnimation('opacity', 'Opacity'),
           builderMap: (anim) => FadeTransition(
-                opacity: anim["opacity"],
-                child: Transform.rotate(
-                  angle: anim["rotation"].value,
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: <Widget>[
-                      Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            color: Colors.blueAccent, shape: BoxShape.circle),
-                      ),
-                      Transform.scale(
-                        scale: anim['scale'].value,
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: anim["color"].value,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ],
+            opacity: anim["opacity"],
+            child: Transform.rotate(
+              angle: anim["rotation"].value,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: <Widget>[
+                  Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                        color: Colors.blueAccent, shape: BoxShape.circle),
                   ),
-                ),
+                  Transform.scale(
+                    scale: anim['scale'].value,
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: anim["color"].value,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
               ),
+            ),
+          ),
         );
         break;
       default:

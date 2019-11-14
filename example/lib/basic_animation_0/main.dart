@@ -66,7 +66,7 @@ class Body extends StatelessWidget {
         Text('Animation is reset on rebuild. Curve changes on rebuild'),
         StateBuilder(
           tag: 'widget 3',
-          blocs: [mainBloc],
+          models: [mainBloc],
           builder: (_, __) => Animator(
             tickerMixin: TickerMixin.tickerProviderStateMixin,
             duration: Duration(seconds: 2),

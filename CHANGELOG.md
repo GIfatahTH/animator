@@ -1,3 +1,6 @@
+## [1.0.0+2].
+1. Update to use states_rebuilder: ^1.7.0
+
 ## [1.0.0+1].
 1. Refactor code.
 2. Fix typos.
