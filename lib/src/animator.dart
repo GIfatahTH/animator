@@ -161,11 +161,11 @@ class _AnimatorState<T> extends State<Animator<T>> {
           : MixinWith.singleTickerProviderStateMixin,
       tag: TAG_ANIM,
       models: [_animatorBloc],
-      initState: (_, __, ticker) {
+      initState: (_, ticker) {
         _animatorBloc.shouldDisposeOnAnimationEnd = true;
         _animatorBloc.initAnimation(ticker);
       },
-      dispose: (_, __, ___) => _animatorBloc.dispose(),
+      dispose: (_, __) => _animatorBloc.dispose(),
       builder: (_, __) {
         if (widget.builder != null) {
           return widget.builder(_animatorBloc.animation);

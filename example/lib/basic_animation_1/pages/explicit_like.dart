@@ -30,20 +30,25 @@ class MyBloc extends StatesRebuilderWithAnimator {
 class ExplicitAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Injector<MyBloc>(
-      models: [() => MyBloc()],
-      builder: (_, model) => Scaffold(
+    return Injector(
+      inject: [Inject(() => MyBloc())],
+      builder: (_) => Scaffold(
         appBar: AppBar(
           title: Text("Flutter Animation"),
         ),
         body: Padding(
           padding: EdgeInsets.all(20),
-          child: StateWithMixinBuilder(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            viewModels: [model],
-            initState: (ctx, _, ticker) => model.init(ticker),
-            dispose: (_, __, ___) => model.dispose(),
-            builder: (_, __) => Center(child: MyAnimation()),
+          child: Builder(
+            builder: (context) {
+              final model = Injector.get<MyBloc>();
+              return StateWithMixinBuilder(
+                mixinWith: MixinWith.tickerProviderStateMixin,
+                models: [model],
+                initState: (ctx, ticker) => model.init(ticker),
+                dispose: (_, __) => model.dispose(),
+                builder: (_, __) => Center(child: MyAnimation()),
+              );
+            },
           ),
         ),
       ),

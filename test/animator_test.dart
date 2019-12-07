@@ -668,7 +668,7 @@ void main() {
 
       await tester.pumpWidget(
         StateBuilder(
-          viewModels: [vm],
+          models: [vm],
           builder: (_, __) {
             return Animator(
               tickerMixin: TickerMixin.tickerProviderStateMixin,
@@ -710,7 +710,7 @@ void main() {
 
       await tester.pumpWidget(
         StateBuilder(
-          viewModels: [vm],
+          models: [vm],
           builder: (_, __) {
             return Animator(
               tween: switcher
@@ -750,7 +750,7 @@ void main() {
 
       await tester.pumpWidget(
         StateBuilder(
-          viewModels: [vm],
+          models: [vm],
           builder: (_, __) {
             return Animator<Offset>(
               tickerMixin: TickerMixin.tickerProviderStateMixin,
@@ -795,9 +795,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -822,9 +822,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -852,9 +852,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -902,9 +902,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -962,9 +962,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -1028,9 +1028,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
@@ -1065,16 +1065,15 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),
       );
 
       vm.endAnimationListener(() {
-        // print(vm.animation.isCompleted);
         // numberOfRepeats++;
       });
       vm.animator.curve = (Curves.bounceIn);
@@ -1102,9 +1101,9 @@ void main() {
       await tester.pumpWidget(
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, __, ticker) => vm.init(ticker),
-            dispose: (_, __, ticker) => vm.dispose(),
-            viewModels: [vm],
+            initState: (_, ticker) => vm.init(ticker),
+            dispose: (_, ticker) => vm.dispose(),
+            models: [vm],
             builder: (_, __) {
               return Container();
             }),

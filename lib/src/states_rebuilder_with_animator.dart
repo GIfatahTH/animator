@@ -7,7 +7,7 @@ import 'animator.dart';
 import 'animation_parameters.dart';
 
 class StatesRebuilderWithAnimator<T> extends StatesRebuilder
-    implements ListenerOfStatesRebuilder {
+    implements ObserverOfStatesRebuilder {
   Animate<T> _animate;
   AnimateMap _animateMap;
 
