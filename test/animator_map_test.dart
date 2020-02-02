@@ -328,7 +328,6 @@ void main() {
                     // if (status == AnimationStatus.completed) ;numberOfRepeats2++;
                   },
                   builder: (anim2) {
-                    animValue = anim2.value;
                     return Container();
                   },
                 );
