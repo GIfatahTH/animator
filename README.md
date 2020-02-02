@@ -1,5 +1,8 @@
 # animator
 
+[![CircleCI](https://circleci.com/gh/GIfatahTH/animator.svg?style=svg)](https://circleci.com/gh/GIfatahTH/animator)
+
+
 This library is an animation library for Flutter that:
   * makes animation as simple as the simplest widget in Flutter with the help of Animator widget,
   * Allows you to declare all animation setup in your logic classes (BloCs) and animate you widgets.
