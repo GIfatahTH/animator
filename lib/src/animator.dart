@@ -165,7 +165,9 @@ class _AnimatorState<T> extends State<Animator<T>> {
         _animatorBloc.shouldDisposeOnAnimationEnd = true;
         _animatorBloc.initAnimation(ticker);
       },
-      dispose: (_, __) => _animatorBloc.dispose(),
+      dispose: (_, __) {
+        _animatorBloc.disposeAnim();
+      },
       builder: (_, __) {
         if (widget.builder != null) {
           return widget.builder(_animatorBloc.animation);
