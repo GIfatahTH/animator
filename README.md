@@ -1,5 +1,5 @@
 # animator
-
+[![pub package](https://img.shields.io/pub/v/animator.svg)](https://pub.dev/packages/animator)
 [![CircleCI](https://circleci.com/gh/GIfatahTH/animator.svg?style=svg)](https://circleci.com/gh/GIfatahTH/animator)
 [![codecov](https://codecov.io/gh/GIfatahTH/animator/branch/master/graph/badge.svg)](https://codecov.io/gh/GIfatahTH/animator)
 
