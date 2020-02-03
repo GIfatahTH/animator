@@ -8,4 +8,5 @@ jobs:
       - checkout
       - run: flutter doctor
       - run: flutter test 
+      - run: bash <(curl -s https://codecov.io/bash)
       # - run: flutter -v build apk
