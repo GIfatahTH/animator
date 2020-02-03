@@ -371,7 +371,6 @@ void main() {
     );
 
     await tester.pumpWidget(animator);
-
     expect(animationValue, equals(0));
 
     await tester.pumpAndSettle();
@@ -796,7 +795,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -823,7 +822,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -853,7 +852,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -903,7 +902,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -963,7 +962,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -1029,7 +1028,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -1066,7 +1065,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();
@@ -1102,7 +1101,7 @@ void main() {
         StateWithMixinBuilder<TickerProvider>(
             mixinWith: MixinWith.tickerProviderStateMixin,
             initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.dispose(),
+            dispose: (_, ticker) => vm.disposeAnim(),
             models: [vm],
             builder: (_, __) {
               return Container();

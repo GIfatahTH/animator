@@ -179,8 +179,10 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
 
   void _removeObserverFromBloc() {
     if (_animator.hasBlocs) {
-      _animator.blocs.forEach((b$) {
-        b$.removeObserver(
+      print(_animator.blocs);
+      _animator.blocs.forEach((b) {
+        StatesRebuilderDebug.printObservers(b);
+        b.removeObserver(
           tag: _tagName,
           observer: this,
         );
@@ -188,7 +190,7 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
     }
   }
 
-  void dispose() {
+  void disposeAnim() {
     _animate.disposeController();
     _animate.removeListeners();
     _removeObserverFromBloc();

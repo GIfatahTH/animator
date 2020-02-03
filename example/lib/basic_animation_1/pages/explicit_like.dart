@@ -45,7 +45,7 @@ class ExplicitAnimation extends StatelessWidget {
                 mixinWith: MixinWith.tickerProviderStateMixin,
                 models: [model],
                 initState: (ctx, ticker) => model.init(ticker),
-                dispose: (_, __) => model.dispose(),
+                dispose: (_, __) => model.disposeAnim(),
                 builder: (_, __) => Center(child: MyAnimation()),
               );
             },
