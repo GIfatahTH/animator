@@ -1167,6 +1167,38 @@ void main() {
       );
     }, throwsException);
   });
+
+  testWidgets('stop and dispose animation when animator is disposed',
+      (tester) async {
+    bool switcher = true;
+    ViewModel vm = ViewModel();
+    final widget = MaterialApp(
+      home: Scaffold(
+        body: StateBuilder(
+          models: [vm],
+          builder: (_, __) {
+            if (switcher == true) {
+              return Animator(
+                builder: (anim) {
+                  return Text(anim.value.toString());
+                },
+              );
+            }
+            return Text('Stop');
+          },
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(widget);
+    await tester.pump(Duration(milliseconds: 100));
+    expect(find.text('0.2'), findsOneWidget);
+
+    switcher = false;
+    vm.rebuildStates();
+    await tester.pumpAndSettle();
+    expect(find.text('Stop'), findsOneWidget);
+  });
 }
 
 class ViewModel1 extends StatesRebuilderWithAnimator<double> {

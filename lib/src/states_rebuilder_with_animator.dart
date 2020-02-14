@@ -195,8 +195,8 @@ class StatesRebuilderWithAnimator<T> extends StatesRebuilder
   }
 
   @override
-  @override
-  bool update([void Function(BuildContext) onRebuildCallBack]) {
+  bool update(
+      [void Function(BuildContext) onRebuildCallBack, dynamic message]) {
     _setRepeatCount(_animator.repeats, _animator.cycles);
     if (!_isCycle) {
       controller.reset();

@@ -1,3 +1,6 @@
+## [1.0.0+5].
+1. Add Continuos integration and code coverage support.
+
 ## [1.0.0+3].
 1. Update to use states_rebuilder: ^1.8.0
 
