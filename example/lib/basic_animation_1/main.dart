@@ -63,7 +63,7 @@ class MyHomePage extends StatelessWidget {
           ),
           RaisedButton(
             child: Text("Animation with AnimatorKey"),
-            onPressed: () => goto(ExplicitAnimation(), context),
+            onPressed: () => goto(AnimationWithAnimatorKey(), context),
           )
         ],
       ),

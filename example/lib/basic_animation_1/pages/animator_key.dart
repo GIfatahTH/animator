@@ -1,11 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-import 'package:states_rebuilder/states_rebuilder.dart';
-
 import 'package:animator/animator.dart';
 
-class ExplicitAnimation extends StatelessWidget {
+class AnimationWithAnimatorKey extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
