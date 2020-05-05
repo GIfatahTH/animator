@@ -158,7 +158,6 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
     _statusListener.remove(listener$);
   }
 
-  @override
   void triggerAnimation({bool restart = false}) {
     if (restart) {
       _skipDismissStatus = true;

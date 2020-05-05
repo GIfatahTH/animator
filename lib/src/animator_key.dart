@@ -141,7 +141,8 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
 
   @override
   Animation<R> getAnimation<R>(String name) {
-    return _animatorState.getAnimation<R>(name);
+    return _animatorState.getAnimation<R>(name) ??
+        (_initialMapValue[name] as Animation<R>);
   }
 
   @override
