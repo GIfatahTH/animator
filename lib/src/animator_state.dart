@@ -28,13 +28,13 @@ abstract class AnimatorState<T> {
 
   ///get the animation of provided name
   ///
-  ///It will throw if [tweenMap] is null
+  ///It will throw if [Animator.tweenMap] is null
   Animation<R> getAnimation<R>(String name);
 
   ///The value of the [animation]
   T get value;
 
-  ///The value map of the [animationMap];
+  ///The value map of the [Animator.tweenMap];
   R getValue<R>(String name);
 }
 
@@ -158,6 +158,7 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
     _statusListener.remove(listener$);
   }
 
+  ///Start the animation
   void triggerAnimation({bool restart = false}) {
     if (restart) {
       _skipDismissStatus = true;

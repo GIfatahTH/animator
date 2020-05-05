@@ -8,9 +8,11 @@ void main() {
   testWidgets('TweenMap default setting : auto start and stop ofter 500ms',
       (WidgetTester tester) async {
     double animationValue;
+    Offset offsetValue;
     AnimationStatus animationStatue;
     var numberOfRepeats = 0;
-    final animator = Animator<double>(
+    final animator = Animator<Offset>(
+      tween: Tween<Offset>(begin: Offset.zero, end: const Offset(1, 10)),
       tweenMap: {
         'anim1': Tween<double>(begin: 0, end: 1),
       },
@@ -20,8 +22,9 @@ void main() {
         }
       },
       builder: (_, anim, __) {
+        offsetValue = anim.value;
         animationValue = anim.getValue<double>('anim1');
-        animationStatue = anim.getAnimation('anim1').status;
+        animationStatue = anim.getAnimation<double>('anim1').status;
         return Container();
       },
     );
@@ -32,11 +35,14 @@ void main() {
     await tester.pumpWidget(animator);
 
     expect(animationValue, equals(0));
+    expect(offsetValue, equals(Offset.zero));
     expect(animationStatue, equals(AnimationStatus.forward));
 
     await tester.pumpAndSettle();
 
     expect(animationValue, equals(1));
+    expect(offsetValue, equals(const Offset(1, 10)));
+
     expect(animationStatue, equals(AnimationStatus.completed));
     expect(numberOfRepeats, equals(1));
   });
@@ -61,7 +67,7 @@ void main() {
       builder: (_, anim, __) {
         animationValue1 = anim.getValue<double>('anim1');
         animationValue2 = anim.getValue<Offset>('anim2');
-        animationStatue = anim.getAnimation('anim1').status;
+        animationStatue = anim.getAnimation<double>('anim1').status;
         return Container();
       },
     );
@@ -108,7 +114,7 @@ void main() {
         animationValue1 = anim.getValue<double>('anim1');
         animationValue2 = anim.getValue<Offset>('anim2');
         animationValue3 = anim.getValue<int>('anim3');
-        animationStatue = anim.getAnimation('anim1').status;
+        animationStatue = anim.getAnimation<double>('anim1').status;
         return Container();
       },
     );
@@ -161,7 +167,7 @@ void main() {
         animationValue1 = anim.getValue('anim1');
         animationValue2 = anim.getValue<Offset>('anim2');
         animationValue3 = anim.getValue('anim3');
-        animationStatue = anim.getAnimation('anim1').status;
+        animationStatue = anim.getAnimation<Alignment>('anim1').status;
         return Container();
       },
     );
@@ -214,7 +220,7 @@ void main() {
         animationValue1 = anim.getValue('anim1');
         animationValue2 = anim.getValue<Offset>('anim2');
         animationValue3 = anim.getValue('anim3');
-        animationStatue = anim.getAnimation('anim1').status;
+        animationStatue = anim.getAnimation<Alignment>('anim1').status;
         return Container();
       },
     );
@@ -379,7 +385,7 @@ void main() {
         builder: (_, anim, __) {
           animationValue1_1 = anim.getValue<double>('anim1');
           animationValue2_1 = anim.getValue<Offset>('anim2');
-          animationStatue_1 = anim.getAnimation('anim1').status;
+          animationStatue_1 = anim.getAnimation<double>('anim1').status;
           return Animator<double>(
             tweenMap: {
               'anim1': Tween<double>(begin: 0, end: 1),
@@ -394,7 +400,7 @@ void main() {
             builder: (_, anim, __) {
               animationValue1_2 = anim.getValue<double>('anim1');
               animationValue2_2 = anim.getValue<Offset>('anim2');
-              animationStatue_2 = anim.getAnimation('anim1').status;
+              animationStatue_2 = anim.getAnimation<double>('anim1').status;
               return Container();
             },
           );
@@ -444,7 +450,7 @@ void main() {
       builder: (_, anim, __) {
         animationValue1 = animatorKey.getValue<double>('anim1');
         animationValue2 = animatorKey.getValue<Offset>('anim2');
-        animationStatue = animatorKey.getAnimation('anim1').status;
+        animationStatue = animatorKey.getAnimation<double>('anim1').status;
         return Container();
       },
     );

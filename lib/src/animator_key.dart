@@ -77,22 +77,16 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
   final Map<String, dynamic> _initialMapValue;
   AnimatorStateImp<T> _animatorState;
 
-  ///Get the associated [AnimatorState]
-  AnimatorStateImp<T> get animatorState => _animatorState;
-  set animatorState(AnimatorStateImp<T> anim) {
-    _animatorState = anim;
-  }
-
   // T initialValue;
   // AnimatorKey({this.initialValue});
   ///set the [AnimatorState] associated with this AnimatorKey
   void setAnimatorState(AnimatorState<T> anim) {
     //dispose and copy observers from the default animation to the new one
-    animatorState
+    _animatorState
         //   ..disposeAnim()
         .copy(anim as StatesRebuilder<dynamic>);
 
-    animatorState = anim as AnimatorStateImp<T>;
+    _animatorState = anim as AnimatorStateImp<T>;
   }
 
   ///CallBack used to refresh animation.
@@ -107,7 +101,8 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
 
   ///Change animation setting and refresh it,
   ///
-  ///To start animation enchain it with [AnimatorState.triggerAnimation].
+  ///By default animation is triggered. If you want the opposite
+  ///set [autoStart] to false
   @override
   void refreshAnimation({
     Tween<T> tween,

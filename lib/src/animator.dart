@@ -41,37 +41,6 @@ class Animator<T> extends StatefulWidget {
     this.tickerMixin,
     // this.observe,
   })  : assert(builder != null),
-        assert(() {
-          // if (builder == null && builderMap == null) {
-          //   throw Exception(
-          //       'You have to define one of the "builder" or "builderMap" argument\n'
-          //       ' - Define the "builder" argument if you have one Tween\n'
-          //       ' - Define the "builderMap" argument if you have many Tweens');
-          // }
-          // if (builder != null) {
-          //   throw Exception(
-          //       'You have to define either builder or "builderMap" argument. '
-          //       'you can\'t define both\n'
-          //       ' - Define the "builder" argument if you have one Tween\n'
-          //       ' - Define the "builderMap" argument if you have many Tweens');
-          // }
-          // if (builderMap != null && tweenMap == null && animatorKey == null) {
-          //   throw Exception(
-          //       '"tweenMap" must not be null. If you have one tween use '
-          //       '"builder" argument instead');
-          // }
-          // if (tweenMap != null && tween != null) {
-          //   throw Exception(
-          //       'Use either "tween" or "tweenMap". If you have one tween use '
-          //       '"builder" argument instead');
-          // }
-          // if (tweenMap != null && builder != null) {
-          //   throw Exception(
-          //       'Use "builderMap" instead of "builder". If you have one tween use '
-          //       '"tween" argument instead');
-          // }
-          return true;
-        }()),
         super(key: key);
 
   ///A linear interpolation between a beginning and ending value.
@@ -126,6 +95,8 @@ class Animator<T> extends StatefulWidget {
     Widget child,
   ) builder;
 
+  ///Widget that you do not want to animate.
+  ///It is the static part of the animated Widget.
   final Widget child;
   // ///The build strategy currently used for multi-Tween. Animator widget rebuilds
   // ///itself every time the animation changes value.
