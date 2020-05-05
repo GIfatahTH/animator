@@ -2,20 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
-
-class MyBloc extends StatesRebuilder {
-  String animationSwitcher = 'opacity';
-  String animationName = 'Opacity';
-
-  changeAnimation(String switcher, String name) {
-    animationSwitcher = switcher;
-    animationName = name;
-    rebuildStates(['myAnimation']);
-  }
-}
-
-MyBloc myBloc = MyBloc();
 
 class FlutterAnimation extends StatelessWidget {
   @override
@@ -35,48 +21,58 @@ class FlutterAnimation extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StateBuilder(
-      tag: 'myAnimation',
-      models: [myBloc],
-      builder: (_, __) => Center(child: MyAnimation()),
-    );
+    return Center(child: MyAnimation());
   }
 }
 
-class MyAnimation extends StatelessWidget {
+class MyAnimation extends StatefulWidget {
+  @override
+  _MyAnimationState createState() => _MyAnimationState();
+}
+
+class _MyAnimationState extends State<MyAnimation> {
   final _flutterLog150 =
       FlutterLogo(size: 150, style: FlutterLogoStyle.horizontal);
+
   final _flutterLog300 =
       FlutterLogo(size: 300, style: FlutterLogoStyle.horizontal);
+  String animationSwitcher = 'opacity';
+  String animationName = 'Opacity';
+
+  changeAnimation(String switcher, String name) {
+    setState(() {
+      animationSwitcher = switcher;
+      animationName = name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget _child;
-    switch (myBloc.animationSwitcher) {
+    switch (animationSwitcher) {
       case "opacity":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('opacity'),
           duration: Duration(seconds: 2),
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('rotation1', 'Rotation'),
+          endAnimationListener: (_) => changeAnimation('rotation1', 'Rotation'),
           cycles: 3,
-          builder: (anim) => FadeTransition(
-            opacity: anim,
+          builder: (_, animatorState, __) => FadeTransition(
+            opacity: animatorState.animation,
             child: _flutterLog150,
           ),
         );
         break;
       case "rotation1":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('rotation1'),
           tween: Tween<double>(begin: 0, end: 2 * pi),
           curve: Curves.bounceIn,
           duration: Duration(seconds: 2),
           repeats: 2,
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('rotation2', 'Rotation'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('rotation2', 'Rotation'),
+          builder: (_, animatorState, __) {
             return Transform.rotate(
-              angle: anim.value,
+              angle: animatorState.value,
               child: _flutterLog150,
             );
           },
@@ -84,15 +80,14 @@ class MyAnimation extends StatelessWidget {
         break;
       case "rotation2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('rotation2'),
           tween: Tween<double>(begin: 0, end: 4 * pi),
           duration: Duration(seconds: 1),
           repeats: 2,
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('scaling1', 'Scaling'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('scaling1', 'Scaling'),
+          builder: (_, animatorState, __) {
             return Transform.rotate(
-              angle: -anim.value,
+              angle: -animatorState.value,
               child: _flutterLog150,
             );
           },
@@ -100,15 +95,14 @@ class MyAnimation extends StatelessWidget {
         break;
       case "scaling1":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('scaling1'),
           tween: Tween<double>(begin: 1, end: 0.5),
           duration: Duration(seconds: 1),
           cycles: 4,
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('scaling2', 'Scaling'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('scaling2', 'Scaling'),
+          builder: (_, animatorState, __) {
             return Transform.scale(
-              scale: anim.value,
+              scale: animatorState.value,
               child: _flutterLog150,
             );
           },
@@ -116,15 +110,14 @@ class MyAnimation extends StatelessWidget {
         break;
       case "scaling2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('scaling2'),
           tween: Tween<double>(begin: 1, end: 2),
           duration: Duration(seconds: 1),
           cycles: 3,
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('clipping1', 'clipping'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('clipping1', 'clipping'),
+          builder: (_, animatorState, __) {
             return Transform.scale(
-              scale: anim.value,
+              scale: animatorState.value,
               child: _flutterLog150,
             );
           },
@@ -132,13 +125,12 @@ class MyAnimation extends StatelessWidget {
         break;
       case "clipping1":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('clipping1'),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('clipping2', 'clipping'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('clipping2', 'clipping'),
+          builder: (_, animatorState, __) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -146,7 +138,7 @@ class MyAnimation extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizeTransition(
-                      sizeFactor: anim,
+                      sizeFactor: animatorState.animation,
                       child: _flutterLog300,
                     ),
                   ],
@@ -158,12 +150,12 @@ class MyAnimation extends StatelessWidget {
         break;
       case "clipping2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('clipping2'),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: (_) => myBloc.changeAnimation('skew1', 'Skew'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('skew1', 'Skew'),
+          builder: (_, animatorState, __) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -171,7 +163,7 @@ class MyAnimation extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizeTransition(
-                      sizeFactor: anim,
+                      sizeFactor: animatorState.animation,
                       axis: Axis.horizontal,
                       child: _flutterLog300,
                     ),
@@ -184,14 +176,14 @@ class MyAnimation extends StatelessWidget {
         break;
       case "skew1":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('skew1'),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
-          endAnimationListener: (_) => myBloc.changeAnimation('skew2', 'Skew'),
-          builder: (anim) {
+          endAnimationListener: (_) => changeAnimation('skew2', 'Skew'),
+          builder: (_, animatorState, __) {
             return Transform(
-              transform: Matrix4.skewX(anim.value),
+              transform: Matrix4.skewX(animatorState.value),
               child: _flutterLog300,
             );
           },
@@ -199,15 +191,15 @@ class MyAnimation extends StatelessWidget {
         break;
       case "skew2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('skew2'),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
           cycles: 2,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('translation1', 'Translation'),
-          builder: (anim) {
+              changeAnimation('translation1', 'Translation'),
+          builder: (_, animatorState, __) {
             return Transform(
-              transform: Matrix4.skewY(anim.value),
+              transform: Matrix4.skewY(animatorState.value),
               child: _flutterLog300,
             );
           },
@@ -215,16 +207,16 @@ class MyAnimation extends StatelessWidget {
         break;
       case "translation1":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('translation1'),
           tween: Tween<Offset>(begin: Offset(0, 0), end: Offset(1.5, 0)),
           duration: Duration(seconds: 3),
           curve: Curves.elasticIn,
           cycles: 1,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('translation2', 'Translation'),
-          builder: (anim) {
+              changeAnimation('translation2', 'Translation'),
+          builder: (_, animatorState, __) {
             return FractionalTranslation(
-              translation: anim.value,
+              translation: animatorState.value,
               child: _flutterLog300,
             );
           },
@@ -232,16 +224,16 @@ class MyAnimation extends StatelessWidget {
         break;
       case "translation2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('translation2'),
           tween: Tween<Offset>(begin: Offset(-1.5, 0), end: Offset(0, 0)),
           duration: Duration(seconds: 3),
           curve: Curves.elasticOut,
           cycles: 1,
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('opacity2', 'Multi Tweens'),
-          builder: (anim) {
+              changeAnimation('opacity2', 'Multi Tweens'),
+          builder: (_, animatorState, __) {
             return FractionalTranslation(
-              translation: anim.value,
+              translation: animatorState.value,
               child: _flutterLog300,
             );
           },
@@ -249,13 +241,13 @@ class MyAnimation extends StatelessWidget {
         break;
       case "opacity2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('opacity2'),
           tween: Tween<double>(begin: 1, end: 0),
           endAnimationListener: (_) =>
-              myBloc.changeAnimation('multi1', 'Multi Tweens'),
-          builder: (anim) {
+              changeAnimation('multi1', 'Multi Tweens'),
+          builder: (_, animatorState, __) {
             return FadeTransition(
-              opacity: anim,
+              opacity: animatorState.animation,
               child: _flutterLog300,
             );
           },
@@ -264,7 +256,7 @@ class MyAnimation extends StatelessWidget {
       case "multi1":
         Center(
           child: _child = Animator(
-            key: UniqueKey(),
+            key: Key('multi1'),
             tweenMap: {
               "opacity": Tween<double>(begin: 0.2, end: 1),
               "rotation": Tween<double>(begin: 0, end: 2 * pi),
@@ -273,11 +265,11 @@ class MyAnimation extends StatelessWidget {
             },
             duration: Duration(seconds: 3),
             endAnimationListener: (_) =>
-                myBloc.changeAnimation('multi2', 'Multi Tweens'),
-            builderMap: (anim) => FadeTransition(
-              opacity: anim["opacity"],
+                changeAnimation('multi2', 'Multi Tweens'),
+            builder: (context, animatorState, child) => FadeTransition(
+              opacity: animatorState.getAnimation("opacity"),
               child: Transform.rotate(
-                angle: anim["rotation"].value,
+                angle: animatorState.getValue("rotation"),
                 child: Stack(
                   alignment: Alignment.topCenter,
                   children: <Widget>[
@@ -288,13 +280,13 @@ class MyAnimation extends StatelessWidget {
                           color: Colors.blueAccent, shape: BoxShape.circle),
                     ),
                     Transform.scale(
-                      scale: anim['scale'].value,
+                      scale: animatorState.getValue<double>('scale'),
                       alignment: Alignment.topCenter,
                       child: Container(
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: anim["color"].value,
+                          color: animatorState.getValue<Color>('color'),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -308,7 +300,7 @@ class MyAnimation extends StatelessWidget {
         break;
       case "multi2":
         _child = Animator(
-          key: UniqueKey(),
+          key: Key('multi2'),
           tweenMap: {
             "opacity": Tween<double>(begin: 1, end: 0.2),
             "rotation": Tween<double>(begin: 0, end: 2 * pi),
@@ -316,12 +308,11 @@ class MyAnimation extends StatelessWidget {
             "scale": Tween<double>(begin: 5, end: 1),
           },
           duration: Duration(seconds: 3),
-          endAnimationListener: (_) =>
-              myBloc.changeAnimation('opacity', 'Opacity'),
-          builderMap: (anim) => FadeTransition(
-            opacity: anim["opacity"],
+          endAnimationListener: (_) => changeAnimation('opacity', 'Opacity'),
+          builder: (_, animatorState, __) => FadeTransition(
+            opacity: animatorState.getAnimation('opacity'),
             child: Transform.rotate(
-              angle: anim["rotation"].value,
+              angle: animatorState.getValue<double>('rotation'),
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: <Widget>[
@@ -332,13 +323,13 @@ class MyAnimation extends StatelessWidget {
                         color: Colors.blueAccent, shape: BoxShape.circle),
                   ),
                   Transform.scale(
-                    scale: anim['scale'].value,
+                    scale: animatorState.getValue<double>('scale'),
                     alignment: Alignment.topCenter,
                     child: Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: anim["color"].value,
+                        color: animatorState.getValue('color'),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -357,7 +348,7 @@ class MyAnimation extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          myBloc.animationName,
+          animationName,
           style: TextStyle(fontSize: 35),
         ),
         Divider(),

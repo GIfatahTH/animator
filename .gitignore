@@ -12,3 +12,5 @@ ios/Runner/GeneratedPluginRegistrant.*
 .idea
 
 pubspec.lock
+analysis_options.yaml
+coverage/lcov.info

@@ -46,13 +46,13 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SizedBox(
-                          width: 50 * anim.value,
-                          height: 50 * anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => SizedBox(
+                      width: 50 * animationState.value,
+                      height: 50 * animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -65,12 +65,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                          scale: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.scale(
+                      scale: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -84,14 +84,14 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.diagonal3Values(
-                              anim.value, anim.value, 1),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.diagonal3Values(
+                          animationState.value, animationState.value, 1),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -104,12 +104,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => ScaleTransition(
-                          scale: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => ScaleTransition(
+                      scale: animationState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -133,12 +133,12 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                          scale: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.scale(
+                      scale: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -152,13 +152,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                          scale: anim.value,
-                          alignment: Alignment.topLeft,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.scale(
+                      scale: animationState.value,
+                      alignment: Alignment.topLeft,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -171,13 +171,13 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                          scale: anim.value,
-                          alignment: Alignment.bottomRight,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.scale(
+                      scale: animationState.value,
+                      alignment: Alignment.bottomRight,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -191,13 +191,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                          scale: anim.value,
-                          origin: Offset(10, -10),
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.scale(
+                      scale: animationState.value,
+                      origin: Offset(10, -10),
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -221,8 +221,8 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticOut,
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                        scale: anim.value,
+                    builder: (_, animationState, __) => Transform.scale(
+                        scale: animationState.value,
                         child: Icon(
                           Icons.favorite,
                           color: Colors.red,
@@ -241,8 +241,8 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticIn,
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                        scale: anim.value,
+                    builder: (_, animationState, __) => Transform.scale(
+                        scale: animationState.value,
                         child: Icon(
                           Icons.favorite,
                           color: Colors.red,
@@ -261,8 +261,8 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticInOut,
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                        scale: anim.value,
+                    builder: (_, animationState, __) => Transform.scale(
+                        scale: animationState.value,
                         child: Icon(
                           Icons.favorite,
                           color: Colors.red,
@@ -281,8 +281,8 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.fastOutSlowIn,
                     cycles: 0,
-                    builder: (anim) => Transform.scale(
-                        scale: anim.value,
+                    builder: (_, animationState, __) => Transform.scale(
+                        scale: animationState.value,
                         child: Icon(
                           Icons.favorite,
                           color: Colors.red,
@@ -307,8 +307,8 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SizeTransition(
-                        sizeFactor: anim,
+                    builder: (_, animationState, __) => SizeTransition(
+                        sizeFactor: animationState.animation,
                         child: FlutterLogo(
                           size: 50,
                         )),
@@ -324,8 +324,8 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SizeTransition(
-                        sizeFactor: anim,
+                    builder: (_, animationState, __) => SizeTransition(
+                        sizeFactor: animationState.animation,
                         axis: Axis.horizontal,
                         child: FlutterLogo(
                           size: 50,
@@ -342,8 +342,8 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SizeTransition(
-                        sizeFactor: anim,
+                    builder: (_, animationState, __) => SizeTransition(
+                        sizeFactor: animationState.animation,
                         axis: Axis.horizontal,
                         axisAlignment: -1,
                         child: FlutterLogo(
@@ -362,8 +362,8 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SizeTransition(
-                        sizeFactor: anim,
+                    builder: (_, animationState, __) => SizeTransition(
+                        sizeFactor: animationState.animation,
                         axis: Axis.horizontal,
                         axisAlignment: 1,
                         child: FlutterLogo(
@@ -389,17 +389,17 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.skewX(anim.value),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blue),
-                            ),
-                            child: FlutterLogo(
-                              size: 50,
-                            ),
-                          ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.skewX(animationState.value),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
                         ),
+                        child: FlutterLogo(
+                          size: 50,
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -413,17 +413,17 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.skewY(anim.value),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blue),
-                            ),
-                            child: FlutterLogo(
-                              size: 50,
-                            ),
-                          ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.skewY(animationState.value),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
                         ),
+                        child: FlutterLogo(
+                          size: 50,
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -437,17 +437,18 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.skew(anim.value, anim.value),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blue),
-                            ),
-                            child: FlutterLogo(
-                              size: 50,
-                            ),
-                          ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.skew(
+                          animationState.value, animationState.value),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
                         ),
+                        child: FlutterLogo(
+                          size: 50,
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),

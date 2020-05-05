@@ -45,12 +45,12 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -61,13 +61,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.rotationZ(anim.value),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.rotationZ(animationState.value),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -78,12 +78,12 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => RotationTransition(
-                          turns: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => RotationTransition(
+                      turns: animationState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -104,13 +104,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.rotationX(anim.value),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.rotationX(animationState.value),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -121,13 +121,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.rotationY(anim.value),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.rotationY(animationState.value),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -138,13 +138,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.rotationZ(anim.value),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.rotationZ(animationState.value),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -165,13 +165,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          alignment: Alignment.topLeft,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      alignment: Alignment.topLeft,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -182,13 +182,13 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          alignment: Alignment.bottomRight,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      alignment: Alignment.bottomRight,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -199,14 +199,14 @@ class MyHomePage extends StatelessWidget {
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform: Matrix4.rotationZ(anim.value),
-                          alignment: Alignment.center,
-                          origin: Offset(-10, 10),
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform(
+                      transform: Matrix4.rotationZ(animationState.value),
+                      alignment: Alignment.center,
+                      origin: Offset(-10, 10),
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -228,12 +228,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticOut,
                     cycles: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -245,12 +245,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticIn,
                     cycles: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -262,12 +262,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticInOut,
                     cycles: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -279,12 +279,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.bounceOut,
                     cycles: 0,
-                    builder: (anim) => Transform.rotate(
-                          angle: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animationState, __) => Transform.rotate(
+                      angle: animationState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),

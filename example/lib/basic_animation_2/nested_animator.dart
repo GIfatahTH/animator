@@ -27,16 +27,16 @@ class MyPainterWidget extends StatelessWidget {
       },
       repeats: 0,
       duration: Duration(seconds: 5),
-      builderMap: (anim1) => Animator<double>(
+      builder: (_, animationState1, __) => Animator<double>(
         duration: Duration(seconds: 5),
         curve: Curves.bounceOut,
         repeats: 0,
-        builder: (anim2) => Center(
+        builder: (_, animationState2, __) => Center(
           child: CustomPaint(
             painter: WaveLayer(
-              revealPercent: anim2.value,
-              primaryColor: anim1["color1"].value,
-              secondaryColor: anim1["color2"].value,
+              revealPercent: animationState2.value,
+              primaryColor: animationState1.getValue('color1'),
+              secondaryColor: animationState1.getValue('color2'),
             ),
             child: Container(
               alignment: Alignment.center,
@@ -48,14 +48,14 @@ class MyPainterWidget extends StatelessWidget {
                   Text(
                     "Animation With Animator",
                     style: TextStyle(
-                      color: anim1["color2"].value,
+                      color: animationState1.getValue('color2'),
                       fontSize: 30,
                     ),
                   ),
                   Text(
                     "is very easy",
                     style: TextStyle(
-                      color: anim1["color1"].value,
+                      color: animationState1.getValue('color1'),
                       fontSize: 30,
                     ),
                   ),

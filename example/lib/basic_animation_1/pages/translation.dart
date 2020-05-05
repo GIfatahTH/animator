@@ -46,12 +46,12 @@ class MyHomePage extends StatelessWidget {
                         Tween<Offset>(begin: Offset(-1, 0), end: Offset(1, 0)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -63,12 +63,12 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(-50, 0), end: Offset(50, 0)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform.translate(
-                          offset: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Transform.translate(
+                      offset: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -80,12 +80,12 @@ class MyHomePage extends StatelessWidget {
                         Tween<Offset>(begin: Offset(-1, 0), end: Offset(1, 0)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => SlideTransition(
-                          position: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => SlideTransition(
+                      position: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -107,13 +107,13 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(-50, 0), end: Offset(50, 0)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform:
-                              Matrix4.translationValues(anim.value.dx, 0, 0),
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Transform(
+                      transform: Matrix4.translationValues(
+                          animatorState.value.dx, 0, 0),
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -125,13 +125,13 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(-50, 0), end: Offset(100, 0)),
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => Transform(
-                          transform:
-                              Matrix4.translationValues(anim.value.dx, 0, 0),
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Transform(
+                      transform: Matrix4.translationValues(
+                          animatorState.value.dx, 0, 0),
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -153,12 +153,12 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -170,12 +170,12 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(-0.5, -0.5), end: Offset(0.5, 0.5)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -187,12 +187,12 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(0, -0.5), end: Offset(0, 0.5)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -204,12 +204,12 @@ class MyHomePage extends StatelessWidget {
                         begin: Offset(0.5, -0.5), end: Offset(-0.5, 0.5)),
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -232,12 +232,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.bounceOut,
                     repeats: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -250,12 +250,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.bounceIn,
                     repeats: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -268,12 +268,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.bounceInOut,
                     repeats: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -286,12 +286,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.decelerate,
                     repeats: 0,
-                    builder: (anim) => FractionalTranslation(
-                          translation: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FractionalTranslation(
+                      translation: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -312,15 +312,15 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform:
-                              Matrix4.translationValues(anim.value * 100, 0, 0)
-                                ..rotateZ(anim.value * 4 * pi),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Transform(
+                      transform: Matrix4.translationValues(
+                          animatorState.value * 100, 0, 0)
+                        ..rotateZ(animatorState.value * 4 * pi),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -331,16 +331,16 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => Transform(
-                          transform:
-                              Matrix4.translationValues(anim.value * 100, 0, 0)
-                                ..setRotationZ(anim.value * 2 * pi)
-                                ..scale(anim.value),
-                          alignment: Alignment.center,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Transform(
+                      transform: Matrix4.translationValues(
+                          animatorState.value * 100, 0, 0)
+                        ..setRotationZ(animatorState.value * 2 * pi)
+                        ..scale(animatorState.value),
+                      alignment: Alignment.center,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),

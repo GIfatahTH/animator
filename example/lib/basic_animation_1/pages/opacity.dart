@@ -41,12 +41,12 @@ class MyHomePage extends StatelessWidget {
                 children: <Widget>[
                   Text("Defaut", style: _style),
                   Animator(
-                    builder: (Animation anim) => Opacity(
-                          opacity: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Opacity(
+                      opacity: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -56,12 +56,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     repeats: 5,
                     endAnimationListener: (_) => print("end"),
-                    builder: (anim) => Opacity(
-                          opacity: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Opacity(
+                      opacity: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -70,12 +70,12 @@ class MyHomePage extends StatelessWidget {
                   Text("repeats = 0", style: _style),
                   Animator(
                     repeats: 0,
-                    builder: (anim) => Opacity(
-                          opacity: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Opacity(
+                      opacity: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -84,12 +84,12 @@ class MyHomePage extends StatelessWidget {
                   Text("cycles = 10", style: _style),
                   Animator(
                     cycles: 2 * 5,
-                    builder: (anim) => Opacity(
-                          opacity: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Opacity(
+                      opacity: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -98,12 +98,12 @@ class MyHomePage extends StatelessWidget {
                   Text("cycles = 0", style: _style),
                   Animator(
                     cycles: 0,
-                    builder: (anim) => Opacity(
-                          opacity: anim.value,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => Opacity(
+                      opacity: animatorState.value,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -121,12 +121,12 @@ class MyHomePage extends StatelessWidget {
                 children: <Widget>[
                   Text("Defaut", style: _style),
                   Animator(
-                    builder: (Animation anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -135,12 +135,12 @@ class MyHomePage extends StatelessWidget {
                   Text("repeats = 5", style: _style),
                   Animator(
                     repeats: 5,
-                    builder: (Animation anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -149,12 +149,12 @@ class MyHomePage extends StatelessWidget {
                   Text("repeats = 0", style: _style),
                   Animator(
                     repeats: 0,
-                    builder: (Animation anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -163,12 +163,12 @@ class MyHomePage extends StatelessWidget {
                   Text("cycles = 10", style: _style),
                   Animator(
                     cycles: 2 * 5,
-                    builder: (Animation anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -177,12 +177,12 @@ class MyHomePage extends StatelessWidget {
                   Text("cycles = 0", style: _style),
                   Animator(
                     cycles: 0,
-                    builder: (Animation anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -198,15 +198,15 @@ class MyHomePage extends StatelessWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text("Defaut", style: _style),
+                  Text("Default", style: _style),
                   Animator(
                     duration: Duration(seconds: 2),
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -216,12 +216,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     repeats: 5,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -231,12 +231,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     repeats: 0,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -246,12 +246,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 2 * 5,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -261,12 +261,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     cycles: 0,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -286,12 +286,12 @@ class MyHomePage extends StatelessWidget {
                   Animator(
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -302,12 +302,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     repeats: 5,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -318,12 +318,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     repeats: 0,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -334,12 +334,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.decelerate,
                     cycles: 2 * 5,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -350,12 +350,12 @@ class MyHomePage extends StatelessWidget {
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticOut,
                     cycles: 0,
-                    builder: (anim) => FadeTransition(
-                          opacity: anim,
-                          child: FlutterLogo(
-                            size: 50,
-                          ),
-                        ),
+                    builder: (_, animatorState, __) => FadeTransition(
+                      opacity: animatorState.animation,
+                      child: FlutterLogo(
+                        size: 50,
+                      ),
+                    ),
                   )
                 ],
               ),
