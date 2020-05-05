@@ -1,70 +1,78 @@
+import 'package:animator/src/animator_key.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import 'states_rebuilder_with_animator.dart';
-import 'animation_parameters.dart';
+import 'animator_state.dart';
 
-const String TAG_ANIM = 'animationWithAnimator#2597442';
-
+///Ticker mixin enumeration
 enum TickerMixin {
+  ///tickerProviderStateMixin
   tickerProviderStateMixin,
+
+  ///singleTickerProviderStateMixin
   singleTickerProviderStateMixin,
 }
 
+///{@template animator}
+///A facade widget that hide the complexity of setting animation in Flutter
+///
+///It allows you to easily implement almost all the available
+///Animation in flutter
+///{@endtemplate}
 class Animator<T> extends StatefulWidget {
-  ///A widget that allows you to easily implement almost all the available
-  ///Animation in flutter
+  ///{@macro animator}
   Animator({
     Key key,
     this.tween,
-    this.duration,
-    this.curve: Curves.linear,
+    this.tweenMap,
+    this.duration = const Duration(milliseconds: 500),
+    this.curve = Curves.linear,
     this.cycles,
     this.repeats,
-    this.resetAnimationOnRebuild: false,
-    this.builder,
-    this.builderMap,
-    this.tweenMap,
-    this.name,
-    this.blocs,
+    this.resetAnimationOnRebuild = false,
     this.triggerOnInit,
+    this.builder,
+    this.child,
+    this.animatorKey,
     this.customListener,
     this.endAnimationListener,
     this.statusListener,
     this.tickerMixin,
-  })  : assert(() {
-          if (builder == null && builderMap == null) {
-            throw Exception(
-                'You have to define one of the "builder" or "builderMap" argument\n'
-                ' - Define the "builder" argument if you have one Tween\n'
-                ' - Define the "builderMap" argument if you have many Tweens');
-          }
-          if (builder != null && builderMap != null) {
-            throw Exception(
-                'You have to define either builder or "builderMap" argument. you can\'t define both\n'
-                ' - Define the "builder" argument if you have one Tween\n'
-                ' - Define the "builderMap" argument if you have many Tweens');
-          }
-          if (builderMap != null && tweenMap == null) {
-            throw Exception(
-                '"tweenMap" must not be null. If you have one tween use "builder" argument instead');
-          }
-          if (tweenMap != null && tween != null) {
-            throw Exception(
-                'Use either "tween" or "tweenMap". If you have one tween use "builder" argument instead');
-          }
-          if (tweenMap != null && builder != null) {
-            throw Exception(
-                'Use "builderMap" instead of "builder". If you have one tween use "tween" argument instead');
-          }
+    // this.observe,
+  })  : assert(builder != null),
+        assert(() {
+          // if (builder == null && builderMap == null) {
+          //   throw Exception(
+          //       'You have to define one of the "builder" or "builderMap" argument\n'
+          //       ' - Define the "builder" argument if you have one Tween\n'
+          //       ' - Define the "builderMap" argument if you have many Tweens');
+          // }
+          // if (builder != null) {
+          //   throw Exception(
+          //       'You have to define either builder or "builderMap" argument. '
+          //       'you can\'t define both\n'
+          //       ' - Define the "builder" argument if you have one Tween\n'
+          //       ' - Define the "builderMap" argument if you have many Tweens');
+          // }
+          // if (builderMap != null && tweenMap == null && animatorKey == null) {
+          //   throw Exception(
+          //       '"tweenMap" must not be null. If you have one tween use '
+          //       '"builder" argument instead');
+          // }
+          // if (tweenMap != null && tween != null) {
+          //   throw Exception(
+          //       'Use either "tween" or "tweenMap". If you have one tween use '
+          //       '"builder" argument instead');
+          // }
+          // if (tweenMap != null && builder != null) {
+          //   throw Exception(
+          //       'Use "builderMap" instead of "builder". If you have one tween use '
+          //       '"tween" argument instead');
+          // }
           return true;
         }()),
-        assert(name == null ||
-            blocs != null), // blocs must not be null if the tag is given
-        super(
-          key: resetAnimationOnRebuild ? UniqueKey() : key,
-        );
+        super(key: key);
 
   ///A linear interpolation between a beginning and ending value.
   ///
@@ -77,7 +85,8 @@ class Animator<T> extends StatefulWidget {
   ///An easing curve, i.e. a mapping of the unit interval to the unit interval.
   final Curve curve;
 
-  ///The number of forward and backward periods the animation performs before stopping
+  ///The number of forward and backward periods the animation
+  ///performs before stopping
   final int cycles;
 
   ///The number of forward periods the animation performs before stopping
@@ -96,28 +105,33 @@ class Animator<T> extends StatefulWidget {
   ///Function to be called every time the animation value changes.
   ///
   ///The customListener is provided with an [Animation] object.
-  final Function(StatesRebuilderWithAnimator<T>) customListener;
+  final Function(AnimatorState<T>) customListener;
 
   ///VoidCallback to be called when animation is finished.
-  final Function(StatesRebuilderWithAnimator<T>) endAnimationListener;
+  final Function(AnimatorState<T>) endAnimationListener;
 
   ///Function to be called every time the status of the animation changes.
   ///
-  ///The customListener is provided with an [AnimationStatus, AnimationSetup] object.
-  final Function(AnimationStatus, StatesRebuilderWithAnimator<T>)
-      statusListener;
+  ///The customListener is provided with an [AnimationStatus, AnimationSetup]
+  ///object.
+  final Function(AnimationStatus, AnimatorState<T>) statusListener;
 
   ///The build strategy currently used for one Tween. Animator widget rebuilds
   ///itself every time the animation changes value.
   ///
   ///The builder is provided with an [Animation] object.
-  final Widget Function(Animation<T>) builder;
+  final Widget Function(
+    BuildContext context,
+    AnimatorState<T> animatorState,
+    Widget child,
+  ) builder;
 
-  ///The build strategy currently used for multi-Tween. Animator widget rebuilds
-  ///itself every time the animation changes value.
-  ///
-  ///The `builderMap` is provided with an `Map<String, Animation>` object.
-  final Widget Function(Map<String, Animation>) builderMap;
+  final Widget child;
+  // ///The build strategy currently used for multi-Tween. Animator widget rebuilds
+  // ///itself every time the animation changes value.
+  // ///
+  // ///The `builderMap` is provided with an `Map<String, Animation>` object.
+  // final Widget Function(Map<String, Animation>) builderMap;
 
   ///A linear interpolation between a beginning and ending value.
   ///
@@ -128,53 +142,143 @@ class Animator<T> extends StatefulWidget {
   ///Many widgets can have the same name.
   ///
   ///It is used to rebuild this widget from your logic classes
-  final dynamic name;
+  // final dynamic name;
 
   /// The list of your logic classes you want to rebuild this widget from.
-  final List<StatesRebuilder> blocs;
+  // final List<StatesRebuilder> blocs;
 
-  ///For performance reason the default tickerProvider is of type `singleTickerProviderStateMixin`.
+  final AnimatorKey animatorKey;
+
+  ///For performance reason the default tickerProvider is of type
+  ///`singleTickerProviderStateMixin`.
   ///
   ///use `tickerProviderStateMixin` if many controllers use the same ticker.
   final TickerMixin tickerMixin;
 
+  // ///an [AnimatorKey] class to which you want [Animator] to subscribe.
+  // final AnimatorKey<T> Function() observe;
+
   @override
   _AnimatorState createState() => _AnimatorState<T>();
+
+  ///Return a copy of the this Animator widget with the
+  ///defined parameter overrided
+  Animator<T> copyWith({
+    Tween<T> tween,
+    Map<String, Tween> tweenMap,
+    Duration duration,
+    Curve curve,
+    int cycles,
+    int repeats,
+    dynamic Function(AnimatorState<T>) customListener,
+    dynamic Function(AnimatorState<T>) endAnimationListener,
+    dynamic Function(AnimationStatus, AnimatorState<T>) statusListener,
+  }) {
+    return Animator(
+      key: key,
+      tween: tween ?? this.tween,
+      tweenMap: tweenMap ?? this.tweenMap,
+      duration: duration ?? this.duration,
+      curve: curve ?? this.curve,
+      cycles: cycles ?? this.cycles,
+      repeats: repeats ?? this.repeats,
+      resetAnimationOnRebuild: resetAnimationOnRebuild,
+      triggerOnInit: triggerOnInit,
+      builder: builder,
+      child: child,
+      animatorKey: animatorKey,
+      customListener: customListener,
+      endAnimationListener: endAnimationListener,
+      statusListener: statusListener,
+      tickerMixin: tickerMixin,
+    );
+  }
 }
 
 class _AnimatorState<T> extends State<Animator<T>> {
-  StatesRebuilderWithAnimator<T> _animatorBloc;
+  AnimatorStateImp<T> _animatorState;
 
   @override
   void initState() {
     super.initState();
+    _animatorState = AnimatorStateImp<T>(widget);
+  }
 
-    _animatorBloc = StatesRebuilderWithAnimator<T>(
-        AnimationParameters<T>(_animatorBloc)..setAnimationParameters(widget));
+  void _resetAnimation(
+    TickerProvider ticker, {
+    Tween<T> tween,
+    Map<String, Tween> tweenMap,
+    Duration duration,
+    Curve curve,
+    int repeats,
+    int cycles,
+  }) {
+    _animatorState
+      ..disposeAnim()
+      ..animator = widget.copyWith(
+        tween: tween,
+        tweenMap: tweenMap,
+        duration: duration,
+        curve: curve,
+        repeats: repeats,
+        cycles: cycles,
+      )
+      ..initAnimation(ticker);
+  }
+
+  @override
+  void didUpdateWidget(Animator<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animatorKey != oldWidget.animatorKey) {
+      (widget.animatorKey as AnimatorKeyImp).setAnimatorState(_animatorState);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return StateWithMixinBuilder<TickerProvider>(
-      mixinWith: widget.tickerMixin == TickerMixin.tickerProviderStateMixin
+      mixinWith: widget.tickerMixin == TickerMixin.tickerProviderStateMixin ||
+              widget.resetAnimationOnRebuild == true ||
+              widget.animatorKey != null
           ? MixinWith.tickerProviderStateMixin
           : MixinWith.singleTickerProviderStateMixin,
-      tag: TAG_ANIM,
-      models: [_animatorBloc],
+      key: Key(context.toString()),
+      observe: () => _animatorState,
       initState: (_, ticker) {
-        _animatorBloc.shouldDisposeOnAnimationEnd = true;
-        _animatorBloc.initAnimation(ticker);
+        _animatorState.initAnimation(ticker);
+        if (widget.animatorKey != null) {
+          (widget.animatorKey as AnimatorKeyImp<T>)
+            ..setAnimatorState(_animatorState)
+            ..callbackRefreshAnim = ({
+              Tween<T> tween,
+              Map<String, Tween> tweenMap,
+              Duration duration,
+              Curve curve,
+              int repeats,
+              int cycles,
+            }) {
+              _resetAnimation(
+                ticker,
+                tween: tween,
+                tweenMap: tweenMap,
+                duration: duration,
+                curve: curve,
+                repeats: repeats,
+                cycles: cycles,
+              );
+            };
+        }
       },
       dispose: (_, __) {
-        _animatorBloc.disposeAnim();
+        _animatorState.disposeAnim();
+      },
+      didUpdateWidget: (_, oldWidget, ticker) {
+        if (widget.resetAnimationOnRebuild) {
+          _resetAnimation(ticker);
+        }
       },
       builder: (_, __) {
-        if (widget.builder != null) {
-          return widget.builder(_animatorBloc.animation);
-        }
-        {
-          return widget.builderMap(_animatorBloc.animationMap);
-        }
+        return widget.builder(context, _animatorState, widget.child);
       },
     );
   }

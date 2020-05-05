@@ -1,50 +1,52 @@
-import 'package:animator/src/animation_parameters.dart';
 import 'package:animator/src/animator.dart';
-import 'package:animator/src/states_rebuilder_with_animator.dart';
+import 'package:animator/src/animator_key.dart';
+import 'package:animator/src/animator_rebuilder.dart';
+import 'package:animator/src/animator_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  test("should throw error if both builder or builderMap are not provided", () {
+  test('should throw error if both builder is not provided', () {
     expect(() {
-      Animator(
+      Animator<double>(
         tween: Tween<double>(begin: 0, end: 1),
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
         curve: Curves.linear,
       );
-    }, throwsException);
+    }, throwsAssertionError);
   });
 
-  test("should instantiate animation Controller and animation objects", () {
-    final animator = Animator(
+  test('should instantiate animation Controller and animation objects', () {
+    final animator = Animator<double>(
       triggerOnInit: false,
-      builder: (anim) => null,
+      builder: (_, anim, __) => null,
     );
-    var animatorBloc;
-    animatorBloc = StatesRebuilderWithAnimator(
-        AnimationParameters(animatorBloc)..setAnimationParameters(animator));
+    AnimatorState<double> animatorBloc;
+    animatorBloc = AnimatorState<double>(animator
+        // AnimationParameters(animatorBloc)..setAnimationParameters(animator),
+        );
 
     expect(animatorBloc.controller, isNull);
     expect(animatorBloc.animation, isNull);
 
-    animatorBloc.initAnimation(_Ticker());
+    (animatorBloc as AnimatorStateImp).initAnimation(_Ticker());
 
     expect(animatorBloc.controller, isNot(isNull));
     expect(animatorBloc.animation, isNot(isNull));
   });
 
   testWidgets(
-      "should initialize animation without starting it (triggerOnInit = false)",
+      'should initialize animation without starting it (triggerOnInit = false)',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
 
-    final animator = Animator(
+    final animator = Animator<double>(
       triggerOnInit: false,
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
-        animationStatue = anim.status;
+        animationStatue = anim.animation.status;
         return Container();
       },
     );
@@ -57,27 +59,27 @@ void main() {
     expect(animationValue, equals(0));
     expect(animationStatue, equals(AnimationStatus.dismissed));
 
-    await tester.pumpAndSettle(Duration(seconds: 1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(animationValue, equals(0));
     expect(animationStatue, equals(AnimationStatus.dismissed));
   });
 
   testWidgets(
-      "should auto-starts (triggerOnInit = true) and ends after 1 seconds (repeat=1)",
+      'should auto-starts (triggerOnInit = true) and ends after 1 s (repeat=1)',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    var numberOfRepeats = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       statusListener: (status, anim) {
         if (status == AnimationStatus.completed) {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
-        animationStatue = anim.status;
+        animationStatue = anim.animation.status;
         return Container();
       },
     );
@@ -97,12 +99,11 @@ void main() {
     expect(numberOfRepeats, equals(1));
   });
 
-  testWidgets(
-      "should auto-starts (triggerOnInit = true) and ends after 500ms (repeat=1) : Tween<int>",
+  testWidgets('should auto-starts and ends after 500ms (repeat=1) : Tween<int>',
       (WidgetTester tester) async {
     int animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
+    var numberOfRepeats = 0;
     final animator = Animator<int>(
       tween: IntTween(begin: 0, end: 10), // use IntTween instead of Tween<int>
       statusListener: (status, anim) {
@@ -110,9 +111,9 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
-        animationStatue = anim.status;
+        animationStatue = anim.animation.status;
         return Container();
       },
     );
@@ -132,13 +133,13 @@ void main() {
     expect(numberOfRepeats, equals(1));
   });
 
-  testWidgets("should auto-starts (triggerOnInit = true) and repeat 2 times",
+  testWidgets('should auto-starts (triggerOnInit = true) and repeat 2 times',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    var numberOfRepeats = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       repeats: 2,
       statusListener: (status, anim) {
         animationStatue = status;
@@ -146,7 +147,7 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -162,13 +163,13 @@ void main() {
     expect(numberOfRepeats, equals(2));
   });
 
-  testWidgets("should auto-starts (triggerOnInit = true) and cycle 2 times",
+  testWidgets('should auto-starts (triggerOnInit = true) and cycle 2 times',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    var numberOfRepeats = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       cycles: 2,
       statusListener: (status, anim) {
         animationStatue = status;
@@ -179,7 +180,7 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -196,15 +197,15 @@ void main() {
     expect(numberOfRepeats, equals(2));
   });
 
-  testWidgets("should auto-starts (triggerOnInit = true) and repeat 5 times",
+  testWidgets('should auto-starts (triggerOnInit = true) and repeat 5 times',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    int animationIsEndedNumber = 0;
+    var numberOfRepeats = 0;
+    var animationIsEndedNumber = 0;
 
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       repeats: 5,
       statusListener: (status, anim) {
         animationStatue = status;
@@ -215,7 +216,7 @@ void main() {
       endAnimationListener: (anim) {
         animationIsEndedNumber++;
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -233,14 +234,14 @@ void main() {
     expect(animationIsEndedNumber, equals(1));
   });
 
-  testWidgets("should auto-starts (triggerOnInit = true) and cycle 5 times",
+  testWidgets('should auto-starts (triggerOnInit = true) and cycle 5 times',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    int animationIsEndedNumber = 0;
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    var numberOfRepeats = 0;
+    var animationIsEndedNumber = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       cycles: 5,
       statusListener: (status, anim) {
         animationStatue = status;
@@ -254,7 +255,7 @@ void main() {
       endAnimationListener: (anim) {
         animationIsEndedNumber++;
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -272,15 +273,15 @@ void main() {
     expect(animationIsEndedNumber, equals(1));
   });
 
-  // testWidgets("should  repeats 0 throw time out error",
+  // testWidgets('should  repeats 0 throw time out error',
   //     (WidgetTester tester) async {
-  //   final animator = Animator(
+  //   final animator = Animator<double>(
   //     tween: Tween<double>(begin: 0, end: 1),
-  //     duration: Duration(seconds: 1),
+  //     duration: const Duration(seconds: 1),
   //     curve: Curves.linear,
   //     triggerOnInit: true,
   //     repeats: 0,
-  //     builder: (anim) {
+  //     builder: (_,anim,__) {
   //       print(anim.value);
   //       return Container();
   //     },
@@ -289,15 +290,15 @@ void main() {
   //   await tester.pumpAndSettle();
   // });
 
-  // testWidgets("should  cycle 0 throw time out error",
+  // testWidgets('should  cycle 0 throw time out error',
   //     (WidgetTester tester) async {
-  //   final animator = Animator(
+  //   final animator = Animator<double>(
   //     tween: Tween<double>(begin: 0, end: 1),
-  //     duration: Duration(seconds: 1),
+  //     duration: const Duration(seconds: 1),
   //     curve: Curves.linear,
   //     triggerOnInit: true,
   //     cycles: 0,
-  //     builder: (anim) {
+  //     builder: (_,anim,__) {
   //       print(anim.value);
   //       return Container();
   //     },
@@ -306,15 +307,15 @@ void main() {
   //   await tester.pumpAndSettle();
   // });
 
-  testWidgets("should customListener be called each frame",
+  testWidgets('should customListener be called each frame',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
+    var numberOfRepeats = 0;
     double customAnimationValue;
 
-    final animator = Animator(
-      duration: Duration(seconds: 1),
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
       cycles: 1,
       customListener: (anim) {
         customAnimationValue = anim.animation.value;
@@ -328,7 +329,7 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -346,15 +347,14 @@ void main() {
     expect(customAnimationValue == animationValue, isTrue);
   });
 
-  testWidgets("should not auto-Start because blocs are defined",
+  testWidgets('should not auto-Start because animatorKey is defined',
       (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    final vm = ViewModel();
-    final animator = Animator(
-      duration: Duration(seconds: 1),
-      blocs: [vm],
+    var numberOfRepeats = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
+      animatorKey: AnimatorKey<double>(),
       statusListener: (status, anim) {
         animationStatue = status;
         if (status == AnimationStatus.completed) {
@@ -364,7 +364,7 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -381,15 +381,14 @@ void main() {
   });
 
   testWidgets(
-      "should  auto-Start because triggerOnInit is true although  blocs are defined",
-      (WidgetTester tester) async {
+      'should  auto-Start (triggerOnInit is true '
+      'although  animatorKey is defined', (WidgetTester tester) async {
     double animationValue;
     AnimationStatus animationStatue;
-    int numberOfRepeats = 0;
-    final vm = ViewModel();
-    final animator = Animator(
-      duration: Duration(seconds: 1),
-      blocs: [vm],
+    var numberOfRepeats = 0;
+    final animator = Animator<double>(
+      duration: const Duration(seconds: 1),
+      animatorKey: AnimatorKey<double>(),
       triggerOnInit: true,
       statusListener: (status, anim) {
         animationStatue = status;
@@ -400,7 +399,7 @@ void main() {
           numberOfRepeats++;
         }
       },
-      builder: (anim) {
+      builder: (_, anim, __) {
         animationValue = anim.value;
         return Container();
       },
@@ -418,22 +417,22 @@ void main() {
   });
 
   testWidgets(
-    "should not auto-Start, it will be triggered from the viewModel class",
+    'should not auto-Start, it will be triggered from the viewModel class',
     (WidgetTester tester) async {
       double animationValue;
       AnimationStatus animationStatue;
-      int numberOfRepeats = 0;
-      final vm = ViewModel();
-      final animator = Animator(
-        duration: Duration(seconds: 1),
-        blocs: [vm],
+      var numberOfRepeats = 0;
+      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animator = Animator<double>(
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
         statusListener: (status, anim) {
           animationStatue = status;
           if (status == AnimationStatus.completed) {
             numberOfRepeats++;
           }
         },
-        builder: (anim) {
+        builder: (_, anim, __) {
           animationValue = anim.value;
           return Container();
         },
@@ -449,7 +448,7 @@ void main() {
       expect(animationStatue, null);
       expect(numberOfRepeats, equals(0));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
 
       await tester.pumpAndSettle();
 
@@ -457,7 +456,7 @@ void main() {
       expect(animationStatue, equals(AnimationStatus.completed));
       expect(numberOfRepeats, equals(1));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(1));
@@ -467,15 +466,16 @@ void main() {
   );
 
   testWidgets(
-    "should not auto-Start, it will be triggered from the viewModel class (4 repeats)",
+    'should not auto-Start, it will be triggered from the viewModel class '
+    '(4 repeats)',
     (WidgetTester tester) async {
       double animationValue;
       AnimationStatus animationStatue;
-      int numberOfRepeats = 0;
-      final vm = ViewModel();
-      final animator = Animator(
-        duration: Duration(seconds: 1),
-        blocs: [vm],
+      var numberOfRepeats = 0;
+      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animator = Animator<double>(
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
         repeats: 4,
         statusListener: (status, anim) {
           animationStatue = status;
@@ -483,7 +483,7 @@ void main() {
             numberOfRepeats++;
           }
         },
-        builder: (anim) {
+        builder: (_, anim, __) {
           animationValue = anim.value;
           return Container();
         },
@@ -499,7 +499,7 @@ void main() {
       expect(animationStatue, null);
       expect(numberOfRepeats, equals(0));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
 
       await tester.pumpAndSettle();
 
@@ -507,7 +507,7 @@ void main() {
       expect(animationStatue, equals(AnimationStatus.completed));
       expect(numberOfRepeats, equals(4));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(1));
@@ -517,15 +517,16 @@ void main() {
   );
 
   testWidgets(
-    "should not auto-Start, it will be triggered from the viewModel class (1 cycle)",
+    'should not auto-Start, it will be triggered from the viewModel class '
+    '(1 cycle)',
     (WidgetTester tester) async {
       double animationValue;
       AnimationStatus animationStatue;
-      int numberOfRepeats = 0;
-      final vm = ViewModel();
-      final animator = Animator(
-        duration: Duration(seconds: 1),
-        blocs: [vm],
+      var numberOfRepeats = 0;
+      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animator = Animator<double>(
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
         cycles: 1,
         statusListener: (status, anim) {
           animationStatue = status;
@@ -536,7 +537,7 @@ void main() {
             numberOfRepeats++;
           }
         },
-        builder: (anim) {
+        builder: (_, anim, __) {
           animationValue = anim.value;
           return Container();
         },
@@ -552,7 +553,7 @@ void main() {
       expect(animationStatue, null);
       expect(numberOfRepeats, equals(0));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
 
       await tester.pumpAndSettle();
 
@@ -560,14 +561,14 @@ void main() {
       expect(animationStatue, equals(AnimationStatus.completed));
       expect(numberOfRepeats, equals(1));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(0));
       expect(animationStatue, equals(AnimationStatus.dismissed));
       expect(numberOfRepeats, equals(2));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(1));
@@ -577,15 +578,16 @@ void main() {
   );
 
   testWidgets(
-    "should not auto-Start, it will be triggered from the viewModel class (4 cycle)",
+    'should not auto-Start, it will be triggered from the viewModel class'
+    ' (4 cycle)',
     (WidgetTester tester) async {
       double animationValue;
       AnimationStatus animationStatue;
-      int numberOfRepeats = 0;
-      final vm = ViewModel();
-      final animator = Animator(
-        duration: Duration(seconds: 1),
-        blocs: [vm],
+      var numberOfRepeats = 0;
+      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animator = Animator<double>(
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
         cycles: 4,
         statusListener: (status, anim) {
           animationStatue = status;
@@ -596,7 +598,7 @@ void main() {
             numberOfRepeats++;
           }
         },
-        builder: (anim) {
+        builder: (_, anim, __) {
           animationValue = anim.value;
           return Container();
         },
@@ -612,7 +614,7 @@ void main() {
       expect(animationStatue, null);
       expect(numberOfRepeats, equals(0));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
 
       await tester.pumpAndSettle();
 
@@ -620,14 +622,14 @@ void main() {
       expect(animationStatue, equals(AnimationStatus.dismissed));
       expect(numberOfRepeats, equals(4));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(0));
       expect(animationStatue, equals(AnimationStatus.dismissed));
       expect(numberOfRepeats, equals(8));
 
-      vm.startAnimation();
+      animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
 
       expect(animationValue, equals(0));
@@ -637,12 +639,12 @@ void main() {
   );
 
   testWidgets(
-    "should ColorTween tween work",
+    'should ColorTween tween work',
     (WidgetTester tester) async {
       Color color;
-      final animator = Animator(
+      final animator = Animator<Color>(
         tween: ColorTween(begin: Colors.red, end: Colors.blue),
-        builder: (anim) {
+        builder: (_, anim, __) {
           color = anim.value;
           return Container();
         },
@@ -659,24 +661,24 @@ void main() {
   );
 
   testWidgets(
-    "online change of animation setup, resetAnimationOnRebuild = true",
+    'online change of animation setup, resetAnimationOnRebuild = true',
     (WidgetTester tester) async {
       Offset offset;
-      bool switcher = true;
-      final vm = ViewModel();
+      var switcher = true;
 
+      final vm = ViewModel();
       await tester.pumpWidget(
-        StateBuilder(
+        StateBuilder<ViewModel>(
           models: [vm],
           builder: (_, __) {
-            return Animator(
-              tickerMixin: TickerMixin.tickerProviderStateMixin,
+            return Animator<Offset>(
               tween: switcher
-                  ? Tween<Offset>(begin: Offset.zero, end: Offset(1, 1))
-                  : Tween<Offset>(begin: Offset(10, 10), end: Offset(20, 20)),
-              duration: Duration(seconds: 1),
+                  ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
+                  : Tween<Offset>(
+                      begin: const Offset(10, 10), end: const Offset(20, 20)),
+              duration: const Duration(seconds: 1),
               resetAnimationOnRebuild: true,
-              builder: (anim) {
+              builder: (_, anim, __) {
                 offset = anim.value;
                 return Container();
               },
@@ -689,34 +691,35 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(offset, Offset(1, 1));
+      expect(offset, const Offset(1, 1));
       switcher = false;
       vm.rebuildStates();
       await tester.pump();
-      expect(offset, Offset(10, 10));
+      expect(offset, const Offset(10, 10));
 
       await tester.pumpAndSettle();
-      expect(offset, Offset(20, 20));
+      expect(offset, const Offset(20, 20));
     },
   );
 
   testWidgets(
-    "animation setup should not change resetAnimationOnRebuild = false",
+    'animation setup should not change resetAnimationOnRebuild = false',
     (WidgetTester tester) async {
       Offset offset;
-      bool switcher = true;
+      var switcher = true;
       final vm = ViewModel();
 
       await tester.pumpWidget(
-        StateBuilder(
+        StateBuilder<ViewModel>(
           models: [vm],
           builder: (_, __) {
-            return Animator(
+            return Animator<Offset>(
               tween: switcher
-                  ? Tween<Offset>(begin: Offset.zero, end: Offset(1, 1))
-                  : Tween<Offset>(begin: Offset(10, 10), end: Offset(20, 20)),
-              duration: Duration(seconds: 1),
-              builder: (anim) {
+                  ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
+                  : Tween<Offset>(
+                      begin: const Offset(10, 10), end: const Offset(20, 20)),
+              duration: const Duration(seconds: 1),
+              builder: (_, anim, __) {
                 offset = anim.value;
                 return Container();
               },
@@ -729,37 +732,38 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(offset, Offset(1, 1));
+      expect(offset, const Offset(1, 1));
       switcher = false;
       vm.rebuildStates();
       await tester.pump();
-      expect(offset, Offset(1, 1));
+      expect(offset, const Offset(1, 1));
 
       await tester.pumpAndSettle();
-      expect(offset, Offset(1, 1));
+      expect(offset, const Offset(1, 1));
     },
   );
 
   testWidgets(
-    "animation should not start resetAnimationOnRebuild = false",
+    'animation should not start resetAnimationOnRebuild = false',
     (WidgetTester tester) async {
       Offset offset;
-      bool switcher = true;
+      var switcher = true;
       final vm = ViewModel();
 
       await tester.pumpWidget(
-        StateBuilder(
+        StateBuilder<ViewModel>(
           models: [vm],
           builder: (_, __) {
             return Animator<Offset>(
               tickerMixin: TickerMixin.tickerProviderStateMixin,
               tween: switcher
-                  ? Tween<Offset>(begin: Offset.zero, end: Offset(1, 1))
-                  : Tween<Offset>(begin: Offset(10, 10), end: Offset(20, 20)),
-              duration: Duration(seconds: 1),
+                  ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
+                  : Tween<Offset>(
+                      begin: const Offset(10, 10), end: const Offset(20, 20)),
+              duration: const Duration(seconds: 1),
               resetAnimationOnRebuild: true,
               triggerOnInit: false,
-              builder: (anim) {
+              builder: (_, anim, __) {
                 offset = anim.value;
                 return Container();
               },
@@ -772,426 +776,102 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(offset, Offset(0, 0));
+      expect(offset, const Offset(0, 0));
 
       switcher = false;
       vm.rebuildStates();
       await tester.pump();
-      expect(offset, Offset(10, 10));
+      expect(offset, const Offset(10, 10));
 
       await tester.pumpAndSettle();
-      expect(offset, Offset(10, 10));
-    },
-  );
-
-  testWidgets(
-    "default explicit like animation is initialized but not started",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-
-      expect(vm.animation, isNull);
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-      expect(vm.value, equals(0));
-      expect(vm.animation.status, equals(AnimationStatus.dismissed));
-
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(0));
-      expect(vm.animation.status, equals(AnimationStatus.dismissed));
-    },
-  );
-
-  testWidgets(
-    "default explicit like animation is initialized and started",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-
-      expect(vm.animation, isNull);
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-      expect(vm.value, equals(0));
-      expect(vm.animation.status, equals(AnimationStatus.dismissed));
-
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(1));
-      expect(vm.animation.status, equals(AnimationStatus.completed));
-    },
-  );
-
-  testWidgets(
-    "default explicit like animation (set repeat to 2 then to 5)",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-      int numberOfRepeats = 0;
-      AnimationStatus _status;
-
-      expect(vm.animation, isNull);
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      vm.addAnimationStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          numberOfRepeats++;
-        }
-        _status = status;
-      });
-
-      expect(vm.value, equals(0));
-      expect(numberOfRepeats, equals(0));
-      expect(_status, null);
-      vm.animator.repeats = 2;
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(1));
-      expect(numberOfRepeats, equals(2));
-      expect(_status, equals(AnimationStatus.completed));
-
-      numberOfRepeats = 0;
-      vm.animator.repeats = 5;
-
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(1));
-      expect(numberOfRepeats, equals(5));
-      expect(_status, equals(AnimationStatus.completed));
-    },
-  );
-
-  testWidgets(
-    "default implicit like animation (set cycles to 1, 2 then to 5)",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-      int numberOfRepeats = 0;
-      AnimationStatus _status;
-
-      expect(vm.animation, isNull);
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      vm.addAnimationStatusListener((status) {
-        if (status == AnimationStatus.completed ||
-            status == AnimationStatus.dismissed) {
-          numberOfRepeats++;
-        }
-        _status = status;
-      });
-
-      expect(vm.value, equals(0));
-      expect(numberOfRepeats, equals(0));
-      expect(_status, null);
-      vm.animator.cycles = 1;
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(1));
-      expect(numberOfRepeats, equals(1));
-      expect(_status, equals(AnimationStatus.completed));
-
-      vm.animator.cycles = 2;
-      vm.triggerAnimation(reset: true);
-      numberOfRepeats = 0;
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(0));
-      expect(numberOfRepeats, equals(2));
-      expect(_status, equals(AnimationStatus.dismissed));
-
-      numberOfRepeats = 0;
-      vm.animator.cycles = (5);
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.value, equals(1));
-      expect(numberOfRepeats, equals(5));
-      expect(_status, equals(AnimationStatus.completed));
-    },
-  );
-
-  testWidgets(
-    "default implicit like animation (endAnimationListener)",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-      // int numberOfRepeats = 0;
-      // AnimationStatus _status;
-      // int endAnimationCount = 0;
-
-      expect(vm.animation, isNull);
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      // vm.addAnimationStatusListener((status) {
-      //   print(status);
-      //   if (status == AnimationStatus.completed ||
-      //       status == AnimationStatus.dismissed) {
-      //     numberOfRepeats++;
-      //   }
-      //   _status = status;
-      // });
-
-      // vm.endAnimationListener(() {
-      //   endAnimationCount++;
-      // });
-
-      // expect(vm.value, equals(0));
-      // expect(numberOfRepeats, equals(0));
-      // expect(_status, null);
-      // expect(endAnimationCount, 0);
-      // // vm.setCycles(1);
-      // vm.triggerAnimation();
-      // await tester.pumpAndSettle();
-
-      // expect(vm.value, equals(1));
-      // expect(numberOfRepeats, equals(1));
-      // expect(_status, equals(AnimationStatus.completed));
-      // expect(endAnimationCount, 1);
-
-      // numberOfRepeats = 0;
-      // vm.setCycles(2);
-      // vm.triggerAnimation();
-      // await tester.pumpAndSettle();
-
-      // expect(vm.value, equals(0));
-      // expect(numberOfRepeats, equals(2));
-      // expect(_status, equals(AnimationStatus.dismissed));
-      // expect(endAnimationCount, 2);
-
-      // numberOfRepeats = 0;
-      // vm.setCycles(5);
-      // vm.triggerAnimation();
-      // await tester.pumpAndSettle();
-
-      // expect(vm.value, equals(1));
-      // expect(numberOfRepeats, equals(5));
-      // expect(_status, equals(AnimationStatus.completed));
-      // expect(endAnimationCount, 3);
-    },
-  );
-
-  testWidgets(
-    "explicit like animation (changing duration to 1s then to 5s)",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-
-      int numberOfRepeats = 0;
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      vm.endAnimationListener(() {
-        numberOfRepeats++;
-      });
-      vm.animator.duration = Duration(seconds: 1);
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.controller.duration.inSeconds, equals(1));
-      expect(numberOfRepeats, equals(1));
-      vm.animator.duration = Duration(seconds: 5);
-
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.controller.duration.inSeconds, equals(5));
-      expect(numberOfRepeats, equals(2));
-    },
-  );
-
-  testWidgets(
-    "explicit like animation (changing curves to  bounceIn then to )",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-
-      // int numberOfRepeats = 0;
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      vm.endAnimationListener(() {
-        // numberOfRepeats++;
-      });
-      vm.animator.curve = (Curves.bounceIn);
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.animation.toString(), contains("BounceIn"));
-      // expect(numberOfRepeats, equals(1));
-
-      vm.animator.curve = (Curves.easeInBack);
-
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-      expect(vm.animation.toString(), contains("Cubic"));
-
-      // expect(numberOfRepeats, equals(2));
-    },
-  );
-
-  testWidgets(
-    "explicit like animation (changing tween to   then to )",
-    (WidgetTester tester) async {
-      final vm = ViewModel1();
-
-      await tester.pumpWidget(
-        StateWithMixinBuilder<TickerProvider>(
-            mixinWith: MixinWith.tickerProviderStateMixin,
-            initState: (_, ticker) => vm.init(ticker),
-            dispose: (_, ticker) => vm.disposeAnim(),
-            models: [vm],
-            builder: (_, __) {
-              return Container();
-            }),
-      );
-
-      vm.animator.tween = Tween(begin: 10, end: 20);
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-
-      expect(vm.animation.toString(), contains("Tween<double>(10.0 → 20.0)"));
-      // expect(numberOfRepeats, equals(1));
-
-      vm.animator.tween = Tween(begin: 50, end: -50);
-
-      vm.triggerAnimation();
-      await tester.pumpAndSettle();
-      expect(vm.animation.toString(), contains("Tween<double>(50.0 → -50.0)"));
-
-      // expect(numberOfRepeats, equals(2));
+      expect(offset, const Offset(10, 10));
     },
   );
 
   test(
-      "TweenMap :should throw an exception ((tweenMap notEq null && builder notEq null))",
-      () {
+      'TweenMap :should throw an exception '
+      '((observe is null))', () {
     expect(() {
-      Animator(
-        tweenMap: {
-          "anim1": Tween(begin: 0, end: 1),
-          "anim2": Tween(begin: 0, end: 1),
-        },
-        builder: (anim) {
+      AnimatorRebuilder(
+        observe: null,
+        builder: (_, anim, __) {
           return Container();
         },
       );
-    }, throwsException);
+    }, throwsAssertionError);
+  });
+
+  testWidgets(
+      'TweenMap :should throw an exception '
+      '((observer returns null))', (tester) async {
+    await tester.pumpWidget(AnimatorRebuilder(
+      observe: () => null,
+      builder: (_, anim, __) {
+        return Container();
+      },
+    ));
+
+    expect(tester.takeException(), isAssertionError);
   });
 
   test(
-      "TweenMap :should throw an exception ((builder notEq null && builderMap notEq null))",
-      () {
+      'TweenMap :should throw an exception '
+      '(builder is null)', () {
     expect(() {
-      Animator(
-        tweenMap: {
-          "anim1": Tween(begin: 0, end: 1),
-          "anim2": Tween(begin: 0, end: 1),
-        },
-        builder: (anim) {
-          return Container();
-        },
-        builderMap: (_) => Container(),
+      AnimatorRebuilder(
+        observe: () => AnimatorKey<dynamic>(),
+        builder: null,
       );
-    }, throwsException);
+    }, throwsAssertionError);
   });
 
-  test(
-      "TweenMap :should throw an exception ((tweenMap Eq null && builderMap notEq null))",
-      () {
-    expect(() {
-      Animator(
-        builderMap: (_) => Container(),
-      );
-    }, throwsException);
-  });
+  // test(
+  //     'TweenMap :should throw an exception '
+  //     '((builder notEq null && builderMap notEq null))', () {
+  //   expect(() {
+  //     Animator<double>(
+  //         tweenMap: {
+  //           'anim1': Tween<int>(begin: 0, end: 1),
+  //           'anim2': Tween<int>(begin: 0, end: 1),
+  //         },
+  //         builder: (_, anim, __) {
+  //           return Container();
+  //         });
+  //   }, throwsException);
+  // });
+
+  // test(
+  //     'TweenMap :should throw an exception '
+  //     '((tweenMap Eq null && builderMap notEq null))', () {
+  //   expect(() {
+  //     Animator<double>();
+  //   }, throwsException);
+  // });
 
   testWidgets('stop and dispose animation when animator is disposed',
       (tester) async {
-    bool switcher = true;
-    ViewModel vm = ViewModel();
+    var switcher = true;
+    var vm = ViewModel();
     final widget = MaterialApp(
       home: Scaffold(
-        body: StateBuilder(
+        body: StateBuilder<ViewModel>(
           models: [vm],
           builder: (_, __) {
             if (switcher == true) {
-              return Animator(
-                builder: (anim) {
+              return Animator<double>(
+                builder: (_, anim, __) {
                   return Text(anim.value.toString());
                 },
               );
             }
-            return Text('Stop');
+            return const Text('Stop');
           },
         ),
       ),
     );
 
     await tester.pumpWidget(widget);
-    await tester.pump(Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('0.2'), findsOneWidget);
 
     switcher = false;
@@ -1199,24 +879,189 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Stop'), findsOneWidget);
   });
+
+  testWidgets(
+    'online change of animation setup, using refreshAnimation',
+    (WidgetTester tester) async {
+      Offset offset;
+      var switcher = true;
+
+      final vm = ViewModel();
+      final animatorKey = AnimatorKey<Offset>();
+      await tester.pumpWidget(
+        StateBuilder<ViewModel>(
+          models: [vm],
+          builder: (_, __) {
+            return Animator<Offset>(
+              tween: switcher
+                  ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
+                  : Tween<Offset>(
+                      begin: const Offset(10, 10), end: const Offset(20, 20)),
+              duration: const Duration(seconds: 1),
+              animatorKey: animatorKey,
+              builder: (_, anim, __) {
+                offset = anim.value;
+                return Container();
+              },
+            );
+          },
+        ),
+      );
+
+      expect(offset, equals(Offset.zero));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+
+      expect(offset, const Offset(1, 1));
+      switcher = false;
+      vm.rebuildStates();
+      await tester.pump();
+      animatorKey.refreshAnimation();
+      await tester.pump();
+      expect(offset, const Offset(10, 10));
+
+      await tester.pumpAndSettle();
+      expect(offset, const Offset(20, 20));
+    },
+  );
+
+  // testWidgets(
+  //   'should throw if both tween and tweenMap are defined',
+  //   (WidgetTester tester) async {
+  //     expect(
+  //         () => Animator<double>(
+  //               tween: Tween<double>(),
+  //               tweenMap: {},
+  //               builder: (_, anim, __) {
+  //                 return Container();
+  //               },
+  //             ),
+  //         throwsException);
+  //   },
+  // );
+
+  testWidgets(
+    'should animatorKey as observer works, cas it is assigned before observer',
+    (tester) async {
+      final animatorKey = AnimatorKey<double>();
+      final widget = Column(
+        children: [
+          Animator<double>(
+            animatorKey: animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(MaterialApp(
+        home: widget,
+      ));
+      expect(find.text('0.0'), findsNWidgets(3));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(3));
+      //
+      animatorKey.triggerAnimation();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('0.4'), findsNWidgets(3));
+      //
+      animatorKey.triggerAnimation(restart: true);
+      await tester.pump();
+      expect(find.text('0.0'), findsNWidgets(3));
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(3));
+      expect(animatorKey.controller.status, AnimationStatus.completed);
+      await tester.pumpAndSettle();
+    },
+  );
+
+  testWidgets(
+    'animatorKey as observer',
+    (tester) async {
+      final animatorKey = AnimatorKey<double>(initialValue: 0);
+      final widget = Column(
+        children: [
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          Animator<double>(
+            animatorKey: animatorKey,
+            child: Text('child'),
+            builder: (_, anim, child) {
+              return Column(
+                children: [
+                  child,
+                  Text('${anim.value}'),
+                ],
+              );
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            child: Text('child'),
+            builder: (_, anim, child) {
+              return Column(
+                children: [
+                  child,
+                  Text('${anim.value}'),
+                ],
+              );
+            },
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(MaterialApp(
+        home: widget,
+      ));
+      expect(find.text('0.0'), findsNWidgets(4));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(4));
+      //
+      animatorKey.triggerAnimation();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('0.4'), findsNWidgets(4));
+      //
+      animatorKey.triggerAnimation(restart: true);
+      await tester.pump();
+      expect(find.text('0.0'), findsNWidgets(4));
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(4));
+      expect(animatorKey.controller.status, AnimationStatus.completed);
+      expect(find.text('child'), findsNWidgets(2));
+
+      await tester.pumpAndSettle();
+    },
+  );
 }
 
-class ViewModel1 extends StatesRebuilderWithAnimator<double> {
-  double get value => animation.value;
-  init(TickerProvider ticker) {
-    initAnimation(ticker);
-
-    addAnimationListener(() {
-      rebuildStates();
-    });
-  }
-}
-
-class ViewModel extends StatesRebuilder {
-  startAnimation() {
-    rebuildStates();
-  }
-}
+class ViewModel extends StatesRebuilder<ViewModel> {}
 
 class _Ticker extends State with TickerProviderStateMixin {
   @override

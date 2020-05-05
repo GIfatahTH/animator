@@ -32,15 +32,15 @@ class MyHomePage extends StatelessWidget {
           },
           cycles: 0,
           duration: Duration(seconds: 2),
-          builderMap: (Map<String, Animation> anim) => FadeTransition(
-                opacity: anim["opacity"],
-                child: FractionalTranslation(
-                  translation: anim["translation"].value,
-                  child: FlutterLogo(
-                    size: 50,
-                  ),
-                ),
+          builder: (context, anim, child) => FadeTransition(
+            opacity: anim.getAnimation('opacity'),
+            child: FractionalTranslation(
+              translation: anim.getValue('translation'),
+              child: FlutterLogo(
+                size: 50,
               ),
+            ),
+          ),
         ),
         Divider(),
         Text(
@@ -55,18 +55,18 @@ class MyHomePage extends StatelessWidget {
           },
           cycles: 0,
           duration: Duration(seconds: 2),
-          builderMap: (anim) => FadeTransition(
-                opacity: anim["opacity"],
-                child: FractionalTranslation(
-                  translation: anim["translation"].value,
-                  child: Transform.rotate(
-                    angle: anim["rotation"].value,
-                    child: FlutterLogo(
-                      size: 50,
-                    ),
-                  ),
+          builder: (context, anim, child) => FadeTransition(
+            opacity: anim.getAnimation('opacity'),
+            child: FractionalTranslation(
+              translation: anim.getValue('translation'),
+              child: Transform.rotate(
+                angle: anim.getValue('rotation'),
+                child: FlutterLogo(
+                  size: 50,
                 ),
               ),
+            ),
+          ),
         ),
         Divider(),
         Text(
@@ -83,35 +83,35 @@ class MyHomePage extends StatelessWidget {
           },
           cycles: 0,
           duration: Duration(seconds: 3),
-          builderMap: (anim) => FadeTransition(
-                opacity: anim["opacity"],
-                child: FractionalTranslation(
-                  translation: anim["translation"].value,
-                  child: Transform.rotate(
-                    angle: anim["rotation"].value * 2.0,
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: <Widget>[
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: anim['color'].value,
-                              shape: BoxShape.circle),
-                        ),
-                        Container(
-                          width: 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ],
+          builder: (context, anim, child) => FadeTransition(
+            opacity: anim.getAnimation('opacity'),
+            child: FractionalTranslation(
+              translation: anim.getValue('translation'),
+              child: Transform.rotate(
+                angle: anim.getValue('rotation') * 2.0,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: anim.getValue('color'),
+                          shape: BoxShape.circle),
                     ),
-                  ),
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
         ),
         Divider(),
         Text(
@@ -128,38 +128,38 @@ class MyHomePage extends StatelessWidget {
           },
           cycles: 0,
           duration: Duration(seconds: 3),
-          builderMap: (anim) => FadeTransition(
-                opacity: anim["opacity"],
-                child: FractionalTranslation(
-                  translation: anim["translation"].value,
-                  child: Transform.rotate(
-                    angle: anim["rotation"].value * 2.0,
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: <Widget>[
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent, shape: BoxShape.circle),
-                        ),
-                        Transform.scale(
-                          scale: anim['scale'].value,
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: anim["color"].value,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ],
+          builder: (context, anim, child) => FadeTransition(
+            opacity: anim.getAnimation('opacity'),
+            child: FractionalTranslation(
+              translation: anim.getValue('translation'),
+              child: Transform.rotate(
+                angle: anim.getValue<double>('rotation') * 2.0,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.blueAccent, shape: BoxShape.circle),
                     ),
-                  ),
+                    Transform.scale(
+                      scale: anim.getValue('scale'),
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: anim.getValue('color'),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
         ),
         Divider(),
       ],

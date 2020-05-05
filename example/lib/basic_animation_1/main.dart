@@ -5,7 +5,7 @@ import 'pages/scale.dart';
 import 'pages/translation.dart';
 import 'pages/multi_tween.dart';
 import 'pages/flutter_animation.dart';
-import 'pages/explicit_like.dart';
+import 'pages/animator_key.dart';
 
 class BasicAnimation1 extends StatelessWidget {
   @override
@@ -22,7 +22,7 @@ class BasicAnimation1 extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  goto(Widget page, BuildContext context) {
+  void goto(Widget page, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -62,7 +62,7 @@ class MyHomePage extends StatelessWidget {
             onPressed: () => goto(FlutterAnimation(), context),
           ),
           RaisedButton(
-            child: Text("Explicit-like Animation"),
+            child: Text("Animation with AnimatorKey"),
             onPressed: () => goto(ExplicitAnimation(), context),
           )
         ],
