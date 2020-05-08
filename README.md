@@ -51,13 +51,13 @@ Animator({
             //to get animation value:
             final T value =  animatorState.value;
             //to get Animation object:
-            final Animation<T> animation =  animatorState.animation;
+            final Animation<T> animation = animatorState.animation;
             //to get AnimationController object:
-            final AnimationController animation =  animatorState.controller;
+            final AnimationController animation = animatorState.controller;
             //to get animation value form tweenMap
-            final R value =animatorState.getValue<R>('animName');
+            final R value = animatorState.getValue<R>('animName');
             //To get Animation object from tweenMap
-            final Animation<R> value =animatorState.getAnimation<R>('animName');
+            final Animation<R> value = animatorState.getAnimation<R>('animName');
         },
         child : MayWidget(), //widget to not rebuild with animation
     )
@@ -124,7 +124,7 @@ class AnimatedLogo extends StatelessWidget {
       cycles: 0,
       builder: (context, animatorState, child ) => Center(
             child: FractionalTranslation(
-              translation: animatorState.getAnimation<double>('translateAnim),
+              translation: animatorState.getAnimation<double>('translateAnim'),
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 height: animatorState.getAnimation<Offset>('scaleAnim'),
