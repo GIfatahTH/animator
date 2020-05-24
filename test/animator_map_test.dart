@@ -319,7 +319,7 @@ void main() {
       final vm = ViewModel();
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
               tickerMixin: TickerMixin.tickerProviderStateMixin,
