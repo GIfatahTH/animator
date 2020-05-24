@@ -47,7 +47,7 @@ Animator({
 * In the `builder` argument (6) you put your widgets to be animated.
   ```dart
       Animator<T>(
-        builder : (BuildContext context, AnimatorKey animatorState, Widget child) {
+        builder : (BuildContext context, AnimatorState animatorState, Widget child) {
             //to get animation value:
             final T value =  animatorState.value;
             //to get Animation object:

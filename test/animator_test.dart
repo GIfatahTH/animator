@@ -669,7 +669,7 @@ void main() {
       final vm = ViewModel();
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
               tween: switcher
@@ -711,7 +711,7 @@ void main() {
 
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
               tween: switcher
@@ -752,7 +752,7 @@ void main() {
 
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
               tickerMixin: TickerMixin.tickerProviderStateMixin,
@@ -855,7 +855,7 @@ void main() {
     final widget = MaterialApp(
       home: Scaffold(
         body: StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             if (switcher == true) {
               return Animator<double>(
@@ -890,7 +890,7 @@ void main() {
       final animatorKey = AnimatorKey<Offset>();
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
-          models: [vm],
+          observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
               tween: switcher

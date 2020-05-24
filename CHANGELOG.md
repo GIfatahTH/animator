@@ -1,3 +1,6 @@
+## [2.0.1]
+* update dependencies
+
 ## [2.0.0]
 ## Breaking changes:
 * Remove explicit-like animation.
