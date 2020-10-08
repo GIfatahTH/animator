@@ -126,7 +126,9 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
     }
 
     if (_triggerOnInit == true) {
-      triggerAnimation();
+      Future.delayed(animator.delay).then((_) {
+        triggerAnimation();
+      });
     }
   }
 
