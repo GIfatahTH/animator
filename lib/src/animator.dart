@@ -44,7 +44,8 @@ class Animator<T> extends StatefulWidget {
   })  : assert(builder != null),
         super(key: key);
 
-  /// Time to wait before start animation when triggerOnInit is true
+  /// Time to wait before start animation. Works with triggerOnInit
+  /// and manual trigger
   final Duration delay;
 
   ///A linear interpolation between a beginning and ending value.
