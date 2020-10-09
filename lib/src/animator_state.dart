@@ -159,7 +159,8 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   }
 
   ///Start the animation
-  void triggerAnimation({bool restart = false}) {
+  void triggerAnimation({bool restart = false}) async {
+    await Future.delayed(animator.delay);
     if (restart) {
       _skipDismissStatus = true;
       controller?.reset();
