@@ -63,6 +63,7 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
 
   Duration get _duration => animator.duration;
   Curve get _curve => animator.curve;
+  Curve get _reverseCurve => animator.reverseCurve;
   //
   Map<String, Animation> _animationMap;
 
@@ -103,6 +104,7 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
       CurvedAnimation(
         parent: controller,
         curve: _curve,
+        reverseCurve: _reverseCurve,
       ),
     );
     if (animator.tweenMap != null) {

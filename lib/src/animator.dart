@@ -40,6 +40,7 @@ class Animator<T> extends StatefulWidget {
     this.statusListener,
     this.tickerMixin,
     this.delay = Duration.zero,
+    this.reverseCurve,
     // this.observe,
   })  : assert(builder != null),
         super(key: key);
@@ -58,6 +59,9 @@ class Animator<T> extends StatefulWidget {
 
   ///An easing curve, i.e. a mapping of the unit interval to the unit interval.
   final Curve curve;
+
+  ///An easing curve, to use in the reverse animation.
+  final Curve reverseCurve;
 
   ///The number of forward and backward periods the animation
   ///performs before stopping
