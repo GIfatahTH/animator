@@ -50,7 +50,7 @@ class _BodyState extends State<Body> {
               scale: anim.value,
               child: FlutterLogo(
                 size: 50,
-                colors: Colors.red,
+                textColor: Colors.red,
               ),
             ),
           ),
