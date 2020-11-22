@@ -207,7 +207,7 @@ class _AnimatorState<T> extends State<Animator<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return StateWithMixinBuilder<TickerProvider>(
+    return StateWithMixinBuilder<TickerProvider, void>(
       mixinWith: widget.tickerMixin == TickerMixin.tickerProviderStateMixin ||
               widget.resetAnimationOnRebuild == true ||
               widget.animatorKey != null
@@ -215,7 +215,7 @@ class _AnimatorState<T> extends State<Animator<T>> {
           : MixinWith.singleTickerProviderStateMixin,
       key: Key(context.toString()),
       observe: () => _animatorState,
-      initState: (_, ticker) {
+      initState: (_, __, ticker) {
         _animatorState.initAnimation(ticker);
         if (widget.animatorKey != null) {
           (widget.animatorKey as AnimatorKeyImp<T>)
@@ -240,7 +240,7 @@ class _AnimatorState<T> extends State<Animator<T>> {
             };
         }
       },
-      dispose: (_, __) {
+      dispose: (_, __, ___) {
         _animatorState.disposeAnim();
       },
       didUpdateWidget: (_, oldWidget, ticker) {
