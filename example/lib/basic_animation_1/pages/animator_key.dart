@@ -23,6 +23,7 @@ class MyAnimation extends StatelessWidget {
       FlutterLogo(size: 150, style: FlutterLogoStyle.horizontal);
 
   final AnimatorKey animatorKey = AnimatorKey<double>();
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -31,20 +32,20 @@ class MyAnimation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Start Animation and you can not restart it until it ends'),
-            RaisedButton(
+            ElevatedButton(
               child: Text("Animate"),
               onPressed: () => animatorKey.triggerAnimation(),
             ),
             SizedBox(height: 5),
             Text('Start Animation and restart it if it is running'),
-            RaisedButton(
+            ElevatedButton(
               child: Text("restart animation"),
               onPressed: () => animatorKey.triggerAnimation(restart: true),
             ),
             SizedBox(height: 5),
             Text('Change animation setting and restart it'),
             Text('Curve is changed from linear to bounceIn'),
-            RaisedButton(
+            ElevatedButton(
               child: Text("reset and restart animation using AnimatorKey"),
               onPressed: () => animatorKey
                 ..refreshAnimation(

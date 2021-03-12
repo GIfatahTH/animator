@@ -1,8 +1,4 @@
-import 'package:flutter/animation.dart';
-import 'package:flutter/material.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
-
-import '../animator.dart';
+part of 'animator.dart';
 
 ///{@template animatorKey}
 ///A kay that provides access to the [AnimatorState] of the [Animator] widget
@@ -14,9 +10,10 @@ import '../animator.dart';
 ///You can also reconfigure animation and restart is using the
 ///[AnimatorKey.refreshAnimation] method.
 ///{@endtemplate}
-abstract class AnimatorKey<T> implements StatesRebuilder<T>, AnimatorState<T> {
+abstract class AnimatorKey<T> implements AnimatorState<T> {
   ///{@macro animatorKey}
-  factory AnimatorKey({T initialValue, Map<String, dynamic> initialMapValue}) {
+  factory AnimatorKey(
+      {T? initialValue, Map<String, dynamic>? initialMapValue}) {
     return AnimatorKeyImp<T>(initialValue, initialMapValue);
   }
 
@@ -35,7 +32,7 @@ abstract class AnimatorKey<T> implements StatesRebuilder<T>, AnimatorState<T> {
   @override
   AnimationController get controller;
   @override
-  Animation<T> get animation;
+  Animation<T?> get animation;
 
   @override
   T get value;
@@ -66,37 +63,32 @@ abstract class AnimatorKey<T> implements StatesRebuilder<T>, AnimatorState<T> {
 }
 
 ///Implementation of [AnimatorKey]
-class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
+class AnimatorKeyImp<T> implements AnimatorKey<T> {
   ///Implementation of [AnimatorKey]
-  AnimatorKeyImp(this._initialValue, this._initialMapValue) : super(null) {
-    _animatorState = AnimatorStateImp<T>(null);
+  AnimatorKeyImp(this._initialValue, this._initialMapValue) {
+    _animatorState = AnimatorStateImp<T>(null, () {});
   }
 
-  final T _initialValue;
+  final T? _initialValue;
 
-  final Map<String, dynamic> _initialMapValue;
-  AnimatorStateImp<T> _animatorState;
+  final Map<String, dynamic>? _initialMapValue;
+  late AnimatorStateImp<T> _animatorState;
 
   // T initialValue;
   // AnimatorKey({this.initialValue});
   ///set the [AnimatorState] associated with this AnimatorKey
   void setAnimatorState(AnimatorState<T> anim) {
-    //dispose and copy observers from the default animation to the new one
-    _animatorState
-        //   ..disposeAnim()
-        .copy(anim as StatesRebuilder<dynamic>);
-
     _animatorState = anim as AnimatorStateImp<T>;
   }
 
   ///CallBack used to refresh animation.
-  void Function({
-    Tween<T> tween,
-    Map<String, Tween> tweenMap,
-    Duration duration,
-    Curve curve,
-    int repeats,
-    int cycles,
+  late void Function({
+    Tween<T>? tween,
+    Map<String, Tween>? tweenMap,
+    Duration? duration,
+    Curve? curve,
+    int? repeats,
+    int? cycles,
   }) callbackRefreshAnim;
 
   ///Change animation setting and refresh it,
@@ -105,12 +97,12 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
   ///set [autoStart] to false
   @override
   void refreshAnimation({
-    Tween<T> tween,
-    Map<String, Tween> tweenMap,
-    Duration duration,
-    Curve curve,
-    int repeats,
-    int cycles,
+    Tween<T>? tween,
+    Map<String, Tween>? tweenMap,
+    Duration? duration,
+    Curve? curve,
+    int? repeats,
+    int? cycles,
     bool autoStart = true,
   }) {
     callbackRefreshAnim(
@@ -129,15 +121,17 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
   @override
   AnimationController get controller => _animatorState.controller;
   @override
-  Animation<T> get animation => _animatorState.animation;
+  Animation<T?> get animation => _animatorState.animation;
   @override
-  T get value => animation?.value ?? _initialValue;
+  T get value => _animatorState._animation?.value ?? _initialValue!;
   //
 
   @override
   Animation<R> getAnimation<R>(String name) {
-    return _animatorState.getAnimation<R>(name) ??
-        (_initialMapValue[name] as Animation<R>);
+    assert(_animatorState.animator.tweenMap != null);
+    final result = _animatorState._animationMap[name] as Animation<R>?;
+
+    return result ?? (_initialMapValue![name] as Animation<R>);
   }
 
   @override
@@ -148,13 +142,17 @@ class AnimatorKeyImp<T> extends AnimatorStateImp<T> implements AnimatorKey<T> {
     _animatorState.triggerAnimation(restart: restart);
   }
 
-  @override
-  void addObserver({ObserverOfStatesRebuilder observer, String tag}) {
-    _animatorState.addObserver(observer: observer, tag: tag);
+  void _rebuild() {
+    _observers.forEach((setState) => setState());
   }
 
-  @override
-  void removeObserver({ObserverOfStatesRebuilder observer, String tag}) {
-    _animatorState.removeObserver(observer: observer, tag: tag);
+  List<VoidCallback> _observers = [];
+
+  void addObserver(bool Function() setState) {
+    _observers.add(setState);
+  }
+
+  void removeObserver(bool Function() setState) {
+    _observers.remove(setState);
   }
 }

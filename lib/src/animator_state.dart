@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
-
-import 'animator.dart';
+part of 'animator.dart';
 
 ///{@template animatorState}
 ///The state of [Animator] widget.
@@ -12,8 +9,8 @@ import 'animator.dart';
 ///{@endtemplate}
 abstract class AnimatorState<T> {
   ///{@macro animatorState}
-  factory AnimatorState(Animator<T> animator) {
-    return AnimatorStateImp<T>(animator);
+  factory AnimatorState(Animator<T> animator, void Function() rebuildStates) {
+    return AnimatorStateImp<T>(animator, rebuildStates);
   }
 
   ///The [AnimationController] for an animation.
@@ -24,7 +21,7 @@ abstract class AnimatorState<T> {
   AnimationController get controller;
 
   ///The [Animation] object
-  Animation<T> get animation;
+  Animation<T?> get animation;
 
   ///get the animation of provided name
   ///
@@ -39,32 +36,37 @@ abstract class AnimatorState<T> {
 }
 
 ///Implementation of [AnimatorState]
-class AnimatorStateImp<T> extends StatesRebuilder<T>
-    implements AnimatorState<T> {
+class AnimatorStateImp<T> implements AnimatorState<T> {
+  void Function() rebuildStates;
+
   ///Implementation of [AnimatorState]
-  AnimatorStateImp(this.animator);
+  AnimatorStateImp(Animator<T>? animator, this.rebuildStates) {
+    if (animator != null) {
+      this.animator = animator;
+    }
+  }
 
   ///The animator widget the AnimatorState is associated with
-  Animator<T> animator;
+  late Animator<T> animator;
   //
-  AnimationController _controller;
+  late AnimationController _controller;
   @override
   AnimationController get controller => _controller;
   //
-  Animation<T> _animation;
+  Animation<T?>? _animation;
   @override
-  Animation<T> get animation => _animation;
+  Animation<T?> get animation => _animation!;
   @override
-  T get value => _animation.value;
+  T get value => animation.value!;
   //
-  Tween<T> get _tween {
+  Tween<T?> get _tween {
     return animator.tween ?? (Tween<double>(begin: 0, end: 1) as Tween<T>);
   }
 
-  Duration get _duration => animator.duration;
-  Curve get _curve => animator.curve;
+  Duration get _duration => animator.duration!;
+  Curve get _curve => animator.curve!;
   //
-  Map<String, Animation> _animationMap;
+  late Map<String, Animation> _animationMap;
 
   @override
   Animation<R> getAnimation<R>(String name) {
@@ -75,20 +77,23 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   @override
   R getValue<R>(String name) {
     assert(animator.tweenMap != null);
-    return _animationMap[name].value as R;
+    assert(_animationMap[name] != null);
+    return _animationMap[name]!.value as R;
   }
 
   //
   bool get _triggerOnInit => animator.triggerOnInit != null
-      ? animator.triggerOnInit
-      : animator.animatorKey != null ? false : true;
+      ? animator.triggerOnInit!
+      : animator.animatorKey != null
+          ? false
+          : true;
   //
-  int _repeatCount;
-  bool _isCycle;
+  late int _repeatCount;
+  late bool _isCycle;
   bool _skipDismissStatus = false;
   //
   final List<void Function(AnimationStatus)> _statusListener = [];
-  Function(AnimationStatus) _statusListenerForRepeats;
+  late Function(AnimationStatus) _statusListenerForRepeats;
 
   ///initialize animation
   void initAnimation(TickerProvider ticker) {
@@ -106,11 +111,11 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
       ),
     );
     if (animator.tweenMap != null) {
-      _animationMap = animator.tweenMap.map(
+      _animationMap = animator.tweenMap!.map(
         (name, tween) => MapEntry(
           name,
           tween.animate(
-            CurvedAnimation(parent: controller, curve: animator.curve),
+            CurvedAnimation(parent: controller, curve: animator.curve!),
           ),
         ),
       );
@@ -120,8 +125,16 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
     _addAnimationListeners();
 
     if (animator.statusListener != null) {
-      _animation.addStatusListener(
-        (status) => animator.statusListener(status, this),
+      animation.addStatusListener(
+        (status) => animator.statusListener!(status, this),
+      );
+    }
+
+    if (animator.animatorKey != null) {
+      animation.addListener(
+        () {
+          (animator.animatorKey as AnimatorKeyImp)._rebuild();
+        },
       );
     }
 
@@ -131,13 +144,13 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   }
 
   void _addAnimationListeners() {
-    _animation.addListener(rebuildStates);
+    animation.addListener(rebuildStates);
     if (animator.customListener != null) {
-      _animation.addListener(() => animator.customListener(this));
+      animation.addListener(() => animator.customListener!(this));
     }
   }
 
-  void _setRepeatCount(int repeats, int cycles) {
+  void _setRepeatCount(int? repeats, int? cycles) {
     _repeatCount = repeats == null ? cycles ?? 1 : repeats;
     _addAnimationStatusListener(_statusListenerForRepeats);
   }
@@ -149,12 +162,12 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   }
 
   void _addStatusListener(void Function(AnimationStatus) listener) {
-    _animation.addStatusListener(listener);
+    animation.addStatusListener(listener);
     _statusListener.add(listener);
   }
 
   void _removeStatusListener(void Function(AnimationStatus) listener$) {
-    _animation.removeStatusListener(listener$);
+    animation.removeStatusListener(listener$);
     _statusListener.remove(listener$);
   }
 
@@ -162,12 +175,12 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   void triggerAnimation({bool restart = false}) {
     if (restart) {
       _skipDismissStatus = true;
-      controller?.reset();
+      controller.reset();
       _skipDismissStatus = false;
     }
-    if (_animation.status == AnimationStatus.dismissed) {
+    if (animation.status == AnimationStatus.dismissed) {
       controller.forward();
-    } else if (_animation.status == AnimationStatus.completed) {
+    } else if (animation.status == AnimationStatus.completed) {
       if (!_isCycle) {
         controller
           ..reset()
@@ -181,7 +194,7 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
   ///close animation controller
   void disposeAnim() {
     if (!_isControllerDisposed()) {
-      controller?.dispose();
+      controller.dispose();
     }
     _statusListener.clear();
   }
@@ -204,7 +217,7 @@ class AnimatorStateImp<T> extends StatesRebuilder<T>
               !_skipDismissStatus)) {
         if (_repeatCount == 1) {
           if (animator.endAnimationListener != null) {
-            animator.endAnimationListener(this);
+            animator.endAnimationListener!(this);
           }
           _setRepeatCount(animator.repeats, animator.cycles);
           if (animator.animatorKey == null &&

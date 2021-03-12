@@ -6,10 +6,9 @@ import 'package:animator/animator.dart';
 class MyCustomPainterAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: MyPainterWidget(),
-      ),
+    return Scaffold(
+      appBar: AppBar(),
+      body: MyPainterWidget(),
     );
   }
 }

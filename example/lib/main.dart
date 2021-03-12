@@ -37,15 +37,15 @@ class MyHomePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text("Basic Animation 0"),
             onPressed: () => goto(BasicAnimation0(), context),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Basic Animation 1"),
             onPressed: () => goto(BasicAnimation1(), context),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Basic Animation 2"),
             onPressed: () => goto(MyCustomPainterAnimation(), context),
           ),
