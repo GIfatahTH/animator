@@ -1,34 +1,19 @@
 import 'package:animator/src/animator.dart';
-import 'package:animator/src/animator_key.dart';
-import 'package:animator/src/animator_rebuilder.dart';
-import 'package:animator/src/animator_state.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  test('should throw error if both builder is not provided', () {
-    expect(() {
-      Animator<double>(
-        tween: Tween<double>(begin: 0, end: 1),
-        duration: const Duration(seconds: 1),
-        curve: Curves.linear,
-      );
-    }, throwsAssertionError);
-  });
-
-  test('should instantiate animation Controller and animation objects', () {
+  testWidgets('should instantiate animation Controller and animation objects',
+      (tester) async {
     final animator = Animator<double>(
       triggerOnInit: false,
-      builder: (_, anim, __) => null,
+      builder: (_, anim, __) {
+        return Container();
+      },
     );
-    AnimatorState<double> animatorBloc;
-    animatorBloc = AnimatorState<double>(animator
-        // AnimationParameters(animatorBloc)..setAnimationParameters(animator),
-        );
-
-    expect(animatorBloc.controller, isNull);
-    expect(animatorBloc.animation, isNull);
+    final animatorBloc = AnimatorState<double>(animator, () {});
 
     (animatorBloc as AnimatorStateImp).initAnimation(_Ticker());
 
@@ -39,8 +24,8 @@ void main() {
   testWidgets(
       'should initialize animation without starting it (triggerOnInit = false)',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
 
     final animator = Animator<double>(
       triggerOnInit: false,
@@ -67,8 +52,8 @@ void main() {
   testWidgets(
       'should auto-starts (triggerOnInit = true) and ends after 1 s (repeat=1)',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -101,8 +86,8 @@ void main() {
 
   testWidgets('should auto-starts and ends after 500ms (repeat=1) : Tween<int>',
       (WidgetTester tester) async {
-    int animationValue;
-    AnimationStatus animationStatue;
+    int? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<int>(
       tween: IntTween(begin: 0, end: 10), // use IntTween instead of Tween<int>
@@ -135,8 +120,8 @@ void main() {
 
   testWidgets('should auto-starts (triggerOnInit = true) and repeat 2 times',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -165,8 +150,8 @@ void main() {
 
   testWidgets('should auto-starts (triggerOnInit = true) and cycle 2 times',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -199,8 +184,8 @@ void main() {
 
   testWidgets('should auto-starts (triggerOnInit = true) and repeat 5 times',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     var animationIsEndedNumber = 0;
 
@@ -236,8 +221,8 @@ void main() {
 
   testWidgets('should auto-starts (triggerOnInit = true) and cycle 5 times',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     var animationIsEndedNumber = 0;
     final animator = Animator<double>(
@@ -309,10 +294,10 @@ void main() {
 
   testWidgets('should customListener be called each frame',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
-    double customAnimationValue;
+    double? customAnimationValue;
 
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -349,8 +334,8 @@ void main() {
 
   testWidgets('should not auto-Start because animatorKey is defined',
       (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -383,8 +368,8 @@ void main() {
   testWidgets(
       'should  auto-Start (triggerOnInit is true '
       'although  animatorKey is defined', (WidgetTester tester) async {
-    double animationValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       duration: const Duration(seconds: 1),
@@ -419,10 +404,10 @@ void main() {
   testWidgets(
     'should not auto-Start, it will be triggered from the viewModel class',
     (WidgetTester tester) async {
-      double animationValue;
-      AnimationStatus animationStatue;
+      double? animationValue;
+      AnimationStatus? animationStatue;
       var numberOfRepeats = 0;
-      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animatorKey = AnimatorKey<double>();
       final animator = Animator<double>(
         duration: const Duration(seconds: 1),
         animatorKey: animatorKey,
@@ -469,10 +454,10 @@ void main() {
     'should not auto-Start, it will be triggered from the viewModel class '
     '(4 repeats)',
     (WidgetTester tester) async {
-      double animationValue;
-      AnimationStatus animationStatue;
+      double? animationValue;
+      AnimationStatus? animationStatue;
       var numberOfRepeats = 0;
-      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animatorKey = AnimatorKey<double>();
       final animator = Animator<double>(
         duration: const Duration(seconds: 1),
         animatorKey: animatorKey,
@@ -520,10 +505,10 @@ void main() {
     'should not auto-Start, it will be triggered from the viewModel class '
     '(1 cycle)',
     (WidgetTester tester) async {
-      double animationValue;
-      AnimationStatus animationStatue;
+      double? animationValue;
+      AnimationStatus? animationStatue;
       var numberOfRepeats = 0;
-      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animatorKey = AnimatorKey<double>();
       final animator = Animator<double>(
         duration: const Duration(seconds: 1),
         animatorKey: animatorKey,
@@ -581,10 +566,10 @@ void main() {
     'should not auto-Start, it will be triggered from the viewModel class'
     ' (4 cycle)',
     (WidgetTester tester) async {
-      double animationValue;
-      AnimationStatus animationStatue;
+      double? animationValue;
+      AnimationStatus? animationStatue;
       var numberOfRepeats = 0;
-      final AnimatorKey animatorKey = AnimatorKey<double>();
+      final animatorKey = AnimatorKey<double>();
       final animator = Animator<double>(
         duration: const Duration(seconds: 1),
         animatorKey: animatorKey,
@@ -641,7 +626,7 @@ void main() {
   testWidgets(
     'should ColorTween tween work',
     (WidgetTester tester) async {
-      Color color;
+      Color? color;
       final animator = Animator<Color>(
         tween: ColorTween(begin: Colors.red, end: Colors.blue),
         builder: (_, anim, __) {
@@ -663,10 +648,10 @@ void main() {
   testWidgets(
     'online change of animation setup, resetAnimationOnRebuild = true',
     (WidgetTester tester) async {
-      Offset offset;
+      Offset? offset;
       var switcher = true;
 
-      final vm = ViewModel();
+      final vm = RM.inject(() => ViewModel());
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
           observe: () => vm,
@@ -705,9 +690,9 @@ void main() {
   testWidgets(
     'animation setup should not change resetAnimationOnRebuild = false',
     (WidgetTester tester) async {
-      Offset offset;
+      Offset? offset;
       var switcher = true;
-      final vm = ViewModel();
+      final vm = RM.inject(() => ViewModel());
 
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
@@ -746,9 +731,9 @@ void main() {
   testWidgets(
     'animation should not start resetAnimationOnRebuild = false',
     (WidgetTester tester) async {
-      Offset offset;
+      Offset? offset;
       var switcher = true;
-      final vm = ViewModel();
+      final vm = RM.inject(() => ViewModel());
 
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
@@ -788,43 +773,6 @@ void main() {
     },
   );
 
-  test(
-      'TweenMap :should throw an exception '
-      '((observe is null))', () {
-    expect(() {
-      AnimatorRebuilder(
-        observe: null,
-        builder: (_, anim, __) {
-          return Container();
-        },
-      );
-    }, throwsAssertionError);
-  });
-
-  testWidgets(
-      'TweenMap :should throw an exception '
-      '((observer returns null))', (tester) async {
-    await tester.pumpWidget(AnimatorRebuilder(
-      observe: () => null,
-      builder: (_, anim, __) {
-        return Container();
-      },
-    ));
-
-    expect(tester.takeException(), isAssertionError);
-  });
-
-  test(
-      'TweenMap :should throw an exception '
-      '(builder is null)', () {
-    expect(() {
-      AnimatorRebuilder(
-        observe: () => AnimatorKey<dynamic>(),
-        builder: null,
-      );
-    }, throwsAssertionError);
-  });
-
   // test(
   //     'TweenMap :should throw an exception '
   //     '((builder notEq null && builderMap notEq null))', () {
@@ -851,7 +799,7 @@ void main() {
   testWidgets('stop and dispose animation when animator is disposed',
       (tester) async {
     var switcher = true;
-    var vm = ViewModel();
+    var vm = RM.inject(() => ViewModel());
     final widget = MaterialApp(
       home: Scaffold(
         body: StateBuilder<ViewModel>(
@@ -883,10 +831,10 @@ void main() {
   testWidgets(
     'online change of animation setup, using refreshAnimation',
     (WidgetTester tester) async {
-      Offset offset;
+      Offset? offset;
       var switcher = true;
 
-      final vm = ViewModel();
+      final vm = RM.inject(() => ViewModel());
       final animatorKey = AnimatorKey<Offset>();
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
@@ -1014,7 +962,7 @@ void main() {
             builder: (_, anim, child) {
               return Column(
                 children: [
-                  child,
+                  child!,
                   Text('${anim.value}'),
                 ],
               );
@@ -1026,7 +974,7 @@ void main() {
             builder: (_, anim, child) {
               return Column(
                 children: [
-                  child,
+                  child!,
                   Text('${anim.value}'),
                 ],
               );
@@ -1061,11 +1009,11 @@ void main() {
   );
 }
 
-class ViewModel extends StatesRebuilder<ViewModel> {}
+class ViewModel {}
 
 class _Ticker extends State with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return null;
+    return Container();
   }
 }

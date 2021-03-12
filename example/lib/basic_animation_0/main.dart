@@ -1,15 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
 
 class BasicAnimation0 extends StatelessWidget {
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Basic Animation 0'),
-        ),
-        body: Body(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Basic Animation 0'),
       ),
+      body: Body(),
     );
   }
 }
@@ -58,7 +58,6 @@ class _BodyState extends State<Body> {
         Divider(),
         Text('Animation is reset on rebuild. Curve changes on rebuild'),
         Animator<double>(
-          // tickerMixin: TickerMixin.tickerProviderStateMixin,
           duration: Duration(seconds: 2),
           repeats: 1,
           resetAnimationOnRebuild: true,
@@ -70,7 +69,7 @@ class _BodyState extends State<Body> {
             ),
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('Rebuild '),
           onPressed: () {
             setState(() {

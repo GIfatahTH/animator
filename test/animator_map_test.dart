@@ -1,4 +1,3 @@
-import 'package:animator/src/animator_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -7,9 +6,9 @@ import 'package:animator/src/animator.dart';
 void main() {
   testWidgets('TweenMap default setting : auto start and stop ofter 500ms',
       (WidgetTester tester) async {
-    double animationValue;
-    Offset offsetValue;
-    AnimationStatus animationStatue;
+    double? animationValue;
+    Offset? offsetValue;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<Offset>(
       tween: Tween<Offset>(begin: Offset.zero, end: const Offset(1, 10)),
@@ -50,9 +49,9 @@ void main() {
   testWidgets(
       'TweenMap Two tweens (double and Offset): '
       'auto start and stop ofter 500ms', (WidgetTester tester) async {
-    double animationValue1;
-    Offset animationValue2;
-    AnimationStatus animationStatue;
+    double? animationValue1;
+    Offset? animationValue2;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       tweenMap: {
@@ -94,10 +93,10 @@ void main() {
       'TweenMap three tweens '
       '(double and Offset and int): auto start and stop ofter 500ms',
       (WidgetTester tester) async {
-    double animationValue1;
-    Offset animationValue2;
-    int animationValue3;
-    AnimationStatus animationStatue;
+    double? animationValue1;
+    Offset? animationValue2;
+    int? animationValue3;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       tweenMap: {
@@ -145,10 +144,10 @@ void main() {
       'TweenMap three tweens '
       '(Alignment  and Offset and ColorTween): repeat = 4',
       (WidgetTester tester) async {
-    Alignment animationValue1;
-    Offset animationValue2;
-    Color animationValue3;
-    AnimationStatus animationStatue;
+    Alignment? animationValue1;
+    Offset? animationValue2;
+    Color? animationValue3;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       tweenMap: {
@@ -197,10 +196,10 @@ void main() {
   testWidgets(
       'TweenMap three tweens (Alignment  and Offset and int): cycle = 4',
       (WidgetTester tester) async {
-    Alignment animationValue1;
-    Offset animationValue2;
-    Color animationValue3;
-    AnimationStatus animationStatue;
+    Alignment? animationValue1;
+    Offset? animationValue2;
+    Color? animationValue3;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animator = Animator<double>(
       tweenMap: {
@@ -314,9 +313,9 @@ void main() {
     'Nested Animator : online change of animation setup, '
     'resetAnimationOnRebuild = true',
     (WidgetTester tester) async {
-      Offset offset;
+      Offset? offset;
       var switcher = true;
-      final vm = ViewModel();
+      final vm = RM.inject(() => ViewModel());
       await tester.pumpWidget(
         StateBuilder<ViewModel>(
           observe: () => vm,
@@ -362,12 +361,12 @@ void main() {
   testWidgets(
       'Nested Animator: TweenMap Two tweens (double and Offset): '
       'auto start and stop ofter 500ms', (WidgetTester tester) async {
-    double animationValue1_1;
-    Offset animationValue2_1;
-    double animationValue1_2;
-    Offset animationValue2_2;
-    AnimationStatus animationStatue_1;
-    AnimationStatus animationStatue_2;
+    double? animationValue1_1;
+    Offset? animationValue2_1;
+    double? animationValue1_2;
+    Offset? animationValue2_2;
+    AnimationStatus? animationStatue_1;
+    AnimationStatus? animationStatue_2;
     var numberOfRepeats_1 = 0;
     var numberOfRepeats_2 = 0;
 
@@ -431,9 +430,9 @@ void main() {
   testWidgets(
       'AnimatorKey with tweenMap'
       'auto start and stop ofter 500ms', (WidgetTester tester) async {
-    double animationValue1;
-    Offset animationValue2;
-    AnimationStatus animationStatue;
+    double? animationValue1;
+    Offset? animationValue2;
+    AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
     final animatorKey = AnimatorKey<double>();
     final animator = Animator<double>(
@@ -475,4 +474,4 @@ void main() {
   });
 }
 
-class ViewModel extends StatesRebuilder<ViewModel> {}
+class ViewModel {}

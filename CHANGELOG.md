@@ -1,3 +1,6 @@
+## [3.0.0]
+* update to null safety
+
 ## [2.0.2]
 * update dependencies
 
