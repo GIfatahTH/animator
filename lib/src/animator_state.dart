@@ -143,6 +143,7 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   //
   late int _repeatCount;
   late bool _isCycle;
+  //used to skip the dismiss status when cycle is defined
   bool _skipDismissStatus = false;
   //
 
@@ -193,7 +194,7 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
     _animation = null;
 
     _isCycle = repeats == null && cycles != null;
-    _setRepeatCount(animator.repeats, animator.cycles);
+    _repeatCount = _setRepeatCount(animator.repeats, animator.cycles);
     _addAnimationStatusListener(_getStatusListenerCallBack);
   }
 
@@ -202,10 +203,6 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
     if (animator.customListener != null) {
       controller.addListener(() => animator.customListener!(this));
     }
-  }
-
-  void _setRepeatCount(int? repeats, int? cycles) {
-    _repeatCount = repeats == null ? cycles ?? 1 : repeats;
   }
 
   ///
@@ -252,7 +249,7 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
         if (animator.endAnimationListener != null) {
           animator.endAnimationListener!(this);
         }
-        _setRepeatCount(animator.repeats, animator.cycles);
+        _repeatCount = _setRepeatCount(animator.repeats, animator.cycles);
         // if (animator.animatorKey == null &&
         //     animator.resetAnimationOnRebuild != true) {
         //   _controller?.dispose();
@@ -274,4 +271,8 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
       }
     }
   };
+}
+
+int _setRepeatCount(int? repeats, int? cycles) {
+  return repeats == null ? cycles ?? 1 : repeats;
 }

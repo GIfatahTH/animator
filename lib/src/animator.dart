@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-part 'state_builder.dart';
-part 'animator_state.dart';
+
 part 'animator_key.dart';
 part 'animator_rebuilder.dart';
+part 'animator_state.dart';
+part 'child.dart';
 part 'implicit_animator.dart';
+part 'state_builder.dart';
 
 ///Ticker mixin enumeration
 enum TickerMixin {

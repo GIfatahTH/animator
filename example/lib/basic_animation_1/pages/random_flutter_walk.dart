@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
 
 class RandomFlutterWalk extends StatelessWidget {
   @override
@@ -13,7 +12,10 @@ class RandomFlutterWalk extends StatelessWidget {
           title: Text('Flutter Random Walk'),
         ),
         body: Child(
-          (child) => Animator<Offset>(
+          child: FlutterLogo(
+            size: 50,
+          ),
+          builder: (child) => Animator<Offset>(
             tween: Tween<Offset>(
               begin: Offset(0.0, 0.0),
               end: Offset(
@@ -64,9 +66,6 @@ class RandomFlutterWalk extends StatelessWidget {
                   ..triggerAnimation();
               }
             },
-          ),
-          child: FlutterLogo(
-            size: 50,
           ),
         ));
   }
