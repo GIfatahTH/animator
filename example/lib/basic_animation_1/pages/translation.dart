@@ -41,7 +41,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("FractionalTranslation", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween:
                         Tween<Offset>(begin: Offset(-1, 0), end: Offset(1, 0)),
                     duration: Duration(seconds: 2),
@@ -58,7 +58,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Transform.translate", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-50, 0), end: Offset(50, 0)),
                     duration: Duration(seconds: 2),
@@ -75,7 +75,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("SlideTransition", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween:
                         Tween<Offset>(begin: Offset(-1, 0), end: Offset(1, 0)),
                     duration: Duration(seconds: 2),
@@ -102,7 +102,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 0", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-50, 0), end: Offset(50, 0)),
                     duration: Duration(seconds: 2),
@@ -120,7 +120,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 0.", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-50, 0), end: Offset(100, 0)),
                     duration: Duration(seconds: 2),
@@ -148,7 +148,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("(-a, 0)=>(a, 0)", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
@@ -165,7 +165,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("(-a, a)=>(a, a)", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, -0.5), end: Offset(0.5, 0.5)),
                     duration: Duration(seconds: 2),
@@ -182,7 +182,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("(0, -a)=>(0, a)", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(0, -0.5), end: Offset(0, 0.5)),
                     duration: Duration(seconds: 2),
@@ -199,7 +199,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("(a, -a)=>(-a, a)", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(0.5, -0.5), end: Offset(-0.5, 0.5)),
                     duration: Duration(seconds: 2),
@@ -226,7 +226,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("bounceOut", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
@@ -244,7 +244,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("bounceIn", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
@@ -262,7 +262,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("bounceInOut", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
@@ -280,7 +280,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("decelerate", style: _style),
-                  Animator(
+                  Animator<Offset>(
                     tween: Tween<Offset>(
                         begin: Offset(-0.5, 0), end: Offset(0.5, 0)),
                     duration: Duration(seconds: 2),
@@ -309,7 +309,7 @@ class MyHomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("translation + rotateZ", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animatorState, __) => Transform(
@@ -328,7 +328,7 @@ class MyHomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("translation + rotateZ +scale", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animatorState, __) => Transform(

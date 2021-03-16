@@ -740,13 +740,13 @@ void main() {
           observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
-              tickerMixin: TickerMixin.tickerProviderStateMixin,
+              // tickerMixin: TickerMixin.tickerProviderStateMixin,
               tween: switcher
                   ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
                   : Tween<Offset>(
                       begin: const Offset(10, 10), end: const Offset(20, 20)),
               duration: const Duration(seconds: 1),
-              resetAnimationOnRebuild: true,
+              resetAnimationOnRebuild: false,
               triggerOnInit: false,
               builder: (_, anim, __) {
                 offset = anim.value;
@@ -766,10 +766,10 @@ void main() {
       switcher = false;
       vm.rebuildStates();
       await tester.pump();
-      expect(offset, const Offset(10, 10));
+      expect(offset, const Offset(0, 0));
 
       await tester.pumpAndSettle();
-      expect(offset, const Offset(10, 10));
+      expect(offset, const Offset(0, 0));
     },
   );
 
@@ -864,7 +864,7 @@ void main() {
       switcher = false;
       vm.rebuildStates();
       await tester.pump();
-      animatorKey.refreshAnimation();
+      animatorKey.resetAnimation();
       await tester.pump();
       expect(offset, const Offset(10, 10));
 

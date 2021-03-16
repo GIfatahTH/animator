@@ -2,62 +2,72 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
-class RandomFlutterWalk extends StatefulWidget {
-  @override
-  _RandomFlutterWalkState createState() => _RandomFlutterWalkState();
-}
-
-class _RandomFlutterWalkState extends State<RandomFlutterWalk> {
-  double beginX = 0.0;
-  double beginY = 0.0;
-  double endX = Random().nextDouble() * 50;
-  double endY = Random().nextDouble() * 50;
-  int seconds = Random().nextInt(1000);
-
+class RandomFlutterWalk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: Animator<Offset>(
-        tween: Tween<Offset>(
-            begin: Offset(beginX, beginY), end: Offset(endX, endY)),
-        duration: Duration(milliseconds: 500 + seconds),
-        curve: seconds % 2 == 0 ? Curves.linear : Curves.easeInOut,
-        resetAnimationOnRebuild: true,
-        triggerOnInit: true,
-        cycles: 1,
-        builder: (_, animatorState, __) => Transform.translate(
-          offset: animatorState.value,
+        appBar: AppBar(
+          title: Text('Flutter Random Walk'),
+        ),
+        body: Child(
+          (child) => Animator<Offset>(
+            tween: Tween<Offset>(
+              begin: Offset(0.0, 0.0),
+              end: Offset(
+                Random().nextDouble() * 50,
+                Random().nextDouble() * 50,
+              ),
+            ),
+            duration: Duration(milliseconds: 500 + Random().nextInt(1000)),
+            curve: Curves.linear,
+            // resetAnimationOnRebuild: true,
+            triggerOnInit: true,
+            // cycles: 1,
+            builder: (_, animatorState, __) {
+              return Transform.translate(
+                offset: animatorState.value,
+                child: child,
+              );
+            },
+            statusListener: (status, animatorState) {
+              if (status == AnimationStatus.completed) {
+                final sign = Random().nextBool() ? 1 : -1;
+                final beginX = animatorState.value.dx;
+                final beginY = animatorState.value.dy;
+                double endX = beginX + sign * Random().nextDouble() * 50;
+                double endY = beginY + sign * Random().nextDouble() * 50;
+
+                endX =
+                    endX > screenSize.width - 50 ? screenSize.width - 50 : endX;
+                endX = endX < 0 ? 0 : endX;
+                endY = endY > screenSize.height - 50
+                    ? screenSize.width - 50
+                    : endY;
+                endY = endY < 0 ? 0 : endY;
+                // animatorState.endX = nextEndX;
+                // endY = nextEndY;
+                final milliseconds = Random().nextInt(1000);
+                animatorState
+                  ..resetAnimation(
+                    tween: Tween<Offset>(
+                      begin: Offset(beginX, beginY),
+                      end: Offset(endX, endY),
+                    ),
+                    curve: beginY != 0 || beginY != 0
+                        ? Curves.easeInOut
+                        : Curves.bounceIn,
+                    duration: Duration(milliseconds: 500 + milliseconds),
+                  )
+                  ..triggerAnimation();
+              }
+            },
+          ),
           child: FlutterLogo(
             size: 50,
           ),
-        ),
-        statusListener: (status, setup) {
-          if (status == AnimationStatus.completed) {
-            setState(() {
-              final sign = Random().nextBool() ? 1 : -1;
-              beginX = endX;
-              beginY = endY;
-              double nextEndX = endX + sign * Random().nextDouble() * 50;
-              double nextEndY = endY + sign * Random().nextDouble() * 50;
-
-              nextEndX = nextEndX > screenSize.width - 50
-                  ? screenSize.width - 50
-                  : nextEndX;
-              nextEndX = nextEndX < 0 ? 0 : nextEndX;
-              nextEndY = nextEndY > screenSize.height - 50
-                  ? screenSize.width - 50
-                  : nextEndY;
-              nextEndY = nextEndY < 0 ? 0 : nextEndY;
-
-              endX = nextEndX;
-              endY = nextEndY;
-              seconds = Random().nextInt(8);
-            });
-          }
-        },
-      ),
-    );
+        ));
   }
 }

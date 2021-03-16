@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 part 'state_builder.dart';
 part 'animator_state.dart';
 part 'animator_key.dart';
 part 'animator_rebuilder.dart';
+part 'implicit_animator.dart';
 
 ///Ticker mixin enumeration
 enum TickerMixin {
@@ -72,16 +74,16 @@ class Animator<T> extends StatelessWidget {
   ///Function to be called every time the animation value changes.
   ///
   ///The customListener is provided with an [Animation] object.
-  final Function(AnimatorState<T>)? customListener;
+  final void Function(AnimatorState<T>)? customListener;
 
   ///VoidCallback to be called when animation is finished.
-  final Function(AnimatorState<T>)? endAnimationListener;
+  final void Function(AnimatorState<T>)? endAnimationListener;
 
   ///Function to be called every time the status of the animation changes.
   ///
   ///The customListener is provided with an [AnimationStatus, AnimationSetup]
   ///object.
-  final Function(AnimationStatus, AnimatorState<T>)? statusListener;
+  final void Function(AnimationStatus, AnimatorState<T>)? statusListener;
 
   ///The build strategy currently used for one Tween. Animator widget rebuilds
   ///itself every time the animation changes value.
@@ -153,9 +155,9 @@ class Animator<T> extends StatelessWidget {
       builder: builder,
       child: child,
       animatorKey: animatorKey,
-      customListener: customListener,
-      endAnimationListener: endAnimationListener,
-      statusListener: statusListener,
+      customListener: customListener ?? this.customListener,
+      endAnimationListener: endAnimationListener ?? this.endAnimationListener,
+      statusListener: statusListener ?? this.statusListener,
       tickerMixin: tickerMixin,
     );
   }
@@ -166,85 +168,91 @@ class Animator<T> extends StatelessWidget {
       (context, widget, ticker, setState) {
         final animatorState = AnimatorStateImp(this, setState)
           ..initAnimation(ticker);
+
         Animator<T> animator = widget;
-        void resetAnimation({
-          Tween<T>? tween,
-          Map<String, Tween>? tweenMap,
-          Duration? duration,
-          Curve? curve,
-          int? repeats,
-          int? cycles,
-        }) {
-          animatorState
-            ..disposeAnim()
-            ..animator = animator.copyWith(
-              tween: tween,
-              tweenMap: tweenMap,
-              duration: duration,
-              curve: curve,
-              repeats: repeats,
-              cycles: cycles,
-            )
-            ..initAnimation(ticker);
-        }
+        // void resetAnimation({
+        //   Tween<T>? tween,
+        //   Map<String, Tween>? tweenMap,
+        //   Duration? duration,
+        //   Curve? curve,
+        //   int? repeats,
+        //   int? cycles,
+        // }) {
+        //   animatorState
+        //     .._controller?.value = 0
+        //     ..animator = animator.copyWith(
+        //       tween: tween,
+        //       tweenMap: tweenMap,
+        //       duration: duration,
+        //       curve: curve,
+        //       repeats: repeats,
+        //       cycles: cycles,
+        //     )
+        //     ..initAnimation();
+        // }
 
         if (animator.animatorKey != null) {
           (animator.animatorKey as AnimatorKeyImp<T>)
-            ..setAnimatorState(animatorState)
-            ..callbackRefreshAnim = ({
-              Tween<T>? tween,
-              Map<String, Tween>? tweenMap,
-              Duration? duration,
-              Curve? curve,
-              int? repeats,
-              int? cycles,
-            }) {
-              resetAnimation(
-                tween: tween,
-                tweenMap: tweenMap,
-                duration: duration,
-                curve: curve,
-                repeats: repeats,
-                cycles: cycles,
-              );
-            };
+            ..setAnimatorState(animatorState);
+          // ..callbackRefreshAnim = ({
+          //   Tween<T>? tween,
+          //   Map<String, Tween>? tweenMap,
+          //   Duration? duration,
+          //   Curve? curve,
+          //   int? repeats,
+          //   int? cycles,
+          // }) {
+          //   resetAnimation(
+          //     tween: tween,
+          //     tweenMap: tweenMap,
+          //     duration: duration,
+          //     curve: curve,
+          //     repeats: repeats,
+          //     cycles: cycles,
+          //   );
+          // };
         }
 
         return _Builder(
           dispose: () {
-            animatorState.disposeAnim();
+            animatorState._controller?.dispose();
           },
           didUpdateWidget: (oldWidget, newWidget) {
             animator = newWidget;
             if (resetAnimationOnRebuild) {
               animatorState
-                ..disposeAnim()
-                ..animator = animator
-                ..initAnimation(ticker);
+                ..resetAnimation(
+                  tween: animator.tween,
+                  tweenMap: animator.tweenMap,
+                  duration: animator.duration,
+                  curve: animator.curve,
+                  cycles: animator.cycles,
+                  repeats: animator.repeats,
+                )
+                ..triggerAnimation(restart: true);
             }
             if (animator.animatorKey != null) {
               final key = animator.animatorKey! as AnimatorKeyImp<T>;
               key._observers =
                   (oldWidget.animatorKey as AnimatorKeyImp<T>)._observers;
-              key
-                ..setAnimatorState(animatorState)
-                ..callbackRefreshAnim = ({
-                  Tween<T>? tween,
-                  Map<String, Tween>? tweenMap,
-                  Duration? duration,
-                  Curve? curve,
-                  int? repeats,
-                  int? cycles,
-                }) {
-                  resetAnimation(
-                    tween: tween,
-                    tweenMap: tweenMap,
-                    duration: duration,
-                    curve: curve,
-                    repeats: repeats,
-                    cycles: cycles,
-                  );
-                };
+              key..setAnimatorState(animatorState..animator = animator);
+              // ..callbackRefreshAnim = ({
+              //   Tween<T>? tween,
+              //   Map<String, Tween>? tweenMap,
+              //   Duration? duration,
+              //   Curve? curve,
+              //   int? repeats,
+              //   int? cycles,
+              // }) {
+              //   resetAnimation(
+              //     tween: tween,
+              //     tweenMap: tweenMap,
+              //     duration: duration,
+              //     curve: curve,
+              //     repeats: repeats,
+              //     cycles: cycles,
+              //   );
+              // };
             }
           },
           builder: (context, widget) {
@@ -252,11 +260,7 @@ class Animator<T> extends StatelessWidget {
           },
         );
       },
-      isSingleTicker: () {
-        return !(tickerMixin == TickerMixin.tickerProviderStateMixin ||
-            resetAnimationOnRebuild ||
-            animatorKey != null);
-      }(),
+      isSingleTicker: tickerMixin == TickerMixin.singleTickerProviderStateMixin,
       widget: this,
     );
   }

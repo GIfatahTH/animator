@@ -32,7 +32,7 @@ abstract class AnimatorKey<T> implements AnimatorState<T> {
   @override
   AnimationController get controller;
   @override
-  Animation<T?> get animation;
+  Animation<T> get animation;
 
   @override
   T get value;
@@ -41,25 +41,25 @@ abstract class AnimatorKey<T> implements AnimatorState<T> {
   @override
   R getValue<R>(String name);
 
-  ///Reconfigure and restart animation.
-  ///
-  ///If no parameter is defined, it will use the parameters defined in the
-  ///[Animator] widget this [AnimatorKey] is associated with.
-  ///
-  ///Any defined non null parameter will override the same parameter in the
-  ///[Animator] widget.
-  ///
-  ///By default animation will restart after reconfiguration. If you want not,
-  ///set [autoStart] to false
-  void refreshAnimation({
-    Tween<T> tween,
-    Map<String, Tween> tweenMap,
-    Duration duration,
-    Curve curve,
-    int repeats,
-    int cycles,
-    bool autoStart = true,
-  });
+  // ///Reconfigure and restart animation.
+  // ///
+  // ///If no parameter is defined, it will use the parameters defined in the
+  // ///[Animator] widget this [AnimatorKey] is associated with.
+  // ///
+  // ///Any defined non null parameter will override the same parameter in the
+  // ///[Animator] widget.
+  // ///
+  // ///By default animation will restart after reconfiguration. If you want not,
+  // ///set [autoStart] to false
+  // void refreshAnimation({
+  //   Tween<T> tween,
+  //   Map<String, Tween> tweenMap,
+  //   Duration duration,
+  //   Curve curve,
+  //   int repeats,
+  //   int cycles,
+  //   bool autoStart = true,
+  // });
 }
 
 ///Implementation of [AnimatorKey]
@@ -82,29 +82,38 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
   }
 
   ///CallBack used to refresh animation.
-  late void Function({
-    Tween<T>? tween,
+  void callbackRefreshAnim({
+    Tween<T?>? tween,
     Map<String, Tween>? tweenMap,
     Duration? duration,
     Curve? curve,
     int? repeats,
     int? cycles,
-  }) callbackRefreshAnim;
+  }) =>
+      _animatorState
+        ..resetAnimation(
+          tween: tween ?? _animatorState.animator.tween,
+          tweenMap: tweenMap ?? _animatorState.animator.tweenMap,
+          duration: duration ?? _animatorState.animator.duration,
+          curve: curve ?? _animatorState.animator.curve,
+          repeats: repeats ?? _animatorState.animator.repeats,
+          cycles: cycles ?? _animatorState.animator.cycles,
+        )
+        ..triggerAnimation(restart: true);
 
   ///Change animation setting and refresh it,
   ///
   ///By default animation is triggered. If you want the opposite
   ///set [autoStart] to false
   @override
-  void refreshAnimation({
-    Tween<T>? tween,
-    Map<String, Tween>? tweenMap,
-    Duration? duration,
-    Curve? curve,
-    int? repeats,
-    int? cycles,
-    bool autoStart = true,
-  }) {
+  @override
+  void resetAnimation(
+      {Tween<T?>? tween,
+      Map<String, Tween>? tweenMap,
+      Duration? duration,
+      Curve? curve,
+      int? repeats,
+      int? cycles}) {
     callbackRefreshAnim(
       tween: tween,
       tweenMap: tweenMap,
@@ -113,29 +122,28 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
       repeats: repeats,
       cycles: cycles,
     );
-    if (autoStart) {
-      triggerAnimation();
-    }
   }
 
   @override
   AnimationController get controller => _animatorState.controller;
   @override
-  Animation<T?> get animation => _animatorState.animation;
+  Animation<T> get animation => _animatorState.animation;
   @override
-  T get value => _animatorState._animation?.value ?? _initialValue!;
+  T get value => _animatorState._controller != null
+      ? _animatorState.value
+      : _initialValue!;
   //
 
   @override
   Animation<R> getAnimation<R>(String name) {
     assert(_animatorState.animator.tweenMap != null);
-    final result = _animatorState._animationMap[name] as Animation<R>?;
-
-    return result ?? (_initialMapValue![name] as Animation<R>);
+    return _animatorState.getAnimation<R>(name);
   }
 
   @override
-  R getValue<R>(String name) => _animatorState.getValue<R>(name);
+  R getValue<R>(String name) => _animatorState._controller != null
+      ? _animatorState.getValue<R>(name)
+      : _initialMapValue![name] as R;
   //
   @override
   void triggerAnimation({bool restart = false}) {

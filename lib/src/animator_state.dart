@@ -13,6 +13,17 @@ abstract class AnimatorState<T> {
     return AnimatorStateImp<T>(animator, rebuildStates);
   }
 
+  void resetAnimation({
+    Tween<T?>? tween,
+    Map<String, Tween>? tweenMap,
+    Duration? duration,
+    Curve? curve,
+    int? repeats,
+    int? cycles,
+  });
+
+  void triggerAnimation({bool restart = false});
+
   ///The [AnimationController] for an animation.
   ///
   ///It lets you perform tasks such as:
@@ -21,7 +32,7 @@ abstract class AnimatorState<T> {
   AnimationController get controller;
 
   ///The [Animation] object
-  Animation<T?> get animation;
+  Animation<T> get animation;
 
   ///get the animation of provided name
   ///
@@ -49,36 +60,78 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   ///The animator widget the AnimatorState is associated with
   late Animator<T> animator;
   //
-  late AnimationController _controller;
+  AnimationController? _controller;
   @override
-  AnimationController get controller => _controller;
+  AnimationController get controller => _controller!;
   //
-  Animation<T?>? _animation;
+  Animation<T>? _animation;
   @override
-  Animation<T?> get animation => _animation!;
+  Animation<T> get animation =>
+      _animation ??= controller.drive(_curveTween as Animatable<T>);
+
+  // _animation!;
   @override
-  T get value => animation.value!;
-  //
-  Tween<T?> get _tween {
-    return animator.tween ?? (Tween<double>(begin: 0, end: 1) as Tween<T>);
+  T get value {
+    return _curveTween.evaluate(controller)!;
   }
 
-  Duration get _duration => animator.duration!;
-  Curve get _curve => animator.curve!;
+  late Animatable<dynamic> _curveTween;
+
+  late Duration _duration = animator.duration!;
+  set duration(Duration duration) {
+    if (_duration != duration) {
+      _duration = duration;
+      _controller!.duration = _duration;
+    }
+  }
+
+  late Curve _curve = animator.curve!;
+  set curve(Curve curve) {
+    _curve = curve;
+  }
+
   //
-  late Map<String, Animation> _animationMap;
+  late Tween<T?>? _tween = animator.tween;
+  set tween(Tween<T?>? tween) {
+    tween ??= (Tween<double>(begin: 0, end: 1) as Tween<T>);
+    _curveTween = tween.chain(CurveTween(curve: _curve));
+    _tween = tween;
+  }
+
+  Map<String, Tween<dynamic>> _tweenMap = {};
+  set tweenMap(Map<String, Tween> newTweens) {
+    _tweenMap = newTweens;
+    _animationMap.clear();
+    _valuesMap.clear();
+    _tweenMap.forEach((key, tween) {
+      _curvedTweenMap[key] = tween.chain(CurveTween(curve: _curve));
+    });
+  }
+
+  Map<String, Animatable<dynamic>> _curvedTweenMap = {};
+  @override
+  final Map<String, Animation> _animationMap = {};
 
   @override
   Animation<R> getAnimation<R>(String name) {
-    assert(animator.tweenMap != null);
-    return _animationMap[name] as Animation<R>;
+    assert(_tweenMap.isNotEmpty);
+    var anim = _animationMap[name];
+    if (anim != null) {
+      return anim as Animation<R>;
+    }
+    anim = controller.drive(_curvedTweenMap[name]!);
+    _animationMap[name] = anim;
+    return anim as Animation<R>;
   }
 
+  Map<String, dynamic> _valuesMap = {};
   @override
   R getValue<R>(String name) {
-    assert(animator.tweenMap != null);
-    assert(_animationMap[name] != null);
-    return _animationMap[name]!.value as R;
+    assert(_tweenMap.isNotEmpty);
+    assert(_curvedTweenMap[name] != null);
+    final val = _curvedTweenMap[name]!.evaluate(controller);
+    _valuesMap[name] = val;
+    return val;
   }
 
   //
@@ -92,50 +145,31 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   late bool _isCycle;
   bool _skipDismissStatus = false;
   //
-  final List<void Function(AnimationStatus)> _statusListener = [];
-  late Function(AnimationStatus) _statusListenerForRepeats;
 
   ///initialize animation
   void initAnimation(TickerProvider ticker) {
-    _isCycle = animator.repeats == null && animator.cycles != null;
-    _statusListenerForRepeats = _getStatusListenerCallBack();
-
-    _controller = AnimationController(
+    _controller ??= AnimationController(
       duration: _duration,
       vsync: ticker,
     );
-    _animation = _tween.animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: _curve,
-      ),
-    );
-    if (animator.tweenMap != null) {
-      _animationMap = animator.tweenMap!.map(
-        (name, tween) => MapEntry(
-          name,
-          tween.animate(
-            CurvedAnimation(parent: controller, curve: animator.curve!),
-          ),
-        ),
-      );
-    }
 
-    _setRepeatCount(animator.repeats, animator.cycles);
+    resetAnimation(
+      tween: animator.tween,
+      tweenMap: animator.tweenMap,
+      repeats: animator.repeats,
+      cycles: animator.cycles,
+    );
+
     _addAnimationListeners();
 
     if (animator.statusListener != null) {
-      animation.addStatusListener(
+      controller.addStatusListener(
         (status) => animator.statusListener!(status, this),
       );
     }
 
     if (animator.animatorKey != null) {
-      animation.addListener(
-        () {
-          (animator.animatorKey as AnimatorKeyImp)._rebuild();
-        },
-      );
+      controller.addListener((animator.animatorKey as AnimatorKeyImp)._rebuild);
     }
 
     if (_triggerOnInit == true) {
@@ -143,16 +177,35 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
     }
   }
 
+  void resetAnimation({
+    Tween<T?>? tween,
+    Map<String, Tween>? tweenMap,
+    Duration? duration,
+    Curve? curve,
+    int? repeats,
+    int? cycles,
+  }) {
+    this.duration = duration ?? _duration;
+    this.curve = curve ?? _curve;
+    this.tween = tween ?? _tween;
+    this.tweenMap = tweenMap ?? _tweenMap;
+
+    _animation = null;
+
+    _isCycle = repeats == null && cycles != null;
+    _setRepeatCount(animator.repeats, animator.cycles);
+    _addAnimationStatusListener(_getStatusListenerCallBack);
+  }
+
   void _addAnimationListeners() {
-    animation.addListener(rebuildStates);
+    controller.addListener(rebuildStates);
     if (animator.customListener != null) {
-      animation.addListener(() => animator.customListener!(this));
+      controller.addListener(() => animator.customListener!(this));
     }
   }
 
   void _setRepeatCount(int? repeats, int? cycles) {
     _repeatCount = repeats == null ? cycles ?? 1 : repeats;
-    _addAnimationStatusListener(_statusListenerForRepeats);
   }
 
   ///
@@ -162,28 +215,27 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   }
 
   void _addStatusListener(void Function(AnimationStatus) listener) {
-    animation.addStatusListener(listener);
-    _statusListener.add(listener);
+    controller.addStatusListener(listener);
   }
 
-  void _removeStatusListener(void Function(AnimationStatus) listener$) {
-    animation.removeStatusListener(listener$);
-    _statusListener.remove(listener$);
+  void _removeStatusListener(void Function(AnimationStatus)? listener) {
+    if (listener == null) return;
+    controller.removeStatusListener(listener);
   }
 
   ///Start the animation
   void triggerAnimation({bool restart = false}) {
     if (restart) {
       _skipDismissStatus = true;
-      controller.reset();
+      controller.value = 0;
       _skipDismissStatus = false;
     }
-    if (animation.status == AnimationStatus.dismissed) {
+    if (controller.status == AnimationStatus.dismissed) {
       controller.forward();
-    } else if (animation.status == AnimationStatus.completed) {
+    } else if (controller.status == AnimationStatus.completed) {
       if (!_isCycle) {
         controller
-          ..reset()
+          ..value = 0
           ..forward();
       } else {
         controller.reverse();
@@ -191,55 +243,35 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
     }
   }
 
-  ///close animation controller
-  void disposeAnim() {
-    if (!_isControllerDisposed()) {
-      controller.dispose();
-    }
-    _statusListener.clear();
-  }
-
-  bool _isControllerDisposed() {
-    return controller.toString().contains('DISPOSED');
-  }
-
-  void _disposeController() {
-    if (!_isControllerDisposed()) {
-      controller.dispose();
-    }
-  }
-
-  Function(AnimationStatus) _getStatusListenerCallBack() {
-    return (status) {
-      if (status == AnimationStatus.completed ||
-          (status == AnimationStatus.dismissed &&
-              _isCycle &&
-              !_skipDismissStatus)) {
-        if (_repeatCount == 1) {
-          if (animator.endAnimationListener != null) {
-            animator.endAnimationListener!(this);
+  late Function(AnimationStatus) _getStatusListenerCallBack = (status) {
+    if (status == AnimationStatus.completed ||
+        (status == AnimationStatus.dismissed &&
+            _isCycle &&
+            !_skipDismissStatus)) {
+      if (_repeatCount == 1) {
+        if (animator.endAnimationListener != null) {
+          animator.endAnimationListener!(this);
+        }
+        _setRepeatCount(animator.repeats, animator.cycles);
+        // if (animator.animatorKey == null &&
+        //     animator.resetAnimationOnRebuild != true) {
+        //   _controller?.dispose();
+        // }//TODO what if remove me
+      } else {
+        if (status == AnimationStatus.completed) {
+          if (_repeatCount > 1) _repeatCount--;
+          if (_isCycle) {
+            controller.reverse();
+          } else {
+            controller
+              ..value = 0
+              ..forward();
           }
-          _setRepeatCount(animator.repeats, animator.cycles);
-          if (animator.animatorKey == null &&
-              animator.resetAnimationOnRebuild != true) {
-            _disposeController();
-          }
-        } else {
-          if (status == AnimationStatus.completed) {
-            if (_repeatCount > 1) _repeatCount--;
-            if (_isCycle) {
-              controller.reverse();
-            } else {
-              controller
-                ..reset()
-                ..forward();
-            }
-          } else if (status == AnimationStatus.dismissed) {
-            if (_repeatCount > 1) _repeatCount--;
-            controller.forward();
-          }
+        } else if (status == AnimationStatus.dismissed) {
+          if (_repeatCount > 1) _repeatCount--;
+          controller.forward();
         }
       }
-    };
-  }
+    }
+  };
 }

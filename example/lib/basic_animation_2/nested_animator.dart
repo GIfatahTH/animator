@@ -77,15 +77,17 @@ enum SlideDirection {
 // inspired from https://github.com/iamSahdeep/liquid_swipe_flutter
 class WaveLayer extends CustomPainter {
   double revealPercent;
-  double waveCenterY;
-  double waveHorRadius;
-  double waveVertRadius;
-  double sideWidth;
+  late double waveCenterY;
+  late double waveHorRadius;
+  late double waveVertRadius;
+  late double sideWidth;
   SlideDirection slideDirection = SlideDirection.rightToLeft;
   Color primaryColor;
   Color secondaryColor;
   WaveLayer(
-      {@required this.revealPercent, this.primaryColor, this.secondaryColor});
+      {@required required this.revealPercent,
+      required this.primaryColor,
+      required this.secondaryColor});
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {

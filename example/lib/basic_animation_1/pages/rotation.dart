@@ -41,7 +41,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Transform.rotate", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -57,7 +57,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" Matrix4.rotationZ", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -74,7 +74,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("RotationTransition", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -100,7 +100,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" Matrix4.rotationX", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -117,7 +117,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" Matrix4.rotationY", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -134,7 +134,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" Matrix4.rotationZ", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -161,7 +161,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" origin : topLeft", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -178,7 +178,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" origin : bottomRight", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -195,7 +195,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text(" Offset(-10, 10)", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     repeats: 0,
@@ -223,7 +223,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("elasticOut", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticOut,
@@ -240,7 +240,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("elasticIn", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticIn,
@@ -257,7 +257,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("elasticInOut", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticInOut,
@@ -274,7 +274,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("bounceOut", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 2 * pi),
                     duration: Duration(seconds: 2),
                     curve: Curves.bounceOut,

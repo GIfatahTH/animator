@@ -40,7 +40,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Defaut", style: _style),
-                  Animator(
+                  Animator<double>(
                     builder: (_, animatorState, __) => Opacity(
                       opacity: animatorState.value,
                       child: FlutterLogo(
@@ -53,7 +53,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 5", style: _style),
-                  Animator(
+                  Animator<double>(
                     repeats: 5,
                     endAnimationListener: (_) => print("end"),
                     builder: (_, animatorState, __) => Opacity(
@@ -68,7 +68,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     repeats: 0,
                     builder: (_, animatorState, __) => Opacity(
                       opacity: animatorState.value,
@@ -82,7 +82,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 10", style: _style),
-                  Animator(
+                  Animator<double>(
                     cycles: 2 * 5,
                     builder: (_, animatorState, __) => Opacity(
                       opacity: animatorState.value,
@@ -96,7 +96,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     cycles: 0,
                     builder: (_, animatorState, __) => Opacity(
                       opacity: animatorState.value,
@@ -120,7 +120,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Defaut", style: _style),
-                  Animator(
+                  Animator<double>(
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
                       child: FlutterLogo(
@@ -133,7 +133,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 5", style: _style),
-                  Animator(
+                  Animator<double>(
                     repeats: 5,
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
@@ -147,7 +147,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     repeats: 0,
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
@@ -161,7 +161,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 10", style: _style),
-                  Animator(
+                  Animator<double>(
                     cycles: 2 * 5,
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
@@ -175,7 +175,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     cycles: 0,
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
@@ -199,7 +199,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Default", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     builder: (_, animatorState, __) => FadeTransition(
                       opacity: animatorState.animation,
@@ -213,7 +213,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 5", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     repeats: 5,
                     builder: (_, animatorState, __) => FadeTransition(
@@ -228,7 +228,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     repeats: 0,
                     builder: (_, animatorState, __) => FadeTransition(
@@ -243,7 +243,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 10", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 2 * 5,
                     builder: (_, animatorState, __) => FadeTransition(
@@ -258,7 +258,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animatorState, __) => FadeTransition(
@@ -283,7 +283,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Defaut", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     builder: (_, animatorState, __) => FadeTransition(
@@ -298,7 +298,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 5", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     repeats: 5,
@@ -314,7 +314,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("repeats = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     repeats: 0,
@@ -330,7 +330,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 10", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     curve: Curves.decelerate,
                     cycles: 2 * 5,
@@ -346,7 +346,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("cycles = 0", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     curve: Curves.elasticOut,
                     cycles: 0,

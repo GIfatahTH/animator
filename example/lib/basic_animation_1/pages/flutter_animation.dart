@@ -51,7 +51,7 @@ class _MyAnimationState extends State<MyAnimation> {
     Widget _child;
     switch (animationSwitcher) {
       case "opacity":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('opacity'),
           duration: Duration(seconds: 2),
           endAnimationListener: (_) => changeAnimation('rotation1', 'Rotation'),
@@ -63,7 +63,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "rotation1":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('rotation1'),
           tween: Tween<double>(begin: 0, end: 2 * pi),
           curve: Curves.bounceIn,
@@ -79,7 +79,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "rotation2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('rotation2'),
           tween: Tween<double>(begin: 0, end: 4 * pi),
           duration: Duration(seconds: 1),
@@ -94,7 +94,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "scaling1":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('scaling1'),
           tween: Tween<double>(begin: 1, end: 0.5),
           duration: Duration(seconds: 1),
@@ -109,7 +109,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "scaling2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('scaling2'),
           tween: Tween<double>(begin: 1, end: 2),
           duration: Duration(seconds: 1),
@@ -124,7 +124,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "clipping1":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('clipping1'),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
@@ -149,7 +149,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "clipping2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('clipping2'),
           tween: Tween<double>(begin: 1, end: 0),
           duration: Duration(seconds: 1),
@@ -175,7 +175,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "skew1":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('skew1'),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
@@ -190,7 +190,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "skew2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('skew2'),
           tween: Tween<double>(begin: 0, end: 0.2),
           duration: Duration(seconds: 1),
@@ -206,7 +206,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "translation1":
-        _child = Animator(
+        _child = Animator<Offset>(
           key: Key('translation1'),
           tween: Tween<Offset>(begin: Offset(0, 0), end: Offset(1.5, 0)),
           duration: Duration(seconds: 3),
@@ -223,7 +223,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "translation2":
-        _child = Animator(
+        _child = Animator<Offset>(
           key: Key('translation2'),
           tween: Tween<Offset>(begin: Offset(-1.5, 0), end: Offset(0, 0)),
           duration: Duration(seconds: 3),
@@ -240,7 +240,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "opacity2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('opacity2'),
           tween: Tween<double>(begin: 1, end: 0),
           endAnimationListener: (_) =>
@@ -255,7 +255,7 @@ class _MyAnimationState extends State<MyAnimation> {
         break;
       case "multi1":
         Center(
-          child: _child = Animator(
+          child: _child = Animator<double>(
             key: Key('multi1'),
             tweenMap: {
               "opacity": Tween<double>(begin: 0.2, end: 1),
@@ -299,7 +299,7 @@ class _MyAnimationState extends State<MyAnimation> {
         );
         break;
       case "multi2":
-        _child = Animator(
+        _child = Animator<double>(
           key: Key('multi2'),
           tweenMap: {
             "opacity": Tween<double>(begin: 1, end: 0.2),
