@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 part 'animator_key.dart';
-part 'animator_rebuilder.dart';
+// part 'animator_rebuilder.dart';
 part 'animator_state.dart';
 part 'child.dart';
-part 'implicit_animator.dart';
-part 'state_builder.dart';
-
-///Ticker mixin enumeration
-enum TickerMixin {
-  ///tickerProviderStateMixin
-  tickerProviderStateMixin,
-
-  ///singleTickerProviderStateMixin
-  singleTickerProviderStateMixin,
-}
+// part 'implicit_animator.dart';
+// part 'state_builder.dart';
 
 ///{@template animator}
 ///A facade widget that hide the complexity of setting animation in Flutter
@@ -23,7 +15,7 @@ enum TickerMixin {
 ///It allows you to easily implement almost all the available
 ///Animation in flutter
 ///{@endtemplate}
-class Animator<T> extends StatelessWidget {
+class Animator<T> extends StatefulWidget {
   ///{@macro animator}
   Animator({
     Key? key,
@@ -41,17 +33,17 @@ class Animator<T> extends StatelessWidget {
     this.customListener,
     this.endAnimationListener,
     this.statusListener,
-    this.tickerMixin,
+    // this.tickerMixin,
     // this.observe,
-  }) : super(key: key);
+  }) : super(key: key); //TODO check T==dynamic || tween != null
 
   ///A linear interpolation between a beginning and ending value.
   ///
   ///`tween` argument is used for one Tween animation.
-  final Tween<T?>? tween;
+  final Tween<T>? tween;
 
   ///A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seconds
-  final Duration? duration;
+  final Duration duration;
 
   ///An easing curve, i.e. a mapping of the unit interval to the unit interval.
   final Curve? curve;
@@ -122,148 +114,79 @@ class Animator<T> extends StatelessWidget {
 
   final AnimatorKey<T>? animatorKey;
 
-  ///For performance reason the default tickerProvider is of type
-  ///`singleTickerProviderStateMixin`.
-  ///
-  ///use `tickerProviderStateMixin` if many controllers use the same ticker.
-  final TickerMixin? tickerMixin;
+  @override
+  _AnimatorState<T> createState() => _AnimatorState<T>();
+}
 
-  // ///an [AnimatorKey] class to which you want [Animator] to subscribe.
-  // final AnimatorKey<T> Function() observe;
+class _AnimatorState<T> extends State<Animator<T>> {
+  /*
+    Key? key,
+    this.tween,
+    this.tweenMap,
+    
+    this.resetAnimationOnRebuild = false,
+    */
+  late final injectedAnimation = RM.injectAnimation(
+    duration: widget.duration,
+    curve: widget.curve ?? Curves.linear,
+    repeats: widget.repeats ?? widget.cycles,
+    shouldReverseRepeats:
+        widget.repeats != null ? false : widget.cycles != null,
+    shouldAutoStart:
+        widget.triggerOnInit ?? widget.animatorKey != null ? false : true,
+    endAnimationListener: widget.endAnimationListener != null
+        ? () => widget.endAnimationListener!(animatorState)
+        : null,
+    onInitialized: (injectedAnimation) {
+      if (widget.customListener != null) {
+        injectedAnimation.controller!.addListener(customListener);
+      }
+      if (widget.statusListener != null) {
+        injectedAnimation.controller!.addStatusListener(statusListener);
+      }
+    },
+  );
+  late AnimatorState<T> animatorState;
 
-  ///Return a copy of the this Animator widget with the
-  ///defined parameter overrided
-  Animator<T> copyWith({
-    Tween<T>? tween,
-    Map<String, Tween>? tweenMap,
-    Duration? duration,
-    Curve? curve,
-    int? cycles,
-    int? repeats,
-    dynamic Function(AnimatorState<T>)? customListener,
-    dynamic Function(AnimatorState<T>)? endAnimationListener,
-    dynamic Function(AnimationStatus, AnimatorState<T>)? statusListener,
-  }) {
-    return Animator(
-      key: key,
-      tween: tween ?? this.tween,
-      tweenMap: tweenMap ?? this.tweenMap,
-      duration: duration ?? this.duration,
-      curve: curve ?? this.curve,
-      cycles: cycles ?? this.cycles,
-      repeats: repeats ?? this.repeats,
-      resetAnimationOnRebuild: resetAnimationOnRebuild,
-      triggerOnInit: triggerOnInit,
-      builder: builder,
-      child: child,
-      animatorKey: animatorKey,
-      customListener: customListener ?? this.customListener,
-      endAnimationListener: endAnimationListener ?? this.endAnimationListener,
-      statusListener: statusListener ?? this.statusListener,
-      tickerMixin: tickerMixin,
+  @override
+  void initState() {
+    super.initState();
+    animatorState = AnimatorStateImp(
+      injected: injectedAnimation,
+      animator: widget,
     );
+    (widget.animatorKey as AnimatorKeyImp<T>?)?._animatorState = animatorState;
+  }
+
+  late VoidCallback customListener = () {
+    widget.customListener!(animatorState);
+  };
+  late void Function(AnimationStatus) statusListener =
+      (AnimationStatus status) {
+    widget.statusListener!(status, animatorState);
+  };
+
+  @override
+  void didUpdateWidget(covariant Animator<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.resetAnimationOnRebuild) {
+      (animatorState as AnimatorStateImp<T>)
+        ..animator = widget
+        ..resetAnimation()
+        ..triggerAnimation(restart: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _StateBuilder<Animator<T>>(
-      (context, widget, ticker, setState) {
-        final animatorState = AnimatorStateImp(this, setState)
-          ..initAnimation(ticker);
-
-        Animator<T> animator = widget;
-        // void resetAnimation({
-        //   Tween<T>? tween,
-        //   Map<String, Tween>? tweenMap,
-        //   Duration? duration,
-        //   Curve? curve,
-        //   int? repeats,
-        //   int? cycles,
-        // }) {
-        //   animatorState
-        //     .._controller?.value = 0
-        //     ..animator = animator.copyWith(
-        //       tween: tween,
-        //       tweenMap: tweenMap,
-        //       duration: duration,
-        //       curve: curve,
-        //       repeats: repeats,
-        //       cycles: cycles,
-        //     )
-        //     ..initAnimation();
-        // }
-
-        if (animator.animatorKey != null) {
-          (animator.animatorKey as AnimatorKeyImp<T>)
-            ..setAnimatorState(animatorState);
-          // ..callbackRefreshAnim = ({
-          //   Tween<T>? tween,
-          //   Map<String, Tween>? tweenMap,
-          //   Duration? duration,
-          //   Curve? curve,
-          //   int? repeats,
-          //   int? cycles,
-          // }) {
-          //   resetAnimation(
-          //     tween: tween,
-          //     tweenMap: tweenMap,
-          //     duration: duration,
-          //     curve: curve,
-          //     repeats: repeats,
-          //     cycles: cycles,
-          //   );
-          // };
-        }
-
-        return _Builder(
-          dispose: () {
-            animatorState._controller?.dispose();
-          },
-          didUpdateWidget: (oldWidget, newWidget) {
-            animator = newWidget;
-            if (resetAnimationOnRebuild) {
-              animatorState
-                ..resetAnimation(
-                  tween: animator.tween,
-                  tweenMap: animator.tweenMap,
-                  duration: animator.duration,
-                  curve: animator.curve,
-                  cycles: animator.cycles,
-                  repeats: animator.repeats,
-                )
-                ..triggerAnimation(restart: true);
-            }
-            if (animator.animatorKey != null) {
-              final key = animator.animatorKey! as AnimatorKeyImp<T>;
-              key._observers =
-                  (oldWidget.animatorKey as AnimatorKeyImp<T>)._observers;
-              key..setAnimatorState(animatorState..animator = animator);
-              // ..callbackRefreshAnim = ({
-              //   Tween<T>? tween,
-              //   Map<String, Tween>? tweenMap,
-              //   Duration? duration,
-              //   Curve? curve,
-              //   int? repeats,
-              //   int? cycles,
-              // }) {
-              //   resetAnimation(
-              //     tween: tween,
-              //     tweenMap: tweenMap,
-              //     duration: duration,
-              //     curve: curve,
-              //     repeats: repeats,
-              //     cycles: cycles,
-              //   );
-              // };
-            }
-          },
-          builder: (context, widget) {
-            return animator.builder(context, animatorState, child);
-          },
-        );
+    return On.animation(
+      (animate) {
+        animate.shouldAlwaysRebuild = true;
+        return widget.builder(context, animatorState, widget.child);
       },
-      isSingleTicker: tickerMixin == TickerMixin.singleTickerProviderStateMixin,
-      widget: this,
+    ).listenTo(
+      injectedAnimation,
+      key: widget.key,
     );
   }
 }
