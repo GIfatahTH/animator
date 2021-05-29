@@ -58,11 +58,7 @@ class ImplicitAnimator extends StatelessWidget {
               endAnimationListener?.call();
 
               WidgetsBinding.instance!.scheduleFrameCallback((_) {
-                // skipDismissStatus = true;
-                // _controller.value = 0;
-                // skipDismissStatus = false;
-
-                setState(); //Check me. Used to trigger a rebuild after animation ends
+                setState(); //TODO Check me. Used to trigger a rebuild after animation ends
               });
             } else {
               if (status == AnimationStatus.completed) {
@@ -92,7 +88,6 @@ class ImplicitAnimator extends StatelessWidget {
         T? _getValue<T>(String name) {
           try {
             final val = _curvedTweens[name]?.evaluate(_controller);
-
             return val;
           } catch (e) {
             if (e is TypeError) {
@@ -109,18 +104,6 @@ class ImplicitAnimator extends StatelessWidget {
           if (isAnimating) {
             return currentValue;
           }
-
-          final cachedTween = _tweens[name];
-          final tween = fn(currentValue);
-          if (tween == null) {
-            return null;
-          }
-          if ((cachedTween?.end != tween.end ||
-                  cachedTween?.begin != tween.begin) &&
-              _isDirty) {
-            _isChanged = true;
-          }
-
           assert(() {
             if (assertionList.contains(name)) {
               assertionList.clear();
@@ -132,25 +115,35 @@ class ImplicitAnimator extends StatelessWidget {
             return true;
           }());
 
+          final cachedTween = _tweens[name];
+          final tween = fn(currentValue);
+          if (tween == null) {
+            return null;
+          }
+
           if (isInit) {
             currentValue = tween.begin;
             _curvedTweens[name] = tween.chain(CurveTween(curve: widget.curve));
             _tweens[name] = tween;
+            if (tween.begin == tween.end) {
+              return tween.begin;
+            }
             _isChanged = true;
             _isDirty = true;
+          } else if ((cachedTween?.end != tween.end ||
+                  cachedTween?.begin != tween.begin) &&
+              _isDirty) {
+            _curvedTweens[name] = tween.chain(CurveTween(curve: widget.curve));
+            _tweens[name] = tween;
+            _isChanged = true;
           }
 
           if (tween.begin == tween.end) {
-            _isChanged ??= false;
             return tween.begin;
           }
-
-          if (_isChanged == true) {
-            _curvedTweens[name] = tween.chain(CurveTween(curve: widget.curve));
-            _tweens[name] = tween;
-          }
-
-          return currentValue;
+          //At this point controller.value == 1 or 2
+          assert(_controller.value == 0.0 || _controller.value == 1.0);
+          return currentValue ?? tween.lerp(_controller.value);
         }
 
         T? animateValue<T>(T? value, [String name = '']) {
@@ -170,7 +163,7 @@ class ImplicitAnimator extends StatelessWidget {
         final Animate animate = Animate._(
           value: animateValue,
           formTween: animateTween,
-        );
+        ).._controller = CurvedAnimation(parent: _controller, curve: curve);
 
         void triggerAnimation() {
           if (_isDirty && _isChanged == true) {
@@ -191,7 +184,10 @@ class ImplicitAnimator extends StatelessWidget {
             didUpdateWidget: (oldWidget, newWidget) {
               widget = newWidget;
               _controller.duration = newWidget.duration;
-
+              animate._controller = CurvedAnimation(
+                parent: _controller,
+                curve: curve,
+              );
               if (isAnimating) {
                 isAnimating = false;
               }
@@ -228,12 +224,19 @@ Tween<dynamic>? _getTween<T>(T? begin, T? end) {
       end: end as Color?,
     );
   }
-  if (val is int) {
-    return IntTween(
-      begin: begin as int?,
-      end: end as int?,
+  if (val is Offset?) {
+    return Tween<Offset>(
+      begin: begin as Offset?,
+      end: end as Offset?,
     );
   }
+  if (val is Size) {
+    return SizeTween(
+      begin: begin as Size?,
+      end: end as Size?,
+    );
+  }
+
   if (val is AlignmentGeometry?) {
     return AlignmentGeometryTween(
       begin: begin as AlignmentGeometry?,
@@ -262,16 +265,31 @@ Tween<dynamic>? _getTween<T>(T? begin, T? end) {
     );
   }
 
-  if (val is Matrix4?) {
-    return Matrix4Tween(
-      begin: begin as Matrix4?,
-      end: end as Matrix4?,
-    );
-  }
   if (val is TextStyle?) {
     return TextStyleTween(
       begin: begin as TextStyle?,
       end: end as TextStyle?,
+    );
+  }
+
+  if (val is Rect) {
+    return RectTween(
+      begin: begin as Rect?,
+      end: end as Rect?,
+    );
+  }
+
+  if (val is RelativeRect) {
+    return RelativeRectTween(
+      begin: begin as RelativeRect?,
+      end: end as RelativeRect?,
+    );
+  }
+
+  if (val is int) {
+    return IntTween(
+      begin: begin as int?,
+      end: end as int?,
     );
   }
 
@@ -289,7 +307,15 @@ Tween<dynamic>? _getTween<T>(T? begin, T? end) {
     );
   }
 
-  throw UnimplementedError();
+  if (val is Matrix4?) {
+    return Matrix4Tween(
+      begin: begin as Matrix4?,
+      end: end as Matrix4?,
+    );
+  }
+
+  throw UnimplementedError('The $T property has no built-in tween. '
+      'Please use [Animate.fromTween] and define your tween');
 }
 
 class Animate {
@@ -303,4 +329,6 @@ class Animate {
   }) : _value = value;
 
   T? call<T>(T? value, [String name = '']) => _value.call<T>(value, name);
+  late Animation<double> _controller;
+  Animation<double> get curvedController => _controller;
 }
