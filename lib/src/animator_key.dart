@@ -49,6 +49,7 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
 
   AnimatorKeyImp(this.initialValue, this.initialMapValue);
   AnimatorState<T>? _animatorState;
+
   @override
   Animation<T> get animation => _animatorState!.animation;
 
@@ -92,6 +93,17 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
       return initialValue!;
     }
     return _animatorState!.value;
+  }
+
+  void _rebuild() {
+    _observers.forEach((setState) => setState());
+  }
+
+  List<VoidCallback> _observers = [];
+
+  VoidCallback addObserver(VoidCallback setState) {
+    _observers.add(setState);
+    return () => _observers.remove(setState);
   }
 }
 
@@ -183,17 +195,4 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
 //     _animatorState.triggerAnimation(restart: restart);
 //   }
 
-//   void _rebuild() {
-//     _observers.forEach((setState) => setState());
-//   }
 
-//   List<VoidCallback> _observers = [];
-
-//   void addObserver(bool Function() setState) {
-//     _observers.add(setState);
-//   }
-
-//   void removeObserver(bool Function() setState) {
-//     _observers.remove(setState);
-//   }
-// }

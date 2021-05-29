@@ -3,11 +3,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 part 'animator_key.dart';
-// part 'animator_rebuilder.dart';
+part 'animator_rebuilder.dart';
 part 'animator_state.dart';
 part 'child.dart';
-// part 'implicit_animator.dart';
-// part 'state_builder.dart';
 
 ///{@template animator}
 ///A facade widget that hide the complexity of setting animation in Flutter
@@ -119,13 +117,6 @@ class Animator<T> extends StatefulWidget {
 }
 
 class _AnimatorState<T> extends State<Animator<T>> {
-  /*
-    Key? key,
-    this.tween,
-    this.tweenMap,
-    
-    this.resetAnimationOnRebuild = false,
-    */
   late final injectedAnimation = RM.injectAnimation(
     duration: widget.duration,
     curve: widget.curve ?? Curves.linear,
@@ -133,11 +124,15 @@ class _AnimatorState<T> extends State<Animator<T>> {
     shouldReverseRepeats:
         widget.repeats != null ? false : widget.cycles != null,
     shouldAutoStart:
-        widget.triggerOnInit ?? widget.animatorKey != null ? false : true,
+        widget.triggerOnInit ?? (widget.animatorKey != null ? false : true),
     endAnimationListener: widget.endAnimationListener != null
         ? () => widget.endAnimationListener!(animatorState)
         : null,
     onInitialized: (injectedAnimation) {
+      if (widget.animatorKey != null) {
+        final key = widget.animatorKey as AnimatorKeyImp<T>;
+        injectedAnimation.controller!.addListener(() => key._rebuild());
+      }
       if (widget.customListener != null) {
         injectedAnimation.controller!.addListener(customListener);
       }
@@ -155,7 +150,8 @@ class _AnimatorState<T> extends State<Animator<T>> {
       injected: injectedAnimation,
       animator: widget,
     );
-    (widget.animatorKey as AnimatorKeyImp<T>?)?._animatorState = animatorState;
+    final key = widget.animatorKey as AnimatorKeyImp<T>?;
+    key?._animatorState = animatorState;
   }
 
   late VoidCallback customListener = () {
@@ -169,9 +165,10 @@ class _AnimatorState<T> extends State<Animator<T>> {
   @override
   void didUpdateWidget(covariant Animator<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final animatorImp = animatorState as AnimatorStateImp<T>;
+    animatorImp.animator = widget;
     if (widget.resetAnimationOnRebuild) {
-      (animatorState as AnimatorStateImp<T>)
-        ..animator = widget
+      animatorImp
         ..resetAnimation()
         ..triggerAnimation(restart: true);
     }

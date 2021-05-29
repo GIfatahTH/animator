@@ -861,7 +861,6 @@ void main() {
       expect(offset, equals(Offset.zero));
       animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
-
       expect(offset, const Offset(1, 1));
       switcher = false;
       vm.notify();
@@ -869,7 +868,6 @@ void main() {
       animatorKey.resetAnimation();
       await tester.pump();
       expect(offset, const Offset(10, 10));
-
       await tester.pumpAndSettle();
       expect(offset, const Offset(20, 20));
     },
@@ -890,132 +888,125 @@ void main() {
   //   },
   // );
 
-  // testWidgets(
-  //   'should animatorKey as observer works, cas it is assigned before observer',
-  //   (tester) async {
-  //     final animatorKey = AnimatorKey<double>();
-  //     final widget = Column(
-  //       children: [
-  //         Animator<double>(
-  //           animatorKey: animatorKey,
-  //           builder: (_, anim, __) {
-  //             return Text('${anim.value}');
-  //           },
-  //         ),
-  //         AnimatorRebuilder(
-  //           observe: () => animatorKey,
-  //           builder: (_, anim, __) {
-  //             return Text('${anim.value}');
-  //           },
-  //         ),
-  //         AnimatorRebuilder(
-  //           observe: () => animatorKey,
-  //           builder: (_, anim, __) {
-  //             return Text('${anim.value}');
-  //           },
-  //         ),
-  //       ],
-  //     );
+  testWidgets(
+    'should animatorKey as observer works, case it is assigned before observer',
+    (tester) async {
+      final animatorKey = AnimatorKey<double>();
+      final widget = Column(
+        children: [
+          Animator<double>(
+            animatorKey: animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+        ],
+      );
 
-  //     await tester.pumpWidget(MaterialApp(
-  //       home: widget,
-  //     ));
-  //     expect(find.text('0.0'), findsNWidgets(3));
-  //     animatorKey.triggerAnimation();
-  //     await tester.pumpAndSettle();
-  //     expect(find.text('1.0'), findsNWidgets(3));
-  //     //
-  //     animatorKey.triggerAnimation();
-  //     await tester.pump();
-  //     await tester.pump(const Duration(milliseconds: 200));
-  //     expect(find.text('0.4'), findsNWidgets(3));
-  //     //
-  //     animatorKey.triggerAnimation(restart: true);
-  //     await tester.pump();
-  //     expect(find.text('0.0'), findsNWidgets(3));
-  //     await tester.pumpAndSettle();
-  //     expect(find.text('1.0'), findsNWidgets(3));
-  //     expect(animatorKey.controller.status, AnimationStatus.completed);
-  //     await tester.pumpAndSettle();
-  //   },
-  // );
+      await tester.pumpWidget(MaterialApp(
+        home: widget,
+      ));
+      expect(find.text('0.0'), findsNWidgets(3));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(3));
+      //
+      animatorKey.triggerAnimation();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('0.4'), findsNWidgets(3));
+      //
+      animatorKey.triggerAnimation(restart: true);
+      await tester.pump();
+      expect(find.text('0.0'), findsNWidgets(3));
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(3));
+      expect(animatorKey.controller.status, AnimationStatus.completed);
+      await tester.pumpAndSettle();
+    },
+  );
 
-  // testWidgets(
-  //   'animatorKey as observer',
-  //   (tester) async {
-  //     final animatorKey = AnimatorKey<double>(initialValue: 0);
-  //     final widget = Column(
-  //       children: [
-  //         AnimatorRebuilder(
-  //           observe: () => animatorKey,
-  //           builder: (_, anim, __) {
-  //             return Text('${anim.value}');
-  //           },
-  //         ),
-  //         AnimatorRebuilder(
-  //           observe: () => animatorKey,
-  //           builder: (_, anim, __) {
-  //             return Text('${anim.value}');
-  //           },
-  //         ),
-  //         Animator<double>(
-  //           animatorKey: animatorKey,
-  //           child: Text('child'),
-  //           builder: (_, anim, child) {
-  //             return Column(
-  //               children: [
-  //                 child!,
-  //                 Text('${anim.value}'),
-  //               ],
-  //             );
-  //           },
-  //         ),
-  //         AnimatorRebuilder(
-  //           observe: () => animatorKey,
-  //           child: Text('child'),
-  //           builder: (_, anim, child) {
-  //             return Column(
-  //               children: [
-  //                 child!,
-  //                 Text('${anim.value}'),
-  //               ],
-  //             );
-  //           },
-  //         ),
-  //       ],
-  //     );
+  testWidgets(
+    'animatorKey as observer',
+    (tester) async {
+      final animatorKey = AnimatorKey<double>(initialValue: 0);
+      final widget = Column(
+        children: [
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            builder: (_, anim, __) {
+              return Text('${anim.value}');
+            },
+          ),
+          Animator<double>(
+            animatorKey: animatorKey,
+            child: Text('child'),
+            builder: (_, anim, child) {
+              return Column(
+                children: [
+                  child!,
+                  Text('${anim.value}'),
+                ],
+              );
+            },
+          ),
+          AnimatorRebuilder(
+            observe: () => animatorKey,
+            child: Text('child'),
+            builder: (_, anim, child) {
+              return Column(
+                children: [
+                  child!,
+                  Text('${anim.value}'),
+                ],
+              );
+            },
+          ),
+        ],
+      );
 
-  //     await tester.pumpWidget(MaterialApp(
-  //       home: widget,
-  //     ));
-  //     expect(find.text('0.0'), findsNWidgets(4));
-  //     animatorKey.triggerAnimation();
-  //     await tester.pumpAndSettle();
-  //     expect(find.text('1.0'), findsNWidgets(4));
-  //     //
-  //     animatorKey.triggerAnimation();
-  //     await tester.pump();
-  //     await tester.pump(const Duration(milliseconds: 200));
-  //     expect(find.text('0.4'), findsNWidgets(4));
-  //     //
-  //     animatorKey.triggerAnimation(restart: true);
-  //     await tester.pump();
-  //     expect(find.text('0.0'), findsNWidgets(4));
-  //     await tester.pumpAndSettle();
-  //     expect(find.text('1.0'), findsNWidgets(4));
-  //     expect(animatorKey.controller.status, AnimationStatus.completed);
-  //     expect(find.text('child'), findsNWidgets(2));
+      await tester.pumpWidget(MaterialApp(
+        home: widget,
+      ));
+      expect(find.text('0.0'), findsNWidgets(4));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(4));
+      //
+      animatorKey.triggerAnimation();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('0.4'), findsNWidgets(4));
+      //
+      animatorKey.triggerAnimation(restart: true);
+      await tester.pump();
+      expect(find.text('0.0'), findsNWidgets(4));
+      await tester.pumpAndSettle();
+      expect(find.text('1.0'), findsNWidgets(4));
+      expect(animatorKey.controller.status, AnimationStatus.completed);
+      expect(find.text('child'), findsNWidgets(2));
 
-  //     await tester.pumpAndSettle();
-  //   },
-  // );
+      await tester.pumpAndSettle();
+    },
+  );
 }
 
 class ViewModel {}
-
-class _Ticker extends State with TickerProviderStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}

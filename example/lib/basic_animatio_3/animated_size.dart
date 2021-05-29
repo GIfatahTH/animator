@@ -52,7 +52,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   size: animate(_size),
                 ),
                 SizeTransition(
-                  sizeFactor: animate.curvedController,
+                  sizeFactor: animate.curvedAnimation,
                   child: FlutterLogo(),
                 ),
               ],
