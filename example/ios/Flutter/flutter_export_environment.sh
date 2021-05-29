@@ -1,7 +1,8 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/home/mafatahnj/flutter"
-export "FLUTTER_APPLICATION_PATH=/run/media/mafatahnj/data/Repository/animator/example"
+export "FLUTTER_ROOT=/run/media/gafatahru/91cd3798-6fc4-4d7e-bb5c-33f198138881/mafatahnj/flutter"
+export "FLUTTER_APPLICATION_PATH=/run/media/gafatahru/5195A8876A200EC0/Repository/animator/example"
+export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"

@@ -14,3 +14,4 @@ ios/Runner/GeneratedPluginRegistrant.*
 pubspec.lock
 analysis_options.yaml
 coverage/lcov.info
+example/ios/Flutter/flutter_export_environment.sh
