@@ -349,7 +349,7 @@ void main() {
 
       expect(offset, const Offset(1, 1));
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       expect(offset, const Offset(10, 10));
 

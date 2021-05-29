@@ -678,7 +678,7 @@ void main() {
 
       expect(offset, const Offset(1, 1));
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       expect(offset, const Offset(10, 10));
 
@@ -719,7 +719,7 @@ void main() {
 
       expect(offset, const Offset(1, 1));
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       expect(offset, const Offset(1, 1));
 
@@ -764,7 +764,7 @@ void main() {
       expect(offset, const Offset(0, 0));
 
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       expect(offset, const Offset(0, 0));
 
@@ -823,7 +823,7 @@ void main() {
     expect(find.text('0.2'), findsOneWidget);
 
     switcher = false;
-    vm.rebuildStates();
+    vm.notify();
     await tester.pumpAndSettle();
     expect(find.text('Stop'), findsOneWidget);
   });
@@ -862,7 +862,7 @@ void main() {
 
       expect(offset, const Offset(1, 1));
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       animatorKey.resetAnimation();
       await tester.pump();

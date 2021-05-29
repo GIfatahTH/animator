@@ -109,7 +109,7 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   }
 
   Map<String, Animatable<dynamic>> _curvedTweenMap = {};
-  @override
+
   final Map<String, Animation> _animationMap = {};
 
   @override
