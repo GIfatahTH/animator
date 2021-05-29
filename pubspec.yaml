@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  states_rebuilder: ^4.0.0
+  states_rebuilder: 
+    path: ../_states_rebuilder/states_rebuilder/states_rebuilder_package
 
 dev_dependencies:
   flutter_test:
