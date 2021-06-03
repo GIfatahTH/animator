@@ -35,6 +35,8 @@ class RandomFlutterWalk extends StatelessWidget {
               );
             },
             statusListener: (status, animatorState) {
+              print('beginX ${animatorState.value.dx}');
+
               if (status == AnimationStatus.completed) {
                 final sign = Random().nextBool() ? 1 : -1;
                 final beginX = animatorState.value.dx;

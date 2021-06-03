@@ -11,7 +11,7 @@ abstract class AnimatorState<T> {
   ///{@macro animatorState}
 
   void resetAnimation({
-    Tween<T?>? tween,
+    Tween<T>? tween,
     Map<String, Tween>? tweenMap,
     Duration? duration,
     Curve? curve,
@@ -52,19 +52,18 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
   });
   final Map<String, Animation<dynamic>> _animationMap = {};
   Animation<T>? _animation;
+  late Tween<T> _tween = animator.tween == null && (T == dynamic || T == double)
+      ? Tween(begin: 0.0, end: 1.0) as Tween<T>
+      : _tween = animator.tween!;
+
+  late Map<String, Tween<dynamic>>? _tweenMap = animator.tweenMap;
   @override
   Animation<T> get animation {
     if (_animation != null) {
       return _animation!;
     }
-    Tween<T> tween;
-    if (animator.tween == null && (T == dynamic || T == double)) {
-      tween = Tween(begin: 0.0, end: 1.0) as Tween<T>;
-    } else {
-      tween = animator.tween!;
-    }
 
-    return _animation ??= tween.animate(injected.curvedAnimation);
+    return _animation ??= _tween.animate(injected.curvedAnimation);
   }
 
   @override
@@ -72,12 +71,12 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
 
   @override
   Animation<R> getAnimation<R>(String name) {
-    assert(animator.tweenMap?.isNotEmpty == true);
+    assert(_tweenMap?.isNotEmpty == true);
     var anim = _animationMap[name];
     if (anim != null) {
       return anim as Animation<R>;
     }
-    anim = animator.tweenMap![name]!.animate(injected.curvedAnimation);
+    anim = _tweenMap![name]!.animate(injected.curvedAnimation);
     _animationMap[name] = anim;
     return anim as Animation<R>;
   }
@@ -93,18 +92,25 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
 
   @override
   void resetAnimation({
-    Tween<T?>? tween,
+    Tween<T>? tween,
     Map<String, Tween>? tweenMap,
     Duration? duration,
     Curve? curve,
     int? repeats,
     int? cycles,
   }) {
-    if (tween != animator.tween) {
+    print(tween);
+
+    if (tween != null) {
       _animation = null;
+      _tween = tween;
     }
     if (tweenMap != null) {
       _animationMap.clear();
+      _tweenMap = tweenMap;
+    }
+    if (curve != null) {
+      _animation = null;
     }
     injected.resetAnimation(
       duration: duration,

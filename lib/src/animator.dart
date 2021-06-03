@@ -169,7 +169,16 @@ class _AnimatorState<T> extends State<Animator<T>> {
     animatorImp.animator = widget;
     if (widget.resetAnimationOnRebuild) {
       animatorImp
-        ..resetAnimation()
+        ..resetAnimation(
+          tween: oldWidget.tween != widget.tween ? widget.tween : null,
+          tweenMap:
+              oldWidget.tweenMap != widget.tweenMap ? widget.tweenMap : null,
+          repeats: oldWidget.repeats != widget.repeats ? widget.repeats : null,
+          cycles: oldWidget.cycles != widget.cycles ? widget.cycles : null,
+          curve: oldWidget.curve != widget.curve ? widget.curve : null,
+          duration:
+              oldWidget.duration != widget.duration ? widget.duration : null,
+        )
         ..triggerAnimation(restart: true);
     }
   }

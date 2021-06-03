@@ -21,7 +21,7 @@ void main() {
 
       await tester.pumpWidget(
         On(
-          () => ImplicitAnimator(
+          () => AnimateWidget(
             duration: Duration(seconds: 1),
             builder: (_, animate) {
               return Container(
@@ -59,7 +59,6 @@ void main() {
 
       selected = !selected;
       model.notify();
-      await tester.pump();
       await tester.pump();
       await tester.pump(Duration(milliseconds: 500));
       expect('$height', '50.0');
@@ -99,7 +98,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             return Container(
@@ -130,7 +129,6 @@ void main() {
       selected = !selected;
       model.notify();
       await tester.pump();
-      await tester.pump();
       await tester.pump(Duration(milliseconds: 500));
 
       expect('$alignment', 'Alignment(-0.5, -0.5)');
@@ -154,7 +152,7 @@ void main() {
     'WHEN two variable of the same type and same name are used'
     'THEN it will throw an ArgumentError',
     (tester) async {
-      await tester.pumpWidget(ImplicitAnimator(
+      await tester.pumpWidget(AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             return Container(
@@ -170,7 +168,7 @@ void main() {
   testWidgets(
     'WHEN double property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       late double inVal = 0;
@@ -179,7 +177,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal)!;
@@ -192,7 +190,6 @@ void main() {
       // animating from 0 => 1000
       inVal = 1000;
       model.notify();
-      await tester.pump();
       await tester.pump();
       expect(outVal, 0);
       await tester.pump(Duration(milliseconds: 200));
@@ -219,7 +216,7 @@ void main() {
   testWidgets(
     'WHEN Tween<Double> property is animated '
     'THEN It does auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end '
     'And when begin and and values of the tween are equal '
     'animation does not start',
@@ -230,7 +227,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate.fromTween(
@@ -256,7 +253,6 @@ void main() {
       // animating from 1000 => 2000
       inVal = 2000;
       model.notify();
-      await tester.pump();
       await tester.pump();
       expect(outVal, 1000);
       await tester.pump(Duration(milliseconds: 200));
@@ -293,7 +289,7 @@ void main() {
   testWidgets(
     'WHEN int property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       late int inVal = 0;
@@ -302,7 +298,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal)!;
@@ -317,8 +313,6 @@ void main() {
       inVal = 1000;
       model.notify();
       await tester.pump();
-      await tester.pump();
-
       expect(outVal, 0);
       await tester.pump(Duration(milliseconds: 200));
       expect(outVal, 200);
@@ -331,7 +325,6 @@ void main() {
       model.notify();
       await tester.pump();
 
-      await tester.pump();
       expect(outVal, 1000);
       await tester.pump(Duration(milliseconds: 200));
       expect(outVal, 1200);
@@ -345,7 +338,7 @@ void main() {
   testWidgets(
     'WHEN Color property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Color? inVal; //Transparent
@@ -354,7 +347,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -369,7 +362,6 @@ void main() {
       inVal = Colors.blue;
       model.notify();
       await tester.pump();
-      await tester.pump();
       expect(outVal, Color(0x002196f3));
       await tester.pump(Duration(milliseconds: 200));
       expect(outVal, Color(0x332196f3));
@@ -381,7 +373,6 @@ void main() {
       // animating from blue => red
       inVal = Colors.red;
       model.notify();
-      await tester.pump();
       await tester.pump();
       expect(outVal, Colors.blue);
       await tester.pump(Duration(milliseconds: 200));
@@ -397,7 +388,7 @@ void main() {
   testWidgets(
     'WHEN AlignmentGeometry and AlignmentDirectional property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       AlignmentGeometry? inVal; // Alignment.center
@@ -406,7 +397,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -421,9 +412,6 @@ void main() {
       inVal = Alignment.topLeft;
       model.notify();
       await tester.pump();
-
-      await tester.pump();
-
       expect(outVal, Alignment.center);
       await tester.pump(Duration(milliseconds: 200));
 
@@ -438,9 +426,6 @@ void main() {
       inVal = AlignmentDirectional.bottomEnd;
       model.notify();
       await tester.pump();
-
-      await tester.pump();
-
       expect(outVal, Alignment.topLeft);
       await tester.pump(Duration(milliseconds: 200));
       expect(
@@ -456,7 +441,7 @@ void main() {
   testWidgets(
     'WHEN EdgeInsetsGeometry and EdgeInsetsDirectional property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       EdgeInsetsGeometry? inVal; //EdgeInsets.zero
@@ -465,7 +450,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -505,7 +490,7 @@ void main() {
   testWidgets(
     'WHEN Decoration property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Decoration? inVal;
@@ -514,7 +499,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -561,7 +546,7 @@ void main() {
   testWidgets(
     'WHEN BoxConstraints property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       BoxConstraints? inVal; //Transparent
@@ -570,7 +555,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -608,7 +593,7 @@ void main() {
   testWidgets(
     'WHEN Matrix4 property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Matrix4? inVal = Matrix4.diagonal3Values(0, 0, 0);
@@ -617,7 +602,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -653,7 +638,7 @@ void main() {
   testWidgets(
     'WHEN TextStyle property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       TextStyle? inVal = TextStyle(fontSize: 0); //Transparent
@@ -662,7 +647,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -701,7 +686,7 @@ void main() {
   testWidgets(
     'WHEN BorderRadius property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       BorderRadius? inVal;
@@ -710,7 +695,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -751,7 +736,7 @@ void main() {
   testWidgets(
     'WHEN ThemeData property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       ThemeData? inVal = ThemeData.light();
@@ -760,7 +745,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -809,7 +794,7 @@ void main() {
       Text? inVal = Text('');
 
       await tester.pumpWidget(
-        ImplicitAnimator(
+        AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             animate(inVal);
@@ -825,7 +810,7 @@ void main() {
   testWidgets(
     'WHEN Offset property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Offset? inVal = Offset.zero;
@@ -834,7 +819,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -874,7 +859,7 @@ void main() {
   testWidgets(
     'WHEN Size property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Size? inVal;
@@ -883,7 +868,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -923,7 +908,7 @@ void main() {
   testWidgets(
     'WHEN Rect property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       Rect? inVal;
@@ -932,7 +917,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -977,7 +962,7 @@ void main() {
   testWidgets(
     'WHEN RelativeRect property is animated '
     'THEN It does not auto started '
-    'AND WHEN ImplicitAnimator rebuild '
+    'AND WHEN AnimateWidget rebuild '
     'It start animating form current value to end',
     (tester) async {
       RelativeRect? inVal;
@@ -986,7 +971,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
@@ -1038,7 +1023,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           cycles: 2,
           duration: Duration(seconds: 1),
           builder: (_, animate) {
@@ -1054,6 +1039,7 @@ void main() {
       ).listenTo(model));
 
       expect('$outVal', 'Rect.fromLTRB(10.0, 10.0, 10.0, 10.0)');
+      await tester.pump();
       await tester.pump(Duration(milliseconds: 200));
       expect('$outVal', 'Rect.fromLTRB(13.1, 10.5, 13.1, 10.5)');
 
@@ -1089,7 +1075,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           repeats: 2,
           builder: (_, animate) {
@@ -1155,7 +1141,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           repeats: 2,
           builder: (_, animate) {
@@ -1223,7 +1209,7 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(On(
-        () => ImplicitAnimator(
+        () => AnimateWidget(
           duration: Duration(seconds: 1),
           cycles: 2,
           builder: (_, animate) {

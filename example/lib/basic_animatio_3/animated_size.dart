@@ -42,20 +42,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       onTap: () => _updateSize(),
       child: Container(
         color: Colors.amberAccent,
-        child: ImplicitAnimator(
+        child: AnimateWidget(
           curve: Curves.easeIn,
           duration: const Duration(seconds: 1),
           builder: (context, animate) {
-            return Column(
-              children: [
-                FlutterLogo(
-                  size: animate(_size),
-                ),
-                SizeTransition(
-                  sizeFactor: animate.curvedAnimation,
-                  child: FlutterLogo(),
-                ),
-              ],
+            return Container(
+              width: animate.fromTween((_) => 100.0.tweenTo(250)),
+              child: FlutterLogo(),
             );
           },
         ),
