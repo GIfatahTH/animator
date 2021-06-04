@@ -2,24 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:states_rebuilder/states_rebuilder.dart' as sb;
 
-///Implicitly animate any parameter that has a corresponding defined flutter
-///tween.
+///Implicitly and explicitly animate its child.
 ///
+///You set the animation parameters such as `duration`, `reverseDuration`, `curve`,
+///`reverseCurve`; `lowerBound`, `upperBound`, `initialValue` and `animationBehavior`.
+///
+///You can set the number of repeats or cycle that animation will perform before
+///stops.
+///
+///You can listen to animation end using `endAnimationListener`
+///
+///You can also control when the animation will starts by setting one of
+///`triggerOnInit`, `triggerOnRebuild`, `resetOnRebuild`.
 ///
 class AnimateWidget extends StatefulWidget {
+  ///Animation duration
   final Duration duration;
+
+  ///The length of time this animation should last when
+  ///going in reverse.
   final Duration? reverseDuration;
+
+  ///Animation curve, It defaults to Curves.linear
   final Curve curve;
+
+  ///Animation curve to be used when the animation is going in reverse.
   final Curve? reverseCurve;
-  final int? repeats;
-  final int? cycles;
+
+  ///The value at which this animation is deemed to be dismissed.
+
   final double lowerBound;
+
+  ///The value at which this animation is deemed to be completed.
+
   final double upperBound;
+
+  ///The AnimationController's value the animation start with.
+
   final double? initialValue;
+
+  ///The behavior of the controller when [AccessibilityFeatures.disableAnimations] is true.
+
   final AnimationBehavior animationBehavior;
+
+  /// The number of times the animation repeats (always from start to end).
+  ///
+  /// A value of zero means that the animation will repeats infinity.
+
+  final int? repeats;
+
+  ///The number of times the animation cycles, animation will repeat by
+  ///alternating between begin and end on each repeat.
+  ///
+  ///A value of zero means that the animation will cycle infinity.
+  final int? cycles;
+
+  ///Callback to be fired after animation ends (After purge of repeats and cycle)
   final void Function()? endAnimationListener;
+
+  ///When it is set to true, animation will auto start after first initialized.
   final bool triggerOnInit;
+
+  ///When it is set to true, animation will try to trigger on rebuild.
+  ///
+  ///If animation is completed (stopped at the upperBound) then the animation
+  ///is reversed, and if the animation is dismissed (stopped at the lowerBound)
+  ///then the animation is forwarded. IF animation is running nothing will happen.
   final bool triggerOnRebuild;
+
+  ///When set to true, animation will reset and restart from its lowerBound
   final bool resetOnRebuild;
   final Widget Function(
     BuildContext,
@@ -65,7 +116,6 @@ class _AnimateWidgetState extends State<AnimateWidget> {
         : widget.cycles != null
             ? true
             : false,
-    // shouldAutoStart: true,
     animationBehavior: widget.animationBehavior,
   );
   Animate? animate;
@@ -73,11 +123,13 @@ class _AnimateWidgetState extends State<AnimateWidget> {
   void initState() {
     super.initState();
     if (widget.triggerOnInit)
-      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-        if (animate!._hasTween) {
-          injectedAnimation.triggerAnimation();
-        }
-      });
+      SchedulerBinding.instance!.addPostFrameCallback(
+        (_) {
+          if (animate!._hasTween) {
+            injectedAnimation.triggerAnimation();
+          }
+        },
+      );
   }
 
   @override
