@@ -99,8 +99,6 @@ class AnimatorStateImp<T> implements AnimatorState<T> {
     int? repeats,
     int? cycles,
   }) {
-    print(tween);
-
     if (tween != null) {
       _animation = null;
       _tween = tween;

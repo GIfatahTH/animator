@@ -834,38 +834,27 @@ void main() {
     'online change of animation setup, using refreshAnimation',
     (WidgetTester tester) async {
       Offset? offset;
-      var switcher = true;
 
-      final vm = RM.inject(() => ViewModel());
       final animatorKey = AnimatorKey<Offset>();
-      await tester.pumpWidget(
-        StateBuilder<ViewModel>(
-          observe: () => vm,
-          builder: (_, __) {
-            return Animator<Offset>(
-              tween: switcher
-                  ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
-                  : Tween<Offset>(
-                      begin: const Offset(10, 10), end: const Offset(20, 20)),
-              duration: const Duration(seconds: 1),
-              animatorKey: animatorKey,
-              builder: (_, anim, __) {
-                offset = anim.value;
-                return Container();
-              },
-            );
-          },
-        ),
-      );
+      await tester.pumpWidget(Animator<Offset>(
+        tween: Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1)),
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
+        builder: (_, anim, __) {
+          offset = anim.value;
+          return Container();
+        },
+      ));
 
       expect(offset, equals(Offset.zero));
       animatorKey.triggerAnimation();
       await tester.pumpAndSettle();
       expect(offset, const Offset(1, 1));
-      switcher = false;
-      vm.notify();
-      await tester.pump();
-      animatorKey.resetAnimation();
+
+      animatorKey.resetAnimation(
+        tween: Tween<Offset>(
+            begin: const Offset(10, 10), end: const Offset(20, 20)),
+      );
       await tester.pump();
       expect(offset, const Offset(10, 10));
       await tester.pumpAndSettle();

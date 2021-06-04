@@ -71,14 +71,21 @@ class AnimatorKeyImp<T> implements AnimatorKey<T> {
 
   @override
   void resetAnimation(
-      {Tween<T?>? tween,
+      {Tween<T>? tween,
       Map<String, Tween>? tweenMap,
       Duration? duration,
       Curve? curve,
       int? repeats,
       int? cycles}) {
     _animatorState!
-      ..resetAnimation()
+      ..resetAnimation(
+        tween: tween,
+        tweenMap: tweenMap,
+        duration: duration,
+        curve: curve,
+        repeats: repeats,
+        cycles: cycles,
+      )
       ..triggerAnimation(restart: true);
   }
 
