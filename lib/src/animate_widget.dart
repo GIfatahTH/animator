@@ -172,26 +172,32 @@ class _AnimateWidgetState extends State<AnimateWidget> {
 }
 
 class Animate {
-  final sb.Animate animate;
+  final sb.Animate _animate;
   final sb.InjectedAnimation _injectedAnimation;
   bool _hasTween = false;
 
-  Animation<double> get curvedAnimation => _injectedAnimation.curvedAnimation;
+  Animation<double> get curvedAnimation {
+    _hasTween = true;
+    return _injectedAnimation.curvedAnimation;
+  }
+
+  AnimationController get controller => _injectedAnimation.controller!;
+
   Animate setCurve(Curve curve) {
-    animate.setCurve(curve);
+    _animate.setCurve(curve);
     return this;
   }
 
   Animate setReverseCurve(Curve curve) {
-    animate.setReverseCurve(curve);
+    _animate.setReverseCurve(curve);
     return this;
   }
 
-  Animate._(this.animate, this._injectedAnimation);
+  Animate._(this._animate, this._injectedAnimation);
 
   ///Implicitly animate to the given value
   T? call<T>(T? value, [String name = '']) {
-    return animate.call(value, name);
+    return _animate.call(value, name);
   }
 
   ///Set animation explicitly by defining the Tween.
@@ -199,6 +205,6 @@ class Animate {
   ///The callback exposes the currentValue value
   T? fromTween<T>(Tween<T?> Function(T? currentValue) fn, [String? name]) {
     _hasTween = true;
-    return animate.fromTween(fn, name);
+    return _animate.fromTween(fn, name);
   }
 }
