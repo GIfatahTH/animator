@@ -1,3 +1,6 @@
+## [3.1.0]
+* add `AnimateWidget` for implicit and explicit animation.
+
 ## [3.0.0]
 * update to null safety
 

@@ -123,6 +123,7 @@ Center(
 
 That's all, you are not limited to use a widget that starts with Animated prefix to use implicit animation.
 
+[Here is the full working example](examples/animatedWidget/ex_001_animated_container).
 ## Explicit animation
 
 
@@ -147,7 +148,8 @@ AnimatedWidget(
 - The `FlutterLogo` will rotate from 0 to 2 * 3.14 (one turn)
 - The `fromTween` exposes the current value of the angle. It may be used to animate from the current value to the next value. (See the example below)
 
-> For rebuild performance use `Child`, `Child2` and `Child3` widget.
+
+[Here is the full working example](examples/animatedWidget/ex_002_explicit_animation).
 
 ## Use of Flutter's transition widgets
 
@@ -169,7 +171,11 @@ The following example is the same example of `PositionedTransition` in flutter d
    ),
  );
 ```
+[Here is the full working example](examples/animatedWidget/ex_003_positioned_transition).
 
+> For rebuild performance use `Child`, `Child2` and `Child3` widget.
+
+[Here an example of clock app](examples/animatedWidget/ex_006_timer).
 
 ## staggered Animation
 
@@ -271,6 +277,11 @@ class _MyStaggeredWidgetState extends State<MyStatefulWidget> {
   }
 }
 ```
+
+[Here is the full working example](examples/animatedWidget/ex_004_staggered_animation).
+
+One of the particularities of Animator is that you can use staggered animation with implicitly animated widget. [Here is the above example with implicit staggered animation](examples/animatedWidget/ex_005_staggered_implicit_animation)
+
 # Animator:
 
 With one widget, `Animator`, you can do all the available animation in Flutter. 

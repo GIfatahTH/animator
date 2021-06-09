@@ -1,6 +1,6 @@
 name: animator
 description: A Flutter library that makes animation easer. It allows for separation of animation setup from the User Interface.
-version: 4.0.0
+version: 3.1.0
 homepage: https://github.com/GIfatahTH/animator
 publish_to: none
 environment:
