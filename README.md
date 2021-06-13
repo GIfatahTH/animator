@@ -282,7 +282,18 @@ class _MyStaggeredWidgetState extends State<MyStatefulWidget> {
 
 One of the particularities of Animator is that you can use staggered animation with implicitly animated widget. [Here is the above example with implicit staggered animation](examples/animatedWidget/ex_005_staggered_implicit_animation)
 
-# Animator:
+## Examples:
+* [Implicit Animation](examples/animatedWidget/ex_001_animated_container).
+* [Explicit animation](examples/animatedWidget/ex_002_explicit_animation).
+* [Animation using PositionedTransition](examples/animatedWidget/ex_003_positioned_transition).
+* [Explicit staggered animation](examples/animatedWidget/ex_004_staggered_animation).
+* [Implicit staggered animation](examples/animatedWidget/ex_005_staggered_implicit_animation)
+* [Clock](examples/animatedWidget/ex_006_timer)
+* [3D button](examples/animatedWidget/ex_007__3d_button)
+
+
+
+̉# Animator:
 
 With one widget, `Animator`, you can do all the available animation in Flutter. 
 
