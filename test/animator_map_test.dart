@@ -434,7 +434,10 @@ void main() {
     Offset? animationValue2;
     AnimationStatus? animationStatue;
     var numberOfRepeats = 0;
-    final animatorKey = AnimatorKey<double>();
+    final animatorKey = AnimatorKey<double>(initialMapValue: {
+      'anim1': 0,
+      'anim2': Offset.zero,
+    });
     final animator = Animator<double>(
       tweenMap: {
         'anim1': Tween<double>(begin: 0, end: 1),
@@ -458,10 +461,12 @@ void main() {
     expect(animationValue2, isNull);
     expect(animationStatue, isNull);
 
+    expect(animatorKey.getValue('anim1'), equals(0));
+    expect(animatorKey.getValue('anim2'), equals(Offset.zero));
     await tester.pumpWidget(animator);
-
     expect(animationValue1, equals(0));
     expect(animationValue2, equals(Offset.zero));
+    expect(animatorKey.animation, isA<Animation>());
     animatorKey.triggerAnimation();
     await tester.pump();
     expect(animationStatue, equals(AnimationStatus.forward));

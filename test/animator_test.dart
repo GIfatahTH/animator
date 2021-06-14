@@ -862,6 +862,44 @@ void main() {
     },
   );
 
+  testWidgets(
+    'online change of animation setup, using refreshAnimation'
+    'Using tweenMap',
+    (WidgetTester tester) async {
+      Offset? offset;
+
+      final animatorKey = AnimatorKey<Offset>();
+      await tester.pumpWidget(Animator<Offset>(
+        tweenMap: {
+          'tween': Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
+        },
+        duration: const Duration(seconds: 1),
+        animatorKey: animatorKey,
+        builder: (_, anim, __) {
+          offset = anim.getValue('tween');
+          return Container();
+        },
+      ));
+
+      expect(offset, equals(Offset.zero));
+      animatorKey.triggerAnimation();
+      await tester.pumpAndSettle();
+      expect(offset, const Offset(1, 1));
+
+      animatorKey.resetAnimation(
+        tweenMap: {
+          'tween': Tween<Offset>(
+              begin: const Offset(10, 10), end: const Offset(20, 20))
+        },
+        curve: Curves.bounceIn,
+      );
+      await tester.pump();
+      expect(offset, const Offset(10, 10));
+      await tester.pumpAndSettle();
+      expect(offset, const Offset(20, 20));
+    },
+  );
+
   // testWidgets(
   //   'should throw if both tween and tweenMap are defined',
   //   (WidgetTester tester) async {

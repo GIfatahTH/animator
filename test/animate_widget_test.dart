@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animator/animator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -1275,6 +1277,139 @@ void main() {
       expect(outVal, 1000);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
       expect(outVal, 0);
+    },
+  );
+  testWidgets(
+    'WHEN triggerOnRebuild is true'
+    'THEN the animation start when AnimateWidget is rebuild',
+    (tester) async {
+      final model = false.inj();
+      int value = 0;
+      await tester.pumpWidget(On(
+        () => AnimateWidget(
+          duration: Duration(seconds: 1),
+          triggerOnInit: false,
+          triggerOnRebuild: true,
+          repeats: model.state ? 1 : 0,
+          builder: (_, animate) {
+            value = animate
+                .fromTween((currentValue) => IntTween(begin: 0, end: 10))!;
+            return Container();
+          },
+        ),
+      ).listenTo(model));
+      expect(value, 0);
+      await tester.pumpAndSettle();
+      expect(value, 0);
+      model.state = true;
+      expect(value, 0);
+      await tester.pumpAndSettle();
+      expect(value, 10);
+    },
+  );
+
+  testWidgets(
+    'WHEN resetOnRebuild is true'
+    'THEN the animation start when AnimateWidget is rebuild',
+    (tester) async {
+      final model = false.inj();
+      int value = 0;
+      await tester.pumpWidget(On(
+        () => AnimateWidget(
+          duration: Duration(seconds: 1),
+          triggerOnInit: true,
+          resetOnRebuild: true,
+          cycles: model.state ? 1 : 1,
+          builder: (_, animate) {
+            value = animate
+                .fromTween((currentValue) => IntTween(begin: 0, end: 10))!;
+            return Container();
+          },
+        ),
+      ).listenTo(model));
+      expect(value, 0);
+      await tester.pumpAndSettle();
+      expect(value, 10);
+      model.state = true;
+      await tester.pump();
+      expect(value, 0);
+      await tester.pumpAndSettle();
+      expect(value, 10);
+    },
+  );
+
+  testWidgets(
+    'WHEN resetOnRebuild is true'
+    'THEN the animation start when AnimateWidget is rebuild1',
+    (tester) async {
+      final model = false.inj();
+      int value = 0;
+      await tester.pumpWidget(On(
+        () => AnimateWidget(
+          duration: Duration(seconds: 1),
+          reverseCurve: model.state ? Curves.bounceIn : null,
+          reverseDuration: model.state ? Duration(seconds: 2) : null,
+          triggerOnInit: false,
+          resetOnRebuild: true,
+          cycles: model.state ? 1 : 0,
+          builder: (_, animate) {
+            value = animate
+                .fromTween((currentValue) => IntTween(begin: 0, end: 10))!;
+            return Container();
+          },
+        ),
+      ).listenTo(model));
+      expect(value, 0);
+      await tester.pumpAndSettle();
+      expect(value, 0);
+      model.state = true;
+      await tester.pump();
+      expect(value, 0);
+      await tester.pump(Duration(milliseconds: 100));
+      await tester.pump(Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      expect(value, 10);
+    },
+  );
+
+  testWidgets(
+    'WHEN resetOnRebuild is true',
+    (tester) async {
+      final model = false.inj();
+      int value = 0;
+      var _animate;
+      await tester.pumpWidget(On(
+        () => AnimateWidget(
+          duration: Duration(seconds: 1),
+          triggerOnInit: false,
+          resetOnRebuild: true,
+          cycles: 2,
+          builder: (_, animate) {
+            _animate = animate;
+            value = animate
+                .setCurve(Curves.bounceIn)
+                .setReverseCurve(Curves.ease)
+                .fromTween((currentValue) => IntTween(begin: 0, end: 10))!;
+            return Container();
+          },
+        ),
+      ).listenTo(model));
+      expect(value, 0);
+      print(_animate.curvedAnimation);
+      await tester.pumpAndSettle();
+      expect(value, 0);
+      model.state = true;
+      await tester.pump();
+      expect(value, 0);
+      await tester.pump(Duration(seconds: 1));
+      expect(value, 10);
+      await tester.pump(Duration(milliseconds: 100));
+      await tester.pump(Duration(milliseconds: 100));
+      expect(_animate.controller.duration, Duration(seconds: 1));
+      expect(_animate.curvedAnimation.toString().endsWith('(◀ 0.900)➩_Linear'),
+          true);
+      await tester.pump(Duration(seconds: 1));
+      expect(value, 0);
     },
   );
 }
