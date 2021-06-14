@@ -5,7 +5,7 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 part 'animator_key.dart';
 part 'animator_rebuilder.dart';
 part 'animator_state.dart';
-part 'child.dart';
+// part 'child.dart';
 
 ///{@template animator}
 ///A facade widget that hide the complexity of setting animation in Flutter
@@ -141,7 +141,7 @@ class _AnimatorState<T> extends State<Animator<T>> {
       }
     },
   );
-  late AnimatorState<T> animatorState;
+  late AnimatorStateImp<T> animatorState;
 
   @override
   void initState() {
@@ -165,10 +165,9 @@ class _AnimatorState<T> extends State<Animator<T>> {
   @override
   void didUpdateWidget(covariant Animator<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final animatorImp = animatorState as AnimatorStateImp<T>;
-    animatorImp.animator = widget;
+    animatorState.animator = widget;
     if (widget.resetAnimationOnRebuild) {
-      animatorImp
+      animatorState
         ..resetAnimation(
           tween: oldWidget.tween != widget.tween ? widget.tween : null,
           tweenMap:
@@ -181,6 +180,12 @@ class _AnimatorState<T> extends State<Animator<T>> {
         )
         ..triggerAnimation(restart: true);
     }
+  }
+
+  @override
+  void dispose() {
+    animatorState.dispose();
+    super.dispose();
   }
 
   @override
