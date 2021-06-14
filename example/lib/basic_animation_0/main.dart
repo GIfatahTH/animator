@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
 
@@ -16,7 +14,7 @@ class BasicAnimation0 extends StatelessWidget {
 
 class Body extends StatefulWidget {
   const Body({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

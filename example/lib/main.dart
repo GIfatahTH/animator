@@ -1,3 +1,4 @@
+import 'package:example/basic_animatio_3/main.dart';
 import 'package:flutter/material.dart';
 import 'basic_animation_0/main.dart';
 import 'basic_animation_1/main.dart';
@@ -48,6 +49,10 @@ class MyHomePage extends StatelessWidget {
           ElevatedButton(
             child: Text("Basic Animation 2"),
             onPressed: () => goto(MyCustomPainterAnimation(), context),
+          ),
+          ElevatedButton(
+            child: Text("Implicit animation"),
+            onPressed: () => goto(BasicAnimation3(), context),
           ),
         ],
       ),

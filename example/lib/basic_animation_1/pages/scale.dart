@@ -43,7 +43,7 @@ class MyHomePage extends StatelessWidget {
                     "SizedBox",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => SizedBox(
@@ -62,7 +62,7 @@ class MyHomePage extends StatelessWidget {
                     "Transform.scale",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => Transform.scale(
@@ -80,7 +80,7 @@ class MyHomePage extends StatelessWidget {
                     "diagonal3Values",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -101,7 +101,7 @@ class MyHomePage extends StatelessWidget {
                     "ScaleTransition",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => ScaleTransition(
@@ -129,7 +129,7 @@ class MyHomePage extends StatelessWidget {
                     "center",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -148,7 +148,7 @@ class MyHomePage extends StatelessWidget {
                     "topLeft",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -168,7 +168,7 @@ class MyHomePage extends StatelessWidget {
                     "bottomRight",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => Transform.scale(
@@ -187,7 +187,7 @@ class MyHomePage extends StatelessWidget {
                     "Offset(10, -10)",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -217,7 +217,7 @@ class MyHomePage extends StatelessWidget {
                     "elasticOut",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticOut,
                     cycles: 0,
@@ -237,7 +237,7 @@ class MyHomePage extends StatelessWidget {
                     "elasticIn",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticIn,
                     cycles: 0,
@@ -257,7 +257,7 @@ class MyHomePage extends StatelessWidget {
                     "elasticInOut",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.elasticInOut,
                     cycles: 0,
@@ -277,7 +277,7 @@ class MyHomePage extends StatelessWidget {
                     "fastOutSlowIn",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0.8, end: 1.4),
                     curve: Curves.fastOutSlowIn,
                     cycles: 0,
@@ -304,7 +304,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("Axis.vertical", style: _style),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => SizeTransition(
@@ -321,7 +321,7 @@ class MyHomePage extends StatelessWidget {
                     "Axis.horizontal",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => SizeTransition(
@@ -339,7 +339,7 @@ class MyHomePage extends StatelessWidget {
                     "axisAlig. : -1",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     duration: Duration(seconds: 2),
                     cycles: 0,
                     builder: (_, animationState, __) => SizeTransition(
@@ -358,7 +358,7 @@ class MyHomePage extends StatelessWidget {
                     "axisAlig. : 1",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: 0, end: 1),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -385,7 +385,7 @@ class MyHomePage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text("skewX", style: _style),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -409,7 +409,7 @@ class MyHomePage extends StatelessWidget {
                     "skewY",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,
@@ -433,7 +433,7 @@ class MyHomePage extends StatelessWidget {
                     "skew",
                     style: _style,
                   ),
-                  Animator(
+                  Animator<double>(
                     tween: Tween<double>(begin: -0.5, end: 0.5),
                     duration: Duration(seconds: 2),
                     cycles: 0,

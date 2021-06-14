@@ -321,7 +321,7 @@ void main() {
           observe: () => vm,
           builder: (_, __) {
             return Animator<Offset>(
-              tickerMixin: TickerMixin.tickerProviderStateMixin,
+              // tickerMixin: TickerMixin.tickerProviderStateMixin,
               tween: switcher
                   ? Tween<Offset>(begin: Offset.zero, end: const Offset(1, 1))
                   : Tween<Offset>(
@@ -349,7 +349,7 @@ void main() {
 
       expect(offset, const Offset(1, 1));
       switcher = false;
-      vm.rebuildStates();
+      vm.notify();
       await tester.pump();
       expect(offset, const Offset(10, 10));
 

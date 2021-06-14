@@ -22,7 +22,7 @@ class MyAnimation extends StatelessWidget {
   final _flutterLog100 =
       FlutterLogo(size: 150, style: FlutterLogoStyle.horizontal);
 
-  final AnimatorKey animatorKey = AnimatorKey<double>();
+  final animatorKey = AnimatorKey<double>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +48,10 @@ class MyAnimation extends StatelessWidget {
             ElevatedButton(
               child: Text("reset and restart animation using AnimatorKey"),
               onPressed: () => animatorKey
-                ..refreshAnimation(
+                ..resetAnimation(
                   curve: Curves.bounceIn,
                 )
-                ..triggerAnimation(),
+                ..triggerAnimation(restart: true),
             ),
             Animator<double>(
               tweenMap: {

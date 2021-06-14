@@ -2,7 +2,7 @@ part of 'animator.dart';
 
 ///Widget used to subscribe to a [AnimatorKey] and
 ///rebuild in sync with the [Animator] widget associated with the [AnimatorKey]
-class AnimatorRebuilder<T> extends StatelessWidget {
+class AnimatorRebuilder<T> extends StatefulWidget {
   ///an [AnimatorKey] class to which you want [Animator] to subscribe.
   final AnimatorKey<T> Function() observe;
 
@@ -27,25 +27,31 @@ class AnimatorRebuilder<T> extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _AnimatorRebuilderState<T> createState() => _AnimatorRebuilderState<T>();
+}
+
+class _AnimatorRebuilderState<T> extends State<AnimatorRebuilder<T>> {
+  late final AnimatorKeyImp<T> animatorKey =
+      widget.observe() as AnimatorKeyImp<T>;
+  late VoidCallback disposer;
+  @override
+  void initState() {
+    super.initState();
+    disposer = animatorKey.addObserver(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    disposer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final animatorState = observe();
-    return _StateBuilder<AnimatorRebuilder>(
-      (context, widget, ticker, setState) {
-        final animatorKey = observe() as AnimatorKeyImp<T>;
-        animatorKey.addObserver(setState);
-        return _Builder(
-          dispose: () {
-            animatorKey.removeObserver(setState);
-          },
-          didUpdateWidget: (_, __) {},
-          builder: (context, widget) => widget.builder(
-            context,
-            animatorState,
-            child,
-          ),
-        );
-      },
-      widget: this,
+    return widget.builder(
+      context,
+      animatorKey,
+      widget.child,
     );
   }
 }
