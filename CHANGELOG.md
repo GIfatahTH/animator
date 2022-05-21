@@ -1,3 +1,6 @@
+## [3.2.0]
+* Update to use states_rebuilder new version
+
 ## [3.1.0]
 * add `AnimateWidget` for implicit and explicit animation.
 

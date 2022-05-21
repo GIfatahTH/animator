@@ -123,7 +123,7 @@ class _AnimateWidgetState extends State<AnimateWidget> {
   void initState() {
     super.initState();
     if (widget.triggerOnInit)
-      SchedulerBinding.instance!.addPostFrameCallback(
+      SchedulerBinding.instance.addPostFrameCallback(
         (_) {
           if (animate!._hasTween) {
             injectedAnimation.triggerAnimation();
@@ -162,12 +162,13 @@ class _AnimateWidgetState extends State<AnimateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return sb.On.animation(
-      (animate) {
+    return sb.OnAnimationBuilder(
+      listenTo: injectedAnimation,
+      builder: (animate) {
         this.animate ??= Animate._(animate, injectedAnimation);
         return widget.builder(context, this.animate!);
       },
-    ).listenTo(injectedAnimation);
+    );
   }
 }
 

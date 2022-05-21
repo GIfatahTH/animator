@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:animator/animator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,8 +20,9 @@ void main() {
       final model = RM.inject(() => 0);
 
       await tester.pumpWidget(
-        On(
-          () => AnimateWidget(
+        OnBuilder(
+          listenTo: model,
+          builder: () => AnimateWidget(
             duration: Duration(seconds: 1),
             builder: (_, animate) {
               return Container(
@@ -47,7 +46,7 @@ void main() {
               );
             },
           ),
-        ).listenTo(model),
+        ),
       );
       expect('$height', '0.0');
       expect('$width', '0.0');
@@ -99,8 +98,9 @@ void main() {
       Decoration? decoration;
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             return Container(
@@ -119,7 +119,7 @@ void main() {
             );
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect('$alignment', 'null');
       expect('$padding', 'null');
@@ -178,15 +178,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal)!;
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, 0);
       // animating from 0 => 1000
@@ -228,8 +229,9 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate.fromTween(
@@ -240,7 +242,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       await tester.pump();
 
       expect(outVal, 0);
@@ -299,15 +301,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal)!;
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       await tester.pump();
 
       expect(outVal, 0);
@@ -348,15 +351,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       await tester.pump();
 
       expect(outVal, null);
@@ -398,15 +402,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       await tester.pump();
 
       expect(outVal, null);
@@ -451,15 +456,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, null);
       // animating from EdgeInsets.zero => EdgeInsets.all(10.0)
@@ -500,15 +506,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, null);
 
@@ -556,15 +563,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, null);
 
@@ -603,15 +611,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       inVal = Matrix4.diagonal3Values(10, 10, 10);
       model.notify();
@@ -648,15 +657,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -696,15 +706,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -746,15 +757,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -820,15 +832,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -869,15 +882,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -918,15 +932,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -972,15 +987,16 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           builder: (_, animate) {
             outVal = animate(inVal);
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       // expect(outVal, 0);
       //
@@ -1024,8 +1040,9 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           cycles: 2,
           duration: Duration(seconds: 1),
           builder: (_, animate) {
@@ -1038,7 +1055,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect('$outVal', 'Rect.fromLTRB(10.0, 10.0, 10.0, 10.0)');
       await tester.pump();
@@ -1076,8 +1093,9 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           repeats: 2,
           builder: (_, animate) {
@@ -1085,7 +1103,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, 0);
       //
@@ -1142,8 +1160,9 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           repeats: 2,
           builder: (_, animate) {
@@ -1153,7 +1172,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, 0);
       //
@@ -1210,8 +1229,9 @@ void main() {
 
       final model = RM.inject(() => 0);
 
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           cycles: 2,
           builder: (_, animate) {
@@ -1219,7 +1239,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
 
       expect(outVal, 0);
       //
@@ -1285,8 +1305,9 @@ void main() {
     (tester) async {
       final model = false.inj();
       int value = 0;
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           triggerOnInit: false,
           triggerOnRebuild: true,
@@ -1297,7 +1318,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       expect(value, 0);
       await tester.pumpAndSettle();
       expect(value, 0);
@@ -1314,8 +1335,9 @@ void main() {
     (tester) async {
       final model = false.inj();
       int value = 0;
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           triggerOnInit: true,
           resetOnRebuild: true,
@@ -1326,7 +1348,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       expect(value, 0);
       await tester.pumpAndSettle();
       expect(value, 10);
@@ -1344,8 +1366,9 @@ void main() {
     (tester) async {
       final model = false.inj();
       int value = 0;
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           reverseCurve: model.state ? Curves.bounceIn : null,
           reverseDuration: model.state ? Duration(seconds: 2) : null,
@@ -1358,7 +1381,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       expect(value, 0);
       await tester.pumpAndSettle();
       expect(value, 0);
@@ -1378,8 +1401,9 @@ void main() {
       final model = false.inj();
       int value = 0;
       var _animate;
-      await tester.pumpWidget(On(
-        () => AnimateWidget(
+      await tester.pumpWidget(OnBuilder(
+        listenTo: model,
+        builder: () => AnimateWidget(
           duration: Duration(seconds: 1),
           triggerOnInit: false,
           resetOnRebuild: true,
@@ -1393,7 +1417,7 @@ void main() {
             return Container();
           },
         ),
-      ).listenTo(model));
+      ));
       expect(value, 0);
       print(_animate.curvedAnimation);
       await tester.pumpAndSettle();

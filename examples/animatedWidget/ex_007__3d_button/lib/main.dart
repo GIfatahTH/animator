@@ -62,7 +62,7 @@ class __HomePageState extends State<_HomePage> {
         });
       },
       child: AnimateWidget(
-        duration: 200.milliseconds(),
+        duration: 200.milliseconds,
         triggerOnRebuild: true,
         builder: (context, animate) {
           final elevation = animate(_isTapDown ? 0.0 : _elevation * 2)!;

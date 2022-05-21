@@ -190,14 +190,13 @@ class _AnimatorState<T> extends State<Animator<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return On.animation(
-      (animate) {
+    return OnAnimationBuilder(
+      key: widget.key,
+      listenTo: injectedAnimation,
+      builder: (animate) {
         animate.shouldAlwaysRebuild = true;
         return widget.builder(context, animatorState, widget.child);
       },
-    ).listenTo(
-      injectedAnimation,
-      key: widget.key,
     );
   }
 }
