@@ -40,7 +40,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: Center(
         child: AnimateWidget(
           duration: const Duration(seconds: 1),
-          reverseDuration: 3.seconds(),
+          reverseDuration: 3.seconds,
           curve: Curves.fastOutSlowIn,
           reverseCurve: Curves.bounceInOut,
           cycles: 0,
