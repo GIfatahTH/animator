@@ -26,12 +26,10 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  double _size = 50.0;
   bool _large = false;
 
   void _updateSize() {
     setState(() {
-      _size = _large ? 250.0 : 100.0;
       _large = !_large;
     });
   }
