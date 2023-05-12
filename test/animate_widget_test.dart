@@ -523,32 +523,30 @@ void main() {
       model.notify();
       await tester.pump();
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 0.0, BorderStyle.none)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 0.0, style: none)))');
       await tester.pump(Duration(milliseconds: 200));
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 0.2, BorderStyle.solid)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 0.2)))');
       await tester.pump(Duration(milliseconds: 300));
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 0.5, BorderStyle.solid)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 0.5)))');
       await tester.pump(Duration(milliseconds: 500));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 1.0, BorderStyle.solid)))');
+      expect('$outVal', 'BoxDecoration(border: Border.all(BorderSide))');
       //
 
       inVal = BoxDecoration(border: Border.all(width: 2));
       model.notify();
       await tester.pump();
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 1.0, BorderStyle.solid)))');
+      expect('$outVal', 'BoxDecoration(border: Border.all(BorderSide))');
       await tester.pump(Duration(milliseconds: 200));
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 1.2, BorderStyle.solid)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 1.2)))');
       await tester.pump(Duration(milliseconds: 300));
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 1.5, BorderStyle.solid)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 1.5)))');
       await tester.pump(Duration(milliseconds: 500));
       expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(Color(0xff000000), 2.0, BorderStyle.solid)))');
+          'BoxDecoration(border: Border.all(BorderSide(width: 2.0)))');
     },
   );
 
@@ -773,31 +771,31 @@ void main() {
       inVal = ThemeData.dark();
       model.notify();
       await tester.pump();
-      expect('${outVal?.accentColor}', 'Color(0xff2196f3)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff2196f3)');
       await tester.pump(Duration(milliseconds: 200));
-      expect('${outVal?.accentColor}', 'Color(0xff2eabee)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff2eabee)');
 
       await tester.pump(Duration(milliseconds: 300));
-      expect('${outVal?.accentColor}', 'Color(0xff42cae6)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff42cae6)');
 
       await tester.pump(Duration(milliseconds: 500));
-      expect('${outVal?.accentColor}', 'Color(0xff64ffda)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff64ffda)');
 
       //
       inVal = ThemeData.light();
       model.notify();
       await tester.pump();
 
-      expect('${outVal?.accentColor}', 'Color(0xff64ffda)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff64ffda)');
 
       await tester.pump(Duration(milliseconds: 200));
-      expect('${outVal?.accentColor}', 'Color(0xff56eadf)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff56eadf)');
 
       await tester.pump(Duration(milliseconds: 300));
-      expect('${outVal?.accentColor}', 'Color(0xff42cae6)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff42cae6)');
 
       await tester.pump(Duration(milliseconds: 500));
-      expect('${outVal?.accentColor}', 'Color(0xff2196f3)');
+      expect('${outVal?.colorScheme.secondary}', 'Color(0xff2196f3)');
     },
   );
 

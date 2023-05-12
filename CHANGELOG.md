@@ -1,3 +1,7 @@
+## [3.3.0]
+* Update to be compatible with dart 3
+
+
 ## [3.2.0]
 * Update to use states_rebuilder new version
 
