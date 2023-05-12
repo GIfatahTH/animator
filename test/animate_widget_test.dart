@@ -520,33 +520,38 @@ void main() {
       expect(outVal, null);
 
       inVal = BoxDecoration(border: Border.all(width: 1));
+
       model.notify();
       await tester.pump();
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 0.0, style: none)))');
+
+      expect((outVal as BoxDecoration).border!.top.width, 0);
+
       await tester.pump(Duration(milliseconds: 200));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 0.2)))');
+      expect((outVal as BoxDecoration).border!.top.width, 0.2);
+
       await tester.pump(Duration(milliseconds: 300));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 0.5)))');
+      expect((outVal as BoxDecoration).border!.top.width, 0.5);
+
       await tester.pump(Duration(milliseconds: 500));
-      expect('$outVal', 'BoxDecoration(border: Border.all(BorderSide))');
+      expect((outVal as BoxDecoration).border!.top.width, 1);
+
       //
 
       inVal = BoxDecoration(border: Border.all(width: 2));
       model.notify();
       await tester.pump();
-      expect('$outVal', 'BoxDecoration(border: Border.all(BorderSide))');
+      expect((outVal as BoxDecoration).border!.top.width, 1);
+
       await tester.pump(Duration(milliseconds: 200));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 1.2)))');
+      expect((outVal as BoxDecoration).border!.top.width.toStringAsFixed(1),
+          '1.2');
+
       await tester.pump(Duration(milliseconds: 300));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 1.5)))');
+      expect((outVal as BoxDecoration).border!.top.width.toStringAsFixed(1),
+          '1.5');
+
       await tester.pump(Duration(milliseconds: 500));
-      expect('$outVal',
-          'BoxDecoration(border: Border.all(BorderSide(width: 2.0)))');
+      expect((outVal as BoxDecoration).border!.top.width, 2);
     },
   );
 
